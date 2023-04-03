@@ -1,0 +1,13 @@
+C:\Users\PC\RiderProjects\MigrationTool\Converter\bin\Debug\Migrations\2023_03_04_01_00_thj_create_customers.sql
+C:\Users\PC\RiderProjects\MigrationTool\Converter\bin\Debug\Migrations\2023_03_04_02_00_thj_add_customers.sql
+C:\Users\PC\RiderProjects\MigrationTool\Converter\bin\Debug\Migrations\2023_03_04_03_00_thj_modify_customers.sql
+C:\Users\PC\RiderProjects\MigrationTool\Converter\bin\Debug\Migrations\2023_03_04_03_01_thj_drop_customers.sql
+C:\Users\PC\RiderProjects\MigrationTool\Converter\bin\Debug\SqlCommands\create_database.sql
+C:\Users\PC\RiderProjects\MigrationTool\Converter\bin\Debug\SqlCommands\create_migration_table.sql
+C:\Users\PC\RiderProjects\MigrationTool\Converter\bin\Debug\Converter.dll
+C:\Users\PC\RiderProjects\MigrationTool\Converter\bin\Debug\Converter.pdb
+C:\Users\PC\RiderProjects\MigrationTool\Converter\obj\Debug\Converter.csproj.AssemblyReference.cache
+C:\Users\PC\RiderProjects\MigrationTool\Converter\obj\Debug\Converter.csproj.CoreCompileInputs.cache
+C:\Users\PC\RiderProjects\MigrationTool\Converter\obj\Debug\Converter.dll
+C:\Users\PC\RiderProjects\MigrationTool\Converter\obj\Debug\Converter.pdb
+C:\Users\PC\RiderProjects\MigrationTool\Converter\bin\Debug\Migrations\2023_03_04_06_00_thj_add_customers.sql
