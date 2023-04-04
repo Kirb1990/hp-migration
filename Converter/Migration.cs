@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Odbc;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using MySql.Data.MySqlClient;
 using System.Threading.Tasks;
 
 namespace Converter
@@ -31,14 +31,14 @@ namespace Converter
 
         public Task Migrate()
         {
-            OdbcConnection connection = new OdbcConnection(_ConnectionString);
+            MySqlConnection connection = new MySqlConnection(_ConnectionString);
             
             try
             {
                 connection.Open();
                 connection.ChangeDatabase(_CurrentDatabase);
                 
-                string migrationsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"Databaess{_PathSeparator}Migrations");
+                string migrationsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"Databases{_PathSeparator}Migrations");
                 
                 List<string> migrations = Directory.GetFiles(migrationsPath, "*.sql")
                     .OrderBy(x => x)
@@ -48,7 +48,7 @@ namespace Converter
                 {
                     string migrationName = Path.GetFileNameWithoutExtension(migration);
 
-                    OdbcCommand selectCommand = new OdbcCommand("SELECT * FROM `migrations` WHERE `migration` = ?", connection);
+                    MySqlCommand selectCommand = new MySqlCommand("SELECT * FROM `migrations` WHERE `migration` = ?", connection);
                     selectCommand.Parameters.AddWithValue("@migrationName", migrationName);
                     object result = selectCommand.ExecuteScalar();
 
@@ -59,10 +59,10 @@ namespace Converter
                     }
                     string script = File.ReadAllText(migration, Encoding.UTF8);
 
-                    OdbcCommand command = new OdbcCommand(script, connection);
+                    MySqlCommand command = new MySqlCommand(script, connection);
                     command.ExecuteNonQuery();
 
-                    OdbcCommand insertCommand = new OdbcCommand("INSERT INTO `migrations` (`migration`) VALUES (?)", connection);
+                    MySqlCommand insertCommand = new MySqlCommand("INSERT INTO `migrations` (`migration`) VALUES (?)", connection);
                     insertCommand.Parameters.AddWithValue("@migrationName", migrationName);
                     insertCommand.ExecuteNonQuery();
 
@@ -87,22 +87,22 @@ namespace Converter
 
         public Task Refresh()
         {
-            OdbcConnection connection = new OdbcConnection(_ConnectionString);
+            MySqlConnection connection = new MySqlConnection(_ConnectionString);
             try
             {
                 connection.Open();
 
                 string query = "SELECT migration FROM migrations";
-                using (OdbcCommand command = new OdbcCommand(query, connection))
+                using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
-                    using (OdbcDataReader reader = command.ExecuteReader())
+                    using (MySqlDataReader reader = command.ExecuteReader())
                     {
                         while (reader.Read())
                         {
                             string migrationName = reader.GetString(0);
 
                             string deleteQuery = $"DELETE FROM `{migrationName}`";
-                            using (OdbcCommand deleteCommand = new OdbcCommand(deleteQuery, connection))
+                            using (MySqlCommand deleteCommand = new MySqlCommand(deleteQuery, connection))
                             {
                                 deleteCommand.ExecuteNonQuery();
                             }
@@ -126,7 +126,7 @@ namespace Converter
         
         public async void Use(string database)
         {
-            OdbcConnection connection = new OdbcConnection(_ConnectionString);
+            MySqlConnection connection = new MySqlConnection(_ConnectionString);
 
             try
             {
@@ -146,10 +146,10 @@ namespace Converter
             }
         }
 
-        async Task CheckDatabaseExisting(OdbcConnection connection, string database)
+        async Task CheckDatabaseExisting(MySqlConnection connection, string database)
         {
             string query = $"SHOW DATABASES LIKE '{database}'"; 
-            OdbcCommand command = new OdbcCommand(query, connection);
+            MySqlCommand command = new MySqlCommand(query, connection);
             object result = command.ExecuteScalar();
 
             if (result != null)
@@ -164,7 +164,7 @@ namespace Converter
             string rawSqlCommand = File.ReadAllText($"{sqlCommandPath}{_PathSeparator}{sqlFileName}", Encoding.UTF8);
             string sqlCommand = rawSqlCommand.Replace("%newdb%", database);
             
-            command = new OdbcCommand(sqlCommand, connection);
+            command = new MySqlCommand(sqlCommand, connection);
             await command.ExecuteNonQueryAsync();
             
             connection.ChangeDatabase(database);
@@ -172,12 +172,12 @@ namespace Converter
             await CreateMigrationTable(connection, sqlCommandPath);
         }
 
-        async Task CreateMigrationTable(OdbcConnection connection, string sqlCommandPath)
+        async Task CreateMigrationTable(MySqlConnection connection, string sqlCommandPath)
         {
             string sqlFileName = "create_migration_table.sql";
             string sqlCommand = File.ReadAllText($"{sqlCommandPath}{_PathSeparator}{sqlFileName}", Encoding.UTF8);
             
-            OdbcCommand command = new OdbcCommand(sqlCommand, connection);
+            MySqlCommand command = new MySqlCommand(sqlCommand, connection);
             await command.ExecuteNonQueryAsync();
         }
     }

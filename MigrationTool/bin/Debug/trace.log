@@ -37,3 +37,41 @@
 04.04.2023 18:59:58 Error executing changing database: ERROR [IM002] [Microsoft][ODBC Driver Manager] Der Datenquellenname wurde nicht gefunden, und es wurde kein Standardtreiber angegeben
 04.04.2023 18:59:58 Error executing migration: ERROR [IM002] [Microsoft][ODBC Driver Manager] Der Datenquellenname wurde nicht gefunden, und es wurde kein Standardtreiber angegeben
 04.04.2023 18:59:58 All migrations executed successfully.
+04.04.2023 19:16:55 Error executing migration: Ein Teil des Pfades "C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Databaess\Migrations" konnte nicht gefunden werden.
+04.04.2023 19:17:37 Migration C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Databases\Migrations\2023_03_04_06_00_thj_add_customers.sql executed successfully.
+04.04.2023 19:17:37 Migration C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Databases\Migrations\2023_03_07_00_00_thj_add_customers.sql executed successfully.
+04.04.2023 19:17:37 All migrations executed successfully.
+04.04.2023 19:18:22 Migration C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Databases\Migrations\2023_03_04_01_00_thj_create_customers.sql executed successfully.
+04.04.2023 19:18:22 Migration C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Databases\Migrations\2023_03_04_02_00_thj_add_customers.sql executed successfully.
+04.04.2023 19:18:22 Migration C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Databases\Migrations\2023_03_04_03_00_thj_modify_customers.sql executed successfully.
+04.04.2023 19:18:22 Migration C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Databases\Migrations\2023_03_04_03_01_thj_drop_customers.sql executed successfully.
+04.04.2023 19:18:22 Migration C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Databases\Migrations\2023_03_04_06_00_thj_add_customers.sql executed successfully.
+04.04.2023 19:18:22 Migration C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Databases\Migrations\2023_03_07_00_00_thj_add_customers.sql executed successfully.
+04.04.2023 19:18:22 All migrations executed successfully.
+MigrationTool.exe Error: 0 : 04.04.2023 19:29:13 Unable to connect to any of the specified MySQL hosts.
+04.04.2023 19:29:13 Error executing changing database: Unable to connect to any of the specified MySQL hosts.
+MigrationTool.exe Error: 0 : 04.04.2023 19:29:13 Unable to connect to any of the specified MySQL hosts.
+04.04.2023 19:29:14 Error executing migration: Unable to connect to any of the specified MySQL hosts.
+MigrationTool.exe Error: 0 : 04.04.2023 19:34:31 Unable to connect to any of the specified MySQL hosts.
+04.04.2023 19:34:31 Error executing changing database: Unable to connect to any of the specified MySQL hosts.
+MigrationTool.exe Error: 0 : 04.04.2023 19:34:31 Unable to connect to any of the specified MySQL hosts.
+04.04.2023 19:34:31 Error executing migration: Unable to connect to any of the specified MySQL hosts.
+MigrationTool.exe Error: 0 : 04.04.2023 19:36:04 Unable to connect to any of the specified MySQL hosts.
+04.04.2023 19:36:04 Error executing changing database: Unable to connect to any of the specified MySQL hosts.
+MigrationTool.exe Error: 0 : 04.04.2023 19:36:04 Unable to connect to any of the specified MySQL hosts.
+04.04.2023 19:36:04 Error executing migration: Unable to connect to any of the specified MySQL hosts.
+04.04.2023 19:37:13 Migration C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Databases\Migrations\2023_03_04_01_00_thj_create_customers.sql executed successfully.
+04.04.2023 19:37:13 Migration C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Databases\Migrations\2023_03_04_02_00_thj_add_customers.sql executed successfully.
+04.04.2023 19:37:13 Migration C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Databases\Migrations\2023_03_04_03_00_thj_modify_customers.sql executed successfully.
+04.04.2023 19:37:13 Migration C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Databases\Migrations\2023_03_04_03_01_thj_drop_customers.sql executed successfully.
+04.04.2023 19:37:13 Migration C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Databases\Migrations\2023_03_04_06_00_thj_add_customers.sql executed successfully.
+04.04.2023 19:37:13 Migration C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Databases\Migrations\2023_03_07_00_00_thj_add_customers.sql executed successfully.
+04.04.2023 19:37:13 All migrations executed successfully.
+04.04.2023 19:40:01 All migrations executed successfully.
+04.04.2023 19:40:29 Migration C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Databases\Migrations\2023_03_04_01_00_thj_create_customers.sql executed successfully.
+04.04.2023 19:40:29 Migration C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Databases\Migrations\2023_03_04_02_00_thj_add_customers.sql executed successfully.
+04.04.2023 19:40:29 Migration C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Databases\Migrations\2023_03_04_03_00_thj_modify_customers.sql executed successfully.
+04.04.2023 19:40:29 Migration C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Databases\Migrations\2023_03_04_03_01_thj_drop_customers.sql executed successfully.
+04.04.2023 19:40:29 Migration C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Databases\Migrations\2023_03_04_06_00_thj_add_customers.sql executed successfully.
+04.04.2023 19:40:29 Migration C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Databases\Migrations\2023_03_07_00_00_thj_add_customers.sql executed successfully.
+04.04.2023 19:40:29 All migrations executed successfully.
