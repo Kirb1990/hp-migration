@@ -1,0 +1,36 @@
+04.04.2023 10:38:27 All migrations executed successfully.
+04.04.2023 10:40:31 Migration D:\JetBrains Rider\Repos\hp-converter\MigrationTool\bin\Debug\Migrations\2023_03_04_01_00_thj_create_customers.sql executed successfully.
+04.04.2023 10:40:31 Migration D:\JetBrains Rider\Repos\hp-converter\MigrationTool\bin\Debug\Migrations\2023_03_04_02_00_thj_add_customers.sql executed successfully.
+04.04.2023 10:40:31 Migration D:\JetBrains Rider\Repos\hp-converter\MigrationTool\bin\Debug\Migrations\2023_03_04_03_00_thj_modify_customers.sql executed successfully.
+04.04.2023 10:40:31 Migration D:\JetBrains Rider\Repos\hp-converter\MigrationTool\bin\Debug\Migrations\2023_03_04_03_01_thj_drop_customers.sql executed successfully.
+04.04.2023 10:40:31 Migration D:\JetBrains Rider\Repos\hp-converter\MigrationTool\bin\Debug\Migrations\2023_03_04_06_00_thj_add_customers.sql executed successfully.
+04.04.2023 10:40:31 Migration D:\JetBrains Rider\Repos\hp-converter\MigrationTool\bin\Debug\Migrations\2023_03_05_00_00_thj_modify_customers.sql executed successfully.
+04.04.2023 10:40:31 Migration D:\JetBrains Rider\Repos\hp-converter\MigrationTool\bin\Debug\Migrations\2023_03_05_01_00_thj_add_customers.sql executed successfully.
+04.04.2023 10:40:31 All migrations executed successfully.
+04.04.2023 14:05:48 Migration D:\JetBrains Rider\Repos\hp-converter\MigrationTool\bin\Debug\Migrations\2023_03_04_01_00_thj_create_customers.sql executed successfully.
+04.04.2023 14:05:48 Migration D:\JetBrains Rider\Repos\hp-converter\MigrationTool\bin\Debug\Migrations\2023_03_04_02_00_thj_add_customers.sql executed successfully.
+04.04.2023 14:05:48 Migration D:\JetBrains Rider\Repos\hp-converter\MigrationTool\bin\Debug\Migrations\2023_03_04_03_00_thj_modify_customers.sql executed successfully.
+04.04.2023 14:05:48 Migration D:\JetBrains Rider\Repos\hp-converter\MigrationTool\bin\Debug\Migrations\2023_03_04_03_01_thj_drop_customers.sql executed successfully.
+04.04.2023 14:05:48 Migration D:\JetBrains Rider\Repos\hp-converter\MigrationTool\bin\Debug\Migrations\2023_03_04_06_00_thj_add_customers.sql executed successfully.
+04.04.2023 14:05:48 Migration D:\JetBrains Rider\Repos\hp-converter\MigrationTool\bin\Debug\Migrations\2023_03_05_00_00_thj_modify_customers.sql executed successfully.
+04.04.2023 14:05:48 Migration D:\JetBrains Rider\Repos\hp-converter\MigrationTool\bin\Debug\Migrations\2023_03_05_01_00_thj_add_customers.sql executed successfully.
+04.04.2023 14:05:48 All migrations executed successfully.
+04.04.2023 14:06:12 All migrations executed successfully.
+04.04.2023 14:07:35 Error executing migration: ERROR [42S22] [MySQL][ODBC 8.0(w) Driver][mysqld-8.0.32]Unknown column 'fist_name' in 'customers'
+04.04.2023 14:07:35 All migrations executed successfully.
+04.04.2023 14:07:51 Migration D:\JetBrains Rider\Repos\hp-converter\MigrationTool\bin\Debug\Migrations\2023_03_05_05_00_thj_add_customers.sql executed successfully.
+04.04.2023 14:07:51 All migrations executed successfully.
+04.04.2023 14:15:44 Migration D:\JetBrains Rider\Repos\hp-converter\MigrationTool\bin\Debug\Migrations\2023_03_07_01_00_thj_create_penises.sql executed successfully.
+04.04.2023 14:15:44 All migrations executed successfully.
+04.04.2023 14:20:49 Migration D:\JetBrains Rider\Repos\hp-converter\MigrationTool\bin\Debug\Migrations\2023_03_10_00_00_thj_modify_penises.sql executed successfully.
+04.04.2023 14:20:49 All migrations executed successfully.
+04.04.2023 14:46:11 Migration D:\JetBrains Rider\Repos\hp-converter\MigrationTool\bin\Debug\Migrations\2023_03_04_01_00_thj_create_customers.sql executed successfully.
+04.04.2023 14:46:11 Migration D:\JetBrains Rider\Repos\hp-converter\MigrationTool\bin\Debug\Migrations\2023_03_04_02_00_thj_add_customers.sql executed successfully.
+04.04.2023 14:46:12 Migration D:\JetBrains Rider\Repos\hp-converter\MigrationTool\bin\Debug\Migrations\2023_03_04_03_00_thj_modify_customers.sql executed successfully.
+04.04.2023 14:46:12 Migration D:\JetBrains Rider\Repos\hp-converter\MigrationTool\bin\Debug\Migrations\2023_03_04_03_01_thj_drop_customers.sql executed successfully.
+04.04.2023 14:46:12 Migration D:\JetBrains Rider\Repos\hp-converter\MigrationTool\bin\Debug\Migrations\2023_03_04_06_00_thj_add_customers.sql executed successfully.
+04.04.2023 14:46:12 All migrations executed successfully.
+04.04.2023 14:48:16 Error executing migration: ERROR [42S21] [MySQL][ODBC 8.0(w) Driver][mysqld-8.0.32]Duplicate column name 'test'
+04.04.2023 14:48:16 All migrations executed successfully.
+04.04.2023 14:48:33 Migration D:\JetBrains Rider\Repos\hp-converter\MigrationTool\bin\Debug\Migrations\2023_03_07_00_00_thj_add_customers.sql executed successfully.
+04.04.2023 14:48:33 All migrations executed successfully.

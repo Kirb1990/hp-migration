@@ -2,7 +2,7 @@
 
 namespace MigrationTool;
 
-abstract class Options
+internal class Options
 {
     [Option('m', "migrate", HelpText = "Migrate the database")]
     public bool Migrate { get; set; }

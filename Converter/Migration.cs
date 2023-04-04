@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Odbc;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -10,18 +11,25 @@ namespace Converter
 {
     public class Migration
     {
-        private readonly string _ConnectionString;
-        private readonly char _PathSeperator;
+        public event EventHandler<Migration> OnSuccessfullyMigrated;
         
-        private string _CurrentDatabase;
+        readonly string _ConnectionString;
+        readonly char _PathSeparator;
+        
+        string _CurrentDatabase;
 
         public Migration(string connectionString)
         {
             _ConnectionString = connectionString;
-            _PathSeperator = Path.DirectorySeparatorChar;
+            _PathSeparator = Path.DirectorySeparatorChar;
+            
+            Trace.Listeners.Add(new TimestampedTextWriterTraceListener(".\\trace.log"));
+            Trace.Listeners.Add(new TimestampedConsoleTraceListener());
+
+            Trace.AutoFlush = true;
         }
 
-        public async void Migrate()
+        public Task Migrate()
         {
             OdbcConnection connection = new OdbcConnection(_ConnectionString);
             
@@ -36,7 +44,7 @@ namespace Converter
                     .OrderBy(x => x)
                     .ToList();
 
-                foreach (var migration in migrations)
+                foreach (string migration in migrations)
                 {
                     string migrationName = Path.GetFileNameWithoutExtension(migration);
 
@@ -58,22 +66,63 @@ namespace Converter
                     insertCommand.Parameters.AddWithValue("@migrationName", migrationName);
                     insertCommand.ExecuteNonQuery();
 
-                    Console.WriteLine($"Migration {migration} executed successfully.");
+                    Trace.WriteLine($"Migration {migration} executed successfully.");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error executing migration: {ex.Message}");
+                Trace.WriteLine($"Error executing migration: {ex.Message}");
             }
             finally
             {
                 connection.Close();
             }
 
-            Console.WriteLine("All migrations executed successfully.");
-            Console.ReadLine();
+            Trace.WriteLine("All migrations executed successfully.");
+            
+            OnSuccessfullyMigrated?.Invoke(this, this);
+            return Task.CompletedTask;
         }
 
+        public Task Refresh()
+        {
+            OdbcConnection connection = new OdbcConnection(_ConnectionString);
+            try
+            {
+                connection.Open();
+
+                string query = "SELECT migration FROM migrations";
+                using (OdbcCommand command = new OdbcCommand(query, connection))
+                {
+                    using (OdbcDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            string migrationName = reader.GetString(0);
+
+                            string deleteQuery = $"DELETE FROM `{migrationName}`";
+                            using (OdbcCommand deleteCommand = new OdbcCommand(deleteQuery, connection))
+                            {
+                                deleteCommand.ExecuteNonQuery();
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine($"Error executing refresh: {ex.Message}");
+                return Task.CompletedTask;
+            }
+            finally
+            {
+                connection.Close();
+            }
+            
+            Trace.WriteLine("All tables cleared successfully.");
+            return Task.CompletedTask;
+        }
+        
         public async void Use(string database)
         {
             OdbcConnection connection = new OdbcConnection(_ConnectionString);
@@ -82,20 +131,21 @@ namespace Converter
             {
                 connection.Open();
                 await CheckDatabaseExisting(connection, database);
+                _CurrentDatabase = database;
+                
+                //await Migrate();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error executing changing database: {ex.Message}");
+                Trace.WriteLine($"Error executing changing database: {ex.Message}");
             }
             finally
             {
                 connection.Close();
             }
-
-            _CurrentDatabase = database;
         }
 
-        private async Task CheckDatabaseExisting(OdbcConnection connection, string database)
+        async Task CheckDatabaseExisting(OdbcConnection connection, string database)
         {
             string query = $"SHOW DATABASES LIKE '{database}'"; 
             OdbcCommand command = new OdbcCommand(query, connection);
@@ -110,7 +160,7 @@ namespace Converter
             string sqlCommandPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SqlCommands");
             string sqlFileName = "create_database.sql";
 
-            string rawSqlCommand = File.ReadAllText($"{sqlCommandPath}{_PathSeperator}{sqlFileName}", Encoding.UTF8);
+            string rawSqlCommand = File.ReadAllText($"{sqlCommandPath}{_PathSeparator}{sqlFileName}", Encoding.UTF8);
             string sqlCommand = rawSqlCommand.Replace("%newdb%", database);
             
             command = new OdbcCommand(sqlCommand, connection);
@@ -121,10 +171,10 @@ namespace Converter
             await CreateMigrationTable(connection, sqlCommandPath);
         }
 
-        private async Task CreateMigrationTable(OdbcConnection connection, string sqlCommandPath)
+        async Task CreateMigrationTable(OdbcConnection connection, string sqlCommandPath)
         {
             string sqlFileName = "create_migration_table.sql";
-            string sqlCommand = File.ReadAllText($"{sqlCommandPath}{_PathSeperator}{sqlFileName}", Encoding.UTF8);
+            string sqlCommand = File.ReadAllText($"{sqlCommandPath}{_PathSeparator}{sqlFileName}", Encoding.UTF8);
             
             OdbcCommand command = new OdbcCommand(sqlCommand, connection);
             await command.ExecuteNonQueryAsync();
