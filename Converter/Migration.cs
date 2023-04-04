@@ -38,7 +38,7 @@ namespace Converter
                 connection.Open();
                 connection.ChangeDatabase(_CurrentDatabase);
                 
-                string migrationsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Migrations");
+                string migrationsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"Databaess{_PathSeparator}Migrations");
                 
                 List<string> migrations = Directory.GetFiles(migrationsPath, "*.sql")
                     .OrderBy(x => x)
@@ -72,6 +72,7 @@ namespace Converter
             catch (Exception ex)
             {
                 Trace.WriteLine($"Error executing migration: {ex.Message}");
+                return Task.CompletedTask;
             }
             finally
             {
@@ -157,7 +158,7 @@ namespace Converter
                 return;
             }   
             
-            string sqlCommandPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SqlCommands");
+            string sqlCommandPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"Databases{_PathSeparator}SqlCommands");
             string sqlFileName = "create_database.sql";
 
             string rawSqlCommand = File.ReadAllText($"{sqlCommandPath}{_PathSeparator}{sqlFileName}", Encoding.UTF8);

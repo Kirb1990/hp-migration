@@ -34,17 +34,10 @@ C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\System.Threading
 C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\MySqlConnector.xml
 C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\System.Diagnostics.DiagnosticSource.xml
 C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\System.Threading.Tasks.Extensions.xml
-C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Migrations\2023_03_04_01_00_thj_create_customers.sql
-C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Migrations\2023_03_04_02_00_thj_add_customers.sql
-C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Migrations\2023_03_04_03_00_thj_modify_customers.sql
-C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Migrations\2023_03_04_03_01_thj_drop_customers.sql
-C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\SqlCommands\create_database.sql
-C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\SqlCommands\create_migration_table.sql
 C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\CommandLine.dll
 C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\CommandLine.xml
 C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Converter.dll
 C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Converter.pdb
-C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Migrations\2023_03_04_06_00_thj_add_customers.sql
 D:\JetBrains Rider\Repos\hp-converter\MigrationTool\bin\Debug\Migrations\2023_03_04_01_00_thj_create_customers.sql
 D:\JetBrains Rider\Repos\hp-converter\MigrationTool\bin\Debug\Migrations\2023_03_04_02_00_thj_add_customers.sql
 D:\JetBrains Rider\Repos\hp-converter\MigrationTool\bin\Debug\Migrations\2023_03_04_03_00_thj_modify_customers.sql
@@ -95,3 +88,12 @@ D:\JetBrains Rider\Repos\hp-converter\MigrationTool\obj\Debug\MigrationTool.pdb
 D:\JetBrains Rider\Repos\hp-converter\MigrationTool\bin\Debug\Converter.dll.config
 D:\JetBrains Rider\Repos\hp-converter\MigrationTool\bin\Debug\MySql.Data.dll
 D:\JetBrains Rider\Repos\hp-converter\MigrationTool\bin\Debug\Migrations\2023_03_07_00_00_thj_add_customers.sql
+C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Databases\Migrations\2023_03_04_01_00_thj_create_customers.sql
+C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Databases\Migrations\2023_03_04_02_00_thj_add_customers.sql
+C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Databases\Migrations\2023_03_04_03_00_thj_modify_customers.sql
+C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Databases\Migrations\2023_03_04_03_01_thj_drop_customers.sql
+C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Databases\Migrations\2023_03_04_06_00_thj_add_customers.sql
+C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Databases\Migrations\2023_03_07_00_00_thj_add_customers.sql
+C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Databases\SqlCommands\create_database.sql
+C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Databases\SqlCommands\create_migration_table.sql
+C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Converter.dll.config

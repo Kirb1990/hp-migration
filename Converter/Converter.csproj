@@ -46,7 +46,7 @@
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>
     <ItemGroup>
-        <Content Include="Migrations\**">
+        <Content Include="Databases\**">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
     </ItemGroup>
@@ -56,15 +56,14 @@
         </Content>
     </ItemGroup>
     <ItemGroup>
-      <Content Include="Migrations\2023_03_04_01_00_thj_create_customers.sql" />
-      <Content Include="Migrations\2023_03_04_02_00_thj_add_customers.sql" />
-      <Content Include="Migrations\2023_03_04_03_00_thj_modify_customers.sql" />
-      <Content Include="Migrations\2023_03_04_03_01_thj_drop_customers.sql" />
       <Content Include="SqlCommands\create_database.sql" />
       <Content Include="SqlCommands\create_migration_table.sql" />
     </ItemGroup>
     <ItemGroup>
       <None Include="App.config" />
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Databases" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

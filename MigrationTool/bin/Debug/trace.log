@@ -34,3 +34,6 @@
 04.04.2023 14:48:16 All migrations executed successfully.
 04.04.2023 14:48:33 Migration D:\JetBrains Rider\Repos\hp-converter\MigrationTool\bin\Debug\Migrations\2023_03_07_00_00_thj_add_customers.sql executed successfully.
 04.04.2023 14:48:33 All migrations executed successfully.
+04.04.2023 18:59:58 Error executing changing database: ERROR [IM002] [Microsoft][ODBC Driver Manager] Der Datenquellenname wurde nicht gefunden, und es wurde kein Standardtreiber angegeben
+04.04.2023 18:59:58 Error executing migration: ERROR [IM002] [Microsoft][ODBC Driver Manager] Der Datenquellenname wurde nicht gefunden, und es wurde kein Standardtreiber angegeben
+04.04.2023 18:59:58 All migrations executed successfully.
