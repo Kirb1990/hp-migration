@@ -75,3 +75,54 @@ MigrationTool.exe Error: 0 : 04.04.2023 19:36:04 Unable to connect to any of the
 04.04.2023 19:40:29 Migration C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Databases\Migrations\2023_03_04_06_00_thj_add_customers.sql executed successfully.
 04.04.2023 19:40:29 Migration C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Databases\Migrations\2023_03_07_00_00_thj_add_customers.sql executed successfully.
 04.04.2023 19:40:29 All migrations executed successfully.
+04.04.2023 19:58:21 All migrations executed successfully.
+04.04.2023 20:16:07 Migration C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Databases\Migrations\2023_03_04_01_00_thj_create_customers.sql executed successfully.
+04.04.2023 20:16:08 Migration C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Databases\Migrations\2023_03_04_02_00_thj_add_customers.sql executed successfully.
+04.04.2023 20:16:08 Migration C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Databases\Migrations\2023_03_04_03_00_thj_modify_customers.sql executed successfully.
+04.04.2023 20:16:08 Migration C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Databases\Migrations\2023_03_04_03_01_thj_drop_customers.sql executed successfully.
+04.04.2023 20:16:08 Migration C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Databases\Migrations\2023_03_04_06_00_thj_add_customers.sql executed successfully.
+04.04.2023 20:16:08 Migration C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Databases\Migrations\2023_03_07_00_00_thj_add_customers.sql executed successfully.
+04.04.2023 20:16:08 All migrations executed successfully.
+04.04.2023 20:18:02 Error executing refresh: No database selected
+04.04.2023 20:18:02 All migrations executed successfully.
+04.04.2023 20:18:55 Error executing refresh: There is already an open DataReader associated with this Connection which must be closed first.
+04.04.2023 20:18:55 All migrations executed successfully.
+04.04.2023 20:23:37 Error executing refresh: There is already an open DataReader associated with this Connection which must be closed first.
+04.04.2023 20:23:37 All tables cleared successfully.
+04.04.2023 20:23:37 All migrations executed successfully.
+04.04.2023 20:25:38 Error executing refresh: There is already an open DataReader associated with this Connection which must be closed first.
+04.04.2023 20:25:38 All tables dropped successfully.
+04.04.2023 20:25:38 All migrations executed successfully.
+04.04.2023 20:27:00 DROP TABLE `customers`
+04.04.2023 20:27:00 Error executing refresh: There is already an open DataReader associated with this Connection which must be closed first.
+04.04.2023 20:27:00 All tables dropped successfully.
+04.04.2023 20:27:00 All migrations executed successfully.
+04.04.2023 20:27:28 DROP TABLE `customers`
+04.04.2023 20:29:22 DELETE FROM `customers`
+04.04.2023 20:29:22 Error executing refresh: There is already an open DataReader associated with this Connection which must be closed first.
+04.04.2023 20:29:22 All tables cleared successfully.
+04.04.2023 20:29:22 All migrations executed successfully.
+04.04.2023 20:31:38 DELETE FROM `customers`
+04.04.2023 20:31:38 Error executing refresh: There is already an open DataReader associated with this Connection which must be closed first.
+04.04.2023 20:31:38 All tables cleared successfully.
+04.04.2023 20:31:38 All migrations executed successfully.
+04.04.2023 20:33:09 DELETE FROM `customers`
+04.04.2023 20:33:09 Error executing refresh: There is already an open DataReader associated with this Connection which must be closed first.
+04.04.2023 20:33:09 All tables cleared successfully.
+04.04.2023 20:33:09 All migrations executed successfully.
+04.04.2023 20:34:16 DELETE FROM `customers`
+04.04.2023 20:34:16 Error executing refresh: There is already an open DataReader associated with this Connection which must be closed first.
+04.04.2023 20:34:16 All tables cleared successfully.
+04.04.2023 20:34:16 All migrations executed successfully.
+04.04.2023 20:36:15 All migrations executed successfully.
+04.04.2023 20:36:40 Migration C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Databases\Migrations\2023_03_04_01_00_thj_create_customers.sql executed successfully.
+04.04.2023 20:36:40 Migration C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Databases\Migrations\2023_03_04_02_00_thj_add_customers.sql executed successfully.
+04.04.2023 20:36:40 Migration C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Databases\Migrations\2023_03_04_03_00_thj_modify_customers.sql executed successfully.
+04.04.2023 20:36:40 Migration C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Databases\Migrations\2023_03_04_03_01_thj_drop_customers.sql executed successfully.
+04.04.2023 20:36:40 Migration C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Databases\Migrations\2023_03_04_06_00_thj_add_customers.sql executed successfully.
+04.04.2023 20:36:40 Migration C:\Users\PC\RiderProjects\MigrationTool\MigrationTool\bin\Debug\Databases\Migrations\2023_03_07_00_00_thj_add_customers.sql executed successfully.
+04.04.2023 20:36:40 All migrations executed successfully.
+04.04.2023 20:37:03 DELETE FROM `customers`
+04.04.2023 20:37:03 Error executing refresh: There is already an open DataReader associated with this Connection which must be closed first.
+04.04.2023 20:37:03 All tables cleared successfully.
+04.04.2023 20:37:03 All migrations executed successfully.

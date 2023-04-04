@@ -4,7 +4,7 @@ namespace MigrationTool;
 
 internal class Options
 {
-    [Option('m', "migrate", HelpText = "Migrate the database")]
+    [Option("migrate", HelpText = "Migrate the database")]
     public bool Migrate { get; set; }
             
     [Option("migrate:refresh", HelpText = "First refresh the database and migrate afterwards")]

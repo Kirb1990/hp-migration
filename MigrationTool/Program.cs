@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Configuration;
-using System.Diagnostics;
 using System.Text;
 using CommandLine;
 using Converter;
@@ -9,19 +8,13 @@ namespace MigrationTool
 {
     abstract class Program
     {
-        static readonly Random _Random = new Random();
-        static readonly string _Chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         static void Main(string[] args)
         {
+            string database;
             string connectionString;
             try
             {
-                string server = LoadRequiredSetting("server");
-                string port = LoadRequiredSetting("port");
-                string user = LoadRequiredSetting("uid");
-                string password = LoadRequiredSetting("password");
-
-                connectionString = $"server={server},{port};uid={user};password={password}";
+                LoadAppSettings(out database, out connectionString);
             }
             catch (ConfigurationErrorsException ex)
             {
@@ -29,36 +22,72 @@ namespace MigrationTool
                 return;
             }
             
-            /*
             Parser.Default.ParseArguments<Options>(args)
                 .WithParsed(o =>
                 {
                     if (o.Migrate)
                     {
-                        Migrate();
+                        Migrate(database, connectionString);
                     }
                     else if (o.Refresh)
                     {
-                        MigrateWithRefresh();
+                        Refresh(database, connectionString);
                     }
                     else if (o.MigrateWithRefresh)
                     {
-                        MigrateWithSeed();
+                        MigrateWithRefresh(database, connectionString);
                     }
 
                     if (o.Seed)
                     {
-                        Seeding();
+                        Seeding(database, connectionString);
                     }
                 });
-            */
         
-            Migration tool = new(connectionString);
-            tool.Use("aewee");
-            tool.Migrate();
+            //Migration tool = new(connectionString);
+            //tool.Use("hausperfekt");
+            //tool.Migrate();
         }
 
-        private static string LoadRequiredSetting(string key)
+        static void LoadAppSettings(out string database, out string connectionString)
+        {
+            string server = LoadRequiredSetting("server");
+            string port = LoadRequiredSetting("port");
+            string user = LoadRequiredSetting("uid");
+            string password = LoadRequiredSetting("password");
+            database = LoadRequiredSetting("database");
+
+            connectionString = $"server={server},{port};uid={user};password={password}";
+        }
+
+        static void Seeding(string database, string connectionString)
+        {
+            throw new NotImplementedException();
+        }
+
+        static void MigrateWithRefresh(string database, string connectionString)
+        {
+            Migration migration = new(connectionString);
+            migration.Use(database);
+            migration.Refresh();
+            migration.Migrate();
+        }
+
+        static void Refresh(string database, string connectionString)
+        {
+            Migration migration = new(connectionString);
+            migration.Use(database);
+            migration.Refresh();
+        }
+
+        static void Migrate(string database, string connectionString)
+        {
+            Migration migration = new(connectionString);
+            migration.Use(database);
+            migration.Migrate();
+        }
+
+        static string LoadRequiredSetting(string key)
         {
             string value = ConfigurationManager.AppSettings[key];
 
@@ -68,17 +97,6 @@ namespace MigrationTool
             }
 
             return value;
-        }
-
-        static string GenerateRandomString(int length)
-        {
-            StringBuilder builder = new StringBuilder(length);
-            for (int i = 0; i < length; i++)
-            {
-                int index = _Random.Next(_Chars.Length);
-                builder.Append(_Chars[index]);
-            }
-            return builder.ToString();
         }
     }
 }

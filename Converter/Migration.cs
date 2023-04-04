@@ -1,22 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using MySql.Data.MySqlClient;
 using System.Threading.Tasks;
+using Mysqlx;
 
 namespace Converter
 {
     public class Migration
     {
         public event EventHandler<Migration> OnSuccessfullyMigrated;
+        public event EventHandler<string> OnErrorOccured;
+        public string Error => _ErrorMessage;
+        public bool HasErrors => _ErrorOccured;
         
         readonly string _ConnectionString;
         readonly char _PathSeparator;
         
         string _CurrentDatabase;
+        string _ErrorMessage;
+        
+        bool _ErrorOccured;
 
         public Migration(string connectionString)
         {
@@ -27,6 +35,16 @@ namespace Converter
             Trace.Listeners.Add(new TimestampedConsoleTraceListener());
 
             Trace.AutoFlush = true;
+            
+            OnErrorOccured += ErrorHandler;
+        }
+
+        void ErrorHandler(object sender, string e)
+        {
+            _ErrorMessage = e;
+            _ErrorOccured = true;
+            
+            Trace.WriteLine(_ErrorMessage);
         }
 
         public Task Migrate()
@@ -52,17 +70,17 @@ namespace Converter
                     selectCommand.Parameters.AddWithValue("@migrationName", migrationName);
                     object result = selectCommand.ExecuteScalar();
 
-                   if (result != null)
+                    if (result != null)
                     {
                         // Migration has already been executed.
                         continue;
                     }
                     string script = File.ReadAllText(migration, Encoding.UTF8);
 
-                    MySqlCommand command = new MySqlCommand(script, connection);
+                    MySqlCommand command = new(script, connection);
                     command.ExecuteNonQuery();
 
-                    MySqlCommand insertCommand = new MySqlCommand("INSERT INTO `migrations` (`migration`) VALUES (?)", connection);
+                    MySqlCommand insertCommand = new("INSERT INTO `migrations` (`migration`) VALUES (?)", connection);
                     insertCommand.Parameters.AddWithValue("@migrationName", migrationName);
                     insertCommand.ExecuteNonQuery();
 
@@ -71,7 +89,7 @@ namespace Converter
             }
             catch (Exception ex)
             {
-                Trace.WriteLine($"Error executing migration: {ex.Message}");
+                OnErrorOccured?.Invoke(this, $"Error executing migration: {ex.Message}");
                 return Task.CompletedTask;
             }
             finally
@@ -85,71 +103,66 @@ namespace Converter
             return Task.CompletedTask;
         }
 
-        public Task Refresh()
+        public async Task Refresh()
         {
-            MySqlConnection connection = new MySqlConnection(_ConnectionString);
+            using MySqlConnection connection = new(_ConnectionString);
             try
             {
-                connection.Open();
+                await connection.OpenAsync();
+                connection.ChangeDatabase(_CurrentDatabase);
 
-                string query = "SELECT migration FROM migrations";
-                using (MySqlCommand command = new MySqlCommand(query, connection))
+                string query = "SELECT table_name FROM information_schema.tables WHERE table_schema = @DatabaseName AND table_type = 'BASE TABLE'";
+                using MySqlCommand command = new MySqlCommand(query, connection);
+                command.Parameters.AddWithValue("@DatabaseName", _CurrentDatabase);
+                using DbDataReader reader = await command.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
                 {
-                    using (MySqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            string migrationName = reader.GetString(0);
-
-                            string deleteQuery = $"DELETE FROM `{migrationName}`";
-                            using (MySqlCommand deleteCommand = new MySqlCommand(deleteQuery, connection))
-                            {
-                                deleteCommand.ExecuteNonQuery();
-                            }
-                        }
-                    }
+                    string tableName = reader.GetString(0);
+                    string deleteQuery = $"DELETE FROM `{tableName}`";
+                    Trace.WriteLine(deleteQuery);
+                    using MySqlCommand deleteCommand = new MySqlCommand(deleteQuery);
+                    deleteCommand.Connection = connection;
+                    await deleteCommand.ExecuteNonQueryAsync();
                 }
             }
             catch (Exception ex)
             {
-                Trace.WriteLine($"Error executing refresh: {ex.Message}");
-                return Task.CompletedTask;
+                OnErrorOccured?.Invoke(this, $"Error executing refresh: {ex.Message}");
             }
             finally
             {
-                connection.Close();
+                await connection.CloseAsync();
             }
-            
+
             Trace.WriteLine("All tables cleared successfully.");
-            return Task.CompletedTask;
         }
+
         
         public async void Use(string database)
         {
-            MySqlConnection connection = new MySqlConnection(_ConnectionString);
+            MySqlConnection connection = new (_ConnectionString);
 
             try
             {
                 connection.Open();
                 await CheckDatabaseExisting(connection, database);
-                _CurrentDatabase = database;
-                
-                //await Migrate();
             }
             catch (Exception ex)
             {
-                Trace.WriteLine($"Error executing changing database: {ex.Message}");
+                OnErrorOccured?.Invoke(this, $"Error executing changing database: {ex.Message}");
             }
             finally
             {
-                connection.Close();
+                await connection.CloseAsync();
             }
+            
+            _CurrentDatabase = database;
         }
 
         async Task CheckDatabaseExisting(MySqlConnection connection, string database)
         {
             string query = $"SHOW DATABASES LIKE '{database}'"; 
-            MySqlCommand command = new MySqlCommand(query, connection);
+            MySqlCommand command = new (query, connection);
             object result = command.ExecuteScalar();
 
             if (result != null)
@@ -177,7 +190,7 @@ namespace Converter
             string sqlFileName = "create_migration_table.sql";
             string sqlCommand = File.ReadAllText($"{sqlCommandPath}{_PathSeparator}{sqlFileName}", Encoding.UTF8);
             
-            MySqlCommand command = new MySqlCommand(sqlCommand, connection);
+            MySqlCommand command = new (sqlCommand, connection);
             await command.ExecuteNonQueryAsync();
         }
     }
