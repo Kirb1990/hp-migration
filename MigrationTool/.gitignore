@@ -1,0 +1,21 @@
+﻿# Binaries
+[Bb]in/
+[Oo]bj/
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[AnyCpu]/
+[Oo]ut/
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# Other files and folders
+[Tt]humbs.db
+*.swp
+*.[Cc]ache
+*.bak
+*.user
+*.vs/
