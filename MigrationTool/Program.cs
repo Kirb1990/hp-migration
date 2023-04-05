@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Configuration;
-using System.Text;
 using CommandLine;
 using Converter;
 
@@ -12,6 +11,7 @@ namespace MigrationTool
         {
             string database;
             string connectionString;
+            
             try
             {
                 LoadAppSettings(out database, out connectionString);
@@ -21,32 +21,34 @@ namespace MigrationTool
                 Console.WriteLine(ex);
                 return;
             }
-            
-            Parser.Default.ParseArguments<Options>(args)
-                .WithParsed(o =>
-                {
-                    if (o.Migrate)
-                    {
-                        Migrate(database, connectionString);
-                    }
-                    else if (o.Refresh)
-                    {
-                        Refresh(database, connectionString);
-                    }
-                    else if (o.MigrateWithRefresh)
-                    {
-                        MigrateWithRefresh(database, connectionString);
-                    }
 
-                    if (o.Seed)
+            try
+            {
+                Parser.Default.ParseArguments<Options>(args)
+                    .WithParsed(o =>
                     {
-                        Seeding(database, connectionString);
-                    }
-                });
-        
-            //Migration tool = new(connectionString);
-            //tool.Use("hausperfekt");
-            //tool.Migrate();
+                        if (o.Migrate)
+                        {
+                            Migrate(database, connectionString);
+                        }
+                        else if (o.Refresh)
+                        {
+                            Refresh(database, connectionString);
+                        }
+                        else if (o.MigrateWithRefresh)
+                        {
+                            MigrateWithRefresh(database, connectionString);
+                        }
+                        if (o.Seed)
+                        {
+                            Seeding(database, connectionString);
+                        }
+                    });
+            }
+            catch (ArgumentNullException ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
 
         static void LoadAppSettings(out string database, out string connectionString)

@@ -59,12 +59,13 @@ namespace Converter
                 List<string> migrations = Directory.GetFiles(migrationsPath, "*.sql")
                     .OrderBy(x => x)
                     .ToList();
+                
 
                 foreach (string migration in migrations)
                 {
                     string migrationName = Path.GetFileNameWithoutExtension(migration);
 
-                    MySqlCommand selectCommand = new MySqlCommand("SELECT * FROM `migrations` WHERE `migration` = ?", connection);
+                    MySqlCommand selectCommand = new("SELECT * FROM `migrations` WHERE `migration` = ?", connection);
                     selectCommand.Parameters.AddWithValue("@migrationName", migrationName);
                     object result = selectCommand.ExecuteScalar();
 
@@ -110,7 +111,7 @@ namespace Converter
                 connection.ChangeDatabase(_CurrentDatabase);
 
                 string query = "SELECT table_name FROM information_schema.tables WHERE table_schema = @DatabaseName AND table_type = 'BASE TABLE'";
-                using MySqlCommand command = new MySqlCommand(query, connection);
+                using MySqlCommand command = new(query, connection);
                 command.Parameters.AddWithValue("@DatabaseName", _CurrentDatabase);
                 using MySqlDataReader reader = command.ExecuteReader();
                 while (reader.Read())
@@ -118,7 +119,7 @@ namespace Converter
                     string tableName = reader.GetString(0);
                     string deleteQuery = $"DELETE FROM `{tableName}`";
                     Trace.WriteLine(deleteQuery);
-                    using MySqlCommand deleteCommand = new MySqlCommand(deleteQuery);
+                    using MySqlCommand deleteCommand = new(deleteQuery);
                     deleteCommand.Connection = connection;
                     deleteCommand.ExecuteNonQuery();
                 }
@@ -149,7 +150,8 @@ namespace Converter
             }
             catch (Exception ex)
             {
-                OnErrorOccured?.Invoke(this, $"Error executing changing database: {ex.Message}");
+                OnErrorOccured?.Invoke(this, $"Error executing using database: {ex.Message}");
+                return;
             }
             finally
             {
