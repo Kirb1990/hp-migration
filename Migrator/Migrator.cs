@@ -5,13 +5,12 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using MySql.Data.MySqlClient;
-using System.Threading.Tasks;
 
-namespace Converter
+namespace MigrationTool
 {
-    public class Migration
+    public class Migrator
     {
-        public event EventHandler<Migration> OnSuccessfullyMigrated;
+        public event EventHandler<Migrator> OnSuccessfullyMigrated;
         public event EventHandler<string> OnErrorOccured;
         public string Error => _ErrorMessage;
         public bool HasErrors => _ErrorOccured;
@@ -24,7 +23,7 @@ namespace Converter
         
         bool _ErrorOccured;
 
-        public Migration(string connectionString)
+        public Migrator(string connectionString)
         {
             _ConnectionString = connectionString;
             _PathSeparator = Path.DirectorySeparatorChar;
@@ -45,6 +44,59 @@ namespace Converter
             Trace.WriteLine(_ErrorMessage);
         }
 
+        public bool TestMySqlConnection(string mysqlConnectionString)
+        {
+            MySqlConnection connection = new(mysqlConnectionString);
+            try
+            {
+                connection.Open();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                OnErrorOccured?.Invoke(this, ex.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+            return false;
+        }
+
+        public bool MySqlDatabaseExists(string database)
+        {
+            MySqlConnection connection = new (_ConnectionString);
+
+            try
+            {
+                connection.Open();
+
+                string query = $"SHOW DATABASES LIKE '{database}'";
+                MySqlCommand command = new(query, connection);
+                object result = command.ExecuteScalar();
+
+                if (result != null)
+                {
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                OnErrorOccured?.Invoke(this, $"Error executing using database: {ex.Message}");
+            }
+            finally
+            {
+                connection.Close();
+            }
+                
+            return false;
+        }
+        public bool TestPervasiveConnection(string pervasiveConnectionString)
+        {
+            // TODO: IMPLEMENT AT WORK!!
+            return false;
+        }
         public bool Migrate()
         {
             MySqlConnection connection = new(_ConnectionString);
@@ -101,7 +153,6 @@ namespace Converter
             OnSuccessfullyMigrated?.Invoke(this, this);
             return true;
         }
-
         public bool Refresh()
         {
             using MySqlConnection connection = new(_ConnectionString);
@@ -138,62 +189,77 @@ namespace Converter
             return true;
         }
 
+        public bool UseWithCreateDatabaseIfNotExists(string database)
+        {
+            if (MySqlDatabaseExists(database))
+            {
+                return Use(database);
+            }
+
+            return ExecuteMigrationTable(database) && Use(database);
+        }
         
-        public async void Use(string database)
+        public bool Use(string database)
         {
             MySqlConnection connection = new (_ConnectionString);
 
             try
             {
                 connection.Open();
-                await CheckDatabaseExisting(connection, database);
+                connection.ChangeDatabase(database);
             }
             catch (Exception ex)
             {
                 OnErrorOccured?.Invoke(this, $"Error executing using database: {ex.Message}");
-                return;
+                return false;
             }
             finally
             {
-                await connection.CloseAsync();
+                connection.Close();
             }
             
             _CurrentDatabase = database;
+            return true;
         }
-
-        async Task CheckDatabaseExisting(MySqlConnection connection, string database)
+        bool ExecuteMigrationTable(string database)
         {
-            string query = $"SHOW DATABASES LIKE '{database}'"; 
-            MySqlCommand command = new (query, connection);
-            object result = command.ExecuteScalar();
+            MySqlConnection connection = new (_ConnectionString);
 
-            if (result != null)
+            try
             {
-                //Database already exists.
-                return;
-            }   
-            
-            string sqlCommandPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"Databases{_PathSeparator}SqlCommands");
-            string sqlFileName = "create_database.sql";
+                connection.Open();
+                
+                string sqlCommandPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"Databases{_PathSeparator}SqlCommands");
+                string sqlFileName = "create_database.sql";
 
-            string rawSqlCommand = File.ReadAllText($"{sqlCommandPath}{_PathSeparator}{sqlFileName}", Encoding.UTF8);
-            string sqlCommand = rawSqlCommand.Replace("%newdb%", database);
+                string rawSqlCommand = File.ReadAllText($"{sqlCommandPath}{_PathSeparator}{sqlFileName}", Encoding.UTF8);
+                string sqlCommand = rawSqlCommand.Replace("%newdb%", database);
             
-            command = new MySqlCommand(sqlCommand, connection);
-            await command.ExecuteNonQueryAsync();
-            
-            connection.ChangeDatabase(database);
-            
-            await CreateMigrationTable(connection, sqlCommandPath);
+                MySqlCommand command = new (sqlCommand, connection);
+                command.ExecuteNonQueryAsync();
+                
+                connection.ChangeDatabase(database);
+                CreateMigrationTable(connection, sqlCommandPath);
+            }
+            catch (Exception ex)
+            {
+                OnErrorOccured?.Invoke(this, $"Error executing using database: {ex.Message}");
+                return false;
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+            return true;
         }
-
-        async Task CreateMigrationTable(MySqlConnection connection, string sqlCommandPath)
+        void CreateMigrationTable(MySqlConnection connection, string sqlCommandPath)
         {
             string sqlFileName = "create_migration_table.sql";
             string sqlCommand = File.ReadAllText($"{sqlCommandPath}{_PathSeparator}{sqlFileName}", Encoding.UTF8);
             
             MySqlCommand command = new (sqlCommand, connection);
-            await command.ExecuteNonQueryAsync();
+            command.ExecuteNonQueryAsync();
         }
     }
 }

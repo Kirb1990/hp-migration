@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Configuration;
 using CommandLine;
-using Converter;
 
 namespace MigrationTool
 {
@@ -69,24 +68,24 @@ namespace MigrationTool
 
         static void MigrateWithRefresh(string database, string connectionString)
         {
-            Migration migration = new(connectionString);
-            migration.Use(database);
-            migration.Refresh();
-            migration.Migrate();
+            Migrator migrator = new(connectionString);
+            migrator.UseWithCreateDatabaseIfNotExists(database);
+            migrator.Refresh();
+            migrator.Migrate();
         }
 
         static void Refresh(string database, string connectionString)
         {
-            Migration migration = new(connectionString);
-            migration.Use(database);
-            migration.Refresh();
+            Migrator migrator = new(connectionString);
+            migrator.UseWithCreateDatabaseIfNotExists(database);
+            migrator.Refresh();
         }
 
         static void Migrate(string database, string connectionString)
         {
-            Migration migration = new(connectionString);
-            migration.Use(database);
-            migration.Migrate();
+            Migrator migrator = new(connectionString);
+            migrator.UseWithCreateDatabaseIfNotExists(database);
+            migrator.Migrate();
         }
 
         static string LoadRequiredSetting(string key)

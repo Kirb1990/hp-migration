@@ -8,7 +8,7 @@
         <OutputType>Library</OutputType>
         <AppDesignerFolder>Properties</AppDesignerFolder>
         <RootNamespace>Migration</RootNamespace>
-        <AssemblyName>Converter</AssemblyName>
+        <AssemblyName>Migrator</AssemblyName>
         <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
         <FileAlignment>512</FileAlignment>
         <LangVersion>latest</LangVersion>
@@ -79,7 +79,7 @@
     <ItemGroup>
         <Compile Include="Listeners\TimestampedConsoleTraceListener.cs" />
         <Compile Include="Listeners\TimestampedTextWriterTraceListener.cs" />
-        <Compile Include="Migration.cs" />
+        <Compile Include="Migrator.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>
     <ItemGroup>

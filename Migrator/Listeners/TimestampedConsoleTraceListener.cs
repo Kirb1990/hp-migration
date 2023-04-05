@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace Converter
+namespace MigrationTool
 {
-    public class TimestampedTextWriterTraceListener : TextWriterTraceListener
+    public class TimestampedConsoleTraceListener : ConsoleTraceListener
     {
-        public TimestampedTextWriterTraceListener(string path) : base(path)
-        {
-        }
-
         public override void WriteLine(string message)
         {
             string timestampedMessage =$"{DateTime.Now:dd.MM.yyyy HH:mm:ss} {message}";

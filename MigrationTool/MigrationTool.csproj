@@ -100,9 +100,9 @@
       <None Include="packages.config" />
     </ItemGroup>
     <ItemGroup>
-      <ProjectReference Include="..\Converter\Converter.csproj">
+      <ProjectReference Include="..\Migrator\Migrator.csproj">
         <Project>{9dade2f4-f502-485b-b7aa-e5cc870f135e}</Project>
-        <Name>Converter</Name>
+        <Name>Migrator</Name>
       </ProjectReference>
     </ItemGroup>
     <ItemGroup>
