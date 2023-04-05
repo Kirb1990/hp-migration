@@ -50,18 +50,18 @@ namespace MigrationTool
             try
             {
                 connection.Open();
-                return true;
             }
             catch (Exception ex)
             {
                 OnErrorOccured?.Invoke(this, ex.Message);
+                return false;
             }
             finally
             {
                 connection.Close();
             }
 
-            return false;
+            return true;
         }
 
         public bool MySqlDatabaseExists(string database)
