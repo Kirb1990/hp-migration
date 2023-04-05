@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using MySql.Data.MySqlClient;
 using System.Threading.Tasks;
-using Mysqlx;
 
 namespace Converter
 {
@@ -47,9 +45,9 @@ namespace Converter
             Trace.WriteLine(_ErrorMessage);
         }
 
-        public Task Migrate()
+        public bool Migrate()
         {
-            MySqlConnection connection = new MySqlConnection(_ConnectionString);
+            MySqlConnection connection = new(_ConnectionString);
             
             try
             {
@@ -90,7 +88,7 @@ namespace Converter
             catch (Exception ex)
             {
                 OnErrorOccured?.Invoke(this, $"Error executing migration: {ex.Message}");
-                return Task.CompletedTask;
+                return false;
             }
             finally
             {
@@ -100,41 +98,43 @@ namespace Converter
             Trace.WriteLine("All migrations executed successfully.");
             
             OnSuccessfullyMigrated?.Invoke(this, this);
-            return Task.CompletedTask;
+            return true;
         }
 
-        public async Task Refresh()
+        public bool Refresh()
         {
             using MySqlConnection connection = new(_ConnectionString);
             try
             {
-                await connection.OpenAsync();
+                connection.Open();
                 connection.ChangeDatabase(_CurrentDatabase);
 
                 string query = "SELECT table_name FROM information_schema.tables WHERE table_schema = @DatabaseName AND table_type = 'BASE TABLE'";
                 using MySqlCommand command = new MySqlCommand(query, connection);
                 command.Parameters.AddWithValue("@DatabaseName", _CurrentDatabase);
-                using DbDataReader reader = await command.ExecuteReaderAsync();
-                while (await reader.ReadAsync())
+                using MySqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
                 {
                     string tableName = reader.GetString(0);
                     string deleteQuery = $"DELETE FROM `{tableName}`";
                     Trace.WriteLine(deleteQuery);
                     using MySqlCommand deleteCommand = new MySqlCommand(deleteQuery);
                     deleteCommand.Connection = connection;
-                    await deleteCommand.ExecuteNonQueryAsync();
+                    deleteCommand.ExecuteNonQuery();
                 }
             }
             catch (Exception ex)
             {
                 OnErrorOccured?.Invoke(this, $"Error executing refresh: {ex.Message}");
+                return false;
             }
             finally
             {
-                await connection.CloseAsync();
+                connection.Close();
             }
 
             Trace.WriteLine("All tables cleared successfully.");
+            return true;
         }
 
         
