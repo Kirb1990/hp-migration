@@ -15,7 +15,4 @@ internal class Options
 
     [Option("--seed", HelpText = "Seed the database")]
     public bool Seed { get; set; }
-    
-    [Value(0)]
-    public string Command { get; set; }
 }

@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using MySql.Data.MySqlClient;
+using Pervasive.Data.SqlClient;
 
 namespace MigrationTool
 {
@@ -12,7 +13,7 @@ namespace MigrationTool
     {
         public event EventHandler<Migrator> OnSuccessfullyMigrated;
         public event EventHandler<string> OnErrorOccured;
-        public string Error => _ErrorMessage;
+        public string Message => _ErrorMessage;
         public bool HasErrors => _ErrorOccured;
         
         readonly string _ConnectionString;
@@ -94,8 +95,22 @@ namespace MigrationTool
         }
         public bool TestPervasiveConnection(string pervasiveConnectionString)
         {
-            // TODO: IMPLEMENT AT WORK!!
-            return false;
+            PsqlConnection connection = new(pervasiveConnectionString);
+            try
+            {
+                connection.Open();
+            }
+            catch (Exception ex)
+            {
+                OnErrorOccured?.Invoke(this, ex.Message);
+                return false;
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+            return true;
         }
         public bool Migrate()
         {
