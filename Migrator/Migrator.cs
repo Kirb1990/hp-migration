@@ -45,9 +45,9 @@ namespace MigrationTool
             Trace.WriteLine(_ErrorMessage);
         }
 
-        public bool TestMySqlConnection(string mysqlConnectionString)
+        public bool TestMySqlConnection()
         {
-            MySqlConnection connection = new(mysqlConnectionString);
+            MySqlConnection connection = new(_ConnectionString);
             try
             {
                 connection.Open();

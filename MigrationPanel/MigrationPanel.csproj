@@ -83,5 +83,11 @@
     <ItemGroup>
         <None Include="App.config" />
     </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\Migrator\Migrator.csproj">
+        <Project>{9dade2f4-f502-485b-b7aa-e5cc870f135e}</Project>
+        <Name>Migrator</Name>
+      </ProjectReference>
+    </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

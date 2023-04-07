@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using MigrationPanel.Exceptions;
 
-namespace MigrationPanel
+namespace MigrationTool
 {
     public partial class Form1 : Form
     {
@@ -28,20 +22,36 @@ namespace MigrationPanel
                 string port = ReadInputBox(textBoxSqlPort);
                 string user = ReadInputBox(textBoxSqlUser);
                 string password = ReadInputBox(textBoxSqlPassword);
-            }
-            catch (Exception exception)
-            {
                 
-                throw;
+                connectionString = $"server={server},{port};uid={user};password={password}";
+            }
+            catch (TextBoxInputException exception)
+            {
+                SetLabelSqlTest(exception.Message, Color.Crimson);
+                return;
             }
             
+            Migrator migrator = new Migrator(connectionString);
+            if (migrator.TestMySqlConnection())
+            {
+                SetLabelSqlTest("Verbindung erfolreich!", Color.GreenYellow);
+                return;
+            }
+            
+            SetLabelSqlTest("Keine Verbindung möglich!", Color.Crimson);
+        }
+
+        void SetLabelSqlTest(string message, Color color)
+        {
+            labelSqlTest.Text = message;
+            labelSqlTest.ForeColor = color;
         }
 
         string ReadInputBox(TextBox textBox)
         {
             if (string.IsNullOrEmpty(textBox.Text))
             {
-                throw new TextBoxInputException($"[{textBox.Name}] Überprüfe ob die Felder korrekt gefüllt sind. ");
+                throw new TextBoxInputException($"[{textBox.Name}] Überprüfe ob das Feld korrekt gefüllt sind.");
             }
 
             return textBox.Text;

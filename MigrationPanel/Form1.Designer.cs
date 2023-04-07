@@ -1,4 +1,4 @@
-﻿namespace MigrationPanel
+﻿namespace MigrationTool
 {
     partial class Form1
     {
@@ -36,8 +36,6 @@
             this.button1 = new System.Windows.Forms.Button();
             this.migrationControl = new System.Windows.Forms.TabControl();
             this.connectionPage = new System.Windows.Forms.TabPage();
-            this.textBoxSqlDatabase = new System.Windows.Forms.TextBox();
-            this.label8 = new System.Windows.Forms.Label();
             this.labelSqlTest = new System.Windows.Forms.Label();
             this.btnSqlConnectionTest = new System.Windows.Forms.Button();
             this.textBoxSqlPassword = new System.Windows.Forms.TextBox();
@@ -51,6 +49,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.migrationPage = new System.Windows.Forms.TabPage();
             this.convertionPage = new System.Windows.Forms.TabPage();
+            this.label8 = new System.Windows.Forms.Label();
             this.migrationControl.SuspendLayout();
             this.connectionPage.SuspendLayout();
             this.migrationPage.SuspendLayout();
@@ -110,7 +109,6 @@
             // 
             // connectionPage
             // 
-            this.connectionPage.Controls.Add(this.textBoxSqlDatabase);
             this.connectionPage.Controls.Add(this.label8);
             this.connectionPage.Controls.Add(this.labelSqlTest);
             this.connectionPage.Controls.Add(this.btnSqlConnectionTest);
@@ -131,38 +129,19 @@
             this.connectionPage.Text = "Verbindung";
             this.connectionPage.UseVisualStyleBackColor = true;
             // 
-            // textBoxSqlDatabase
-            // 
-            this.textBoxSqlDatabase.Cursor = System.Windows.Forms.Cursors.PanNE;
-            this.textBoxSqlDatabase.Location = new System.Drawing.Point(76, 133);
-            this.textBoxSqlDatabase.MaxLength = 32;
-            this.textBoxSqlDatabase.Name = "textBoxSqlDatabase";
-            this.textBoxSqlDatabase.Size = new System.Drawing.Size(177, 20);
-            this.textBoxSqlDatabase.TabIndex = 12;
-            this.textBoxSqlDatabase.Text = "(optional)";
-            // 
-            // label8
-            // 
-            this.label8.Location = new System.Drawing.Point(6, 133);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(64, 20);
-            this.label8.TabIndex = 11;
-            this.label8.Text = "Database:";
-            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // labelSqlTest
             // 
-            this.labelSqlTest.Location = new System.Drawing.Point(89, 166);
+            this.labelSqlTest.Location = new System.Drawing.Point(76, 142);
             this.labelSqlTest.Name = "labelSqlTest";
-            this.labelSqlTest.Size = new System.Drawing.Size(379, 23);
+            this.labelSqlTest.Size = new System.Drawing.Size(392, 23);
             this.labelSqlTest.TabIndex = 10;
             this.labelSqlTest.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // btnSqlConnectionTest
             // 
-            this.btnSqlConnectionTest.Location = new System.Drawing.Point(8, 166);
+            this.btnSqlConnectionTest.Location = new System.Drawing.Point(8, 142);
             this.btnSqlConnectionTest.Name = "btnSqlConnectionTest";
-            this.btnSqlConnectionTest.Size = new System.Drawing.Size(75, 23);
+            this.btnSqlConnectionTest.Size = new System.Drawing.Size(62, 23);
             this.btnSqlConnectionTest.TabIndex = 9;
             this.btnSqlConnectionTest.Text = "Testen";
             this.btnSqlConnectionTest.UseVisualStyleBackColor = true;
@@ -241,10 +220,10 @@
             // 
             // label3
             // 
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (0)));
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.Location = new System.Drawing.Point(6, 3);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(147, 23);
+            this.label3.Size = new System.Drawing.Size(247, 23);
             this.label3.TabIndex = 0;
             this.label3.Text = "MySQL Verbindung";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -274,6 +253,16 @@
             this.convertionPage.Text = "Konverter";
             this.convertionPage.UseVisualStyleBackColor = true;
             // 
+            // label8
+            // 
+            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.Location = new System.Drawing.Point(8, 193);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(245, 23);
+            this.label8.TabIndex = 11;
+            this.label8.Text = "Pervasive Verbindung";
+            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -292,7 +281,6 @@
             this.ResumeLayout(false);
         }
 
-        private System.Windows.Forms.TextBox textBoxSqlDatabase;
         private System.Windows.Forms.Label label8;
 
         private System.Windows.Forms.Button btnSqlConnectionTest;
