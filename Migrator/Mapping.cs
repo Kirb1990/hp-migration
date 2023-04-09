@@ -4,7 +4,7 @@ namespace MigrationTool;
 
 public struct Mapping
 {
-    List<TablePair> TablePairs;
+    public List<TablePair> TablePairs;
 }
 
 public struct TablePair
@@ -16,5 +16,11 @@ public struct TablePair
 public struct Table
 {
     public string Name;
-    public List<string> Fields;
+    public List<Field> Fields;
+}
+
+public struct Field
+{
+    public int Index;
+    public string Name;
 }

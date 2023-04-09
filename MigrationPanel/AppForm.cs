@@ -15,6 +15,7 @@ namespace MigrationPanel
         
         public AppForm()
         {
+            _Migrator = new Migrator("asd");
             InitializeComponent();
         }
 
@@ -67,7 +68,6 @@ namespace MigrationPanel
     
             if (tableNames.Count > 0)
             {
-                
                 mysqlComboBox.Items.AddRange(tableNames.ToArray()); ;
             }
         }
@@ -75,6 +75,8 @@ namespace MigrationPanel
         void OnPervasiveComboBoxChanged(object sender, EventArgs e)
         {
             string tableName = pervasiveComboBox.SelectedItem.ToString();
+            
+            // TODO: wenn bereits eine Migrationsmapping für diese tabelle existiert, diese laden, sonst aus der Datenbank die felder laden
             
             
             dataGridPervasiveFields.Rows.Clear();
@@ -93,15 +95,17 @@ namespace MigrationPanel
         void btnSqlConnectionTest_Click(object sender, EventArgs e)
         {
             string connectionString;
+            string database;
             
             try
             {
                 string server = ReadInputBox(textBoxSqlServer);
                 string port = ReadInputBox(textBoxSqlPort);
                 string user = ReadInputBox(textBoxSqlUser);
-                string password = ReadInputBox(textBoxSqlPassword);
+                string password = ReadInputBox(textBoxSqlPassword); 
+                database = ReadInputBox(textBoxSqlDatabase);
                 
-                connectionString = $"server={server},{port};uid={user};password={password}";
+                connectionString = $"server={server},{port};uid={user};password={password};";
             }
             catch (TextBoxInputException exception)
             {
@@ -110,13 +114,28 @@ namespace MigrationPanel
             }
             
             _Migrator = new Migrator(connectionString);
-            if (_Migrator.TestMySqlConnection())
+            
+            if (!_Migrator.TestMySqlConnection())
             {
-                SetLabelSqlTest("Verbindung erfolreich!", Color.DarkGreen);
+                SetLabelSqlTest("Keine Verbindung möglich!", Color.DarkRed);
                 return;
             }
-            
-            SetLabelSqlTest("Keine Verbindung möglich!", Color.DarkRed);
+
+            if (forceCreateSqlDatabase.Checked)
+            {
+                if (!_Migrator.UseWithCreateDatabaseIfNotExists(database))
+                {
+                    SetLabelSqlTest("Fehler beim wechseln oder Erstellen der Datenbank!", Color.DarkRed);
+                    return;
+                }
+            }
+
+            if (!_Migrator.Use(database))
+            {
+                SetLabelSqlTest("Fehler beim wechseln der Datenbank, existiert diese?", Color.DarkRed);
+                return;
+            }
+            SetLabelSqlTest("Verbindung erfolgreich aufgebaut!", Color.DarkGreen);
         }
 
         void SetLabelSqlTest(string message, Color color)

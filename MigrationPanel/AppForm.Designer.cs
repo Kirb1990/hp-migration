@@ -35,7 +35,7 @@ namespace MigrationPanel
             this.label1 = new System.Windows.Forms.Label();
             this.migrationControl = new System.Windows.Forms.TabControl();
             this.connectionPage = new System.Windows.Forms.TabPage();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.forceCreateSqlDatabase = new System.Windows.Forms.CheckBox();
             this.label9 = new System.Windows.Forms.Label();
             this.textBoxSqlDatabase = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
@@ -88,7 +88,7 @@ namespace MigrationPanel
             // 
             // connectionPage
             // 
-            this.connectionPage.Controls.Add(this.checkBox1);
+            this.connectionPage.Controls.Add(this.forceCreateSqlDatabase);
             this.connectionPage.Controls.Add(this.label9);
             this.connectionPage.Controls.Add(this.textBoxSqlDatabase);
             this.connectionPage.Controls.Add(this.label8);
@@ -111,14 +111,14 @@ namespace MigrationPanel
             this.connectionPage.Text = "Verbindung";
             this.connectionPage.UseVisualStyleBackColor = true;
             // 
-            // checkBox1
+            // forceCreateSqlDatabase
             // 
-            this.checkBox1.Location = new System.Drawing.Point(259, 133);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(209, 20);
-            this.checkBox1.TabIndex = 14;
-            this.checkBox1.Text = "Neuanlage erzwingen";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.forceCreateSqlDatabase.Location = new System.Drawing.Point(259, 133);
+            this.forceCreateSqlDatabase.Name = "forceCreateSqlDatabase";
+            this.forceCreateSqlDatabase.Size = new System.Drawing.Size(209, 20);
+            this.forceCreateSqlDatabase.TabIndex = 14;
+            this.forceCreateSqlDatabase.Text = "Neuanlage erzwingen";
+            this.forceCreateSqlDatabase.UseVisualStyleBackColor = true;
             // 
             // label9
             // 
@@ -364,7 +364,7 @@ namespace MigrationPanel
 
         private System.Windows.Forms.TextBox textBoxSqlDatabase;
         private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox forceCreateSqlDatabase;
 
         private System.Windows.Forms.Label label8;
 

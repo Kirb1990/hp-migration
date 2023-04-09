@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using MySql.Data.MySqlClient;
+using Newtonsoft.Json;
 using Pervasive.Data.SqlClient;
 
 namespace MigrationTool
@@ -15,6 +16,7 @@ namespace MigrationTool
         public event EventHandler<string> OnErrorOccured;
         public string Message => _ErrorMessage;
         public bool HasErrors => _ErrorOccured;
+        public readonly Mapping Mapping;
         
         readonly string _ConnectionString;
         readonly char _PathSeparator;
@@ -23,6 +25,7 @@ namespace MigrationTool
         string _ErrorMessage;
         
         bool _ErrorOccured;
+        
 
         public Migrator(string connectionString)
         {
@@ -33,6 +36,10 @@ namespace MigrationTool
             Trace.Listeners.Add(new TimestampedConsoleTraceListener());
 
             Trace.AutoFlush = true;
+
+            string mappingString =
+                File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mapping.json"), Encoding.UTF8);
+            Mapping = JsonConvert.DeserializeObject<Mapping>(mappingString);
             
             OnErrorOccured += ErrorHandler;
         }
