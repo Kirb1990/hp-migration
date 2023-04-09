@@ -1,8 +1,10 @@
-﻿namespace MigrationTool
+﻿using System.ComponentModel;
+
+namespace MigrationPanel
 {
-    partial class Form1
+    partial class AppForm
     {
-        /// <summary>
+         /// <summary>
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
@@ -29,13 +31,14 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.textCreateDatabase = new System.Windows.Forms.TextBox();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AppForm));
             this.label1 = new System.Windows.Forms.Label();
-            this.btnCreate = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
             this.migrationControl = new System.Windows.Forms.TabControl();
             this.connectionPage = new System.Windows.Forms.TabPage();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.textBoxSqlDatabase = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
             this.labelSqlTest = new System.Windows.Forms.Label();
             this.btnSqlConnectionTest = new System.Windows.Forms.Button();
             this.textBoxSqlPassword = new System.Windows.Forms.TextBox();
@@ -47,60 +50,36 @@
             this.textBoxSqlServer = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.migrationPage = new System.Windows.Forms.TabPage();
-            this.convertionPage = new System.Windows.Forms.TabPage();
-            this.label8 = new System.Windows.Forms.Label();
+            this.mappingPage = new System.Windows.Forms.TabPage();
+            this.dataGridmysql = new System.Windows.Forms.DataGridView();
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridPervasiveFields = new System.Windows.Forms.DataGridView();
+            this.Felder = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.pervasiveComboBox = new System.Windows.Forms.ComboBox();
+            this.mysqlComboBox = new System.Windows.Forms.ComboBox();
+            this.importPage = new System.Windows.Forms.TabPage();
             this.migrationControl.SuspendLayout();
             this.connectionPage.SuspendLayout();
-            this.migrationPage.SuspendLayout();
+            this.mappingPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridmysql)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridPervasiveFields)).BeginInit();
             this.SuspendLayout();
-            // 
-            // textCreateDatabase
-            // 
-            this.textCreateDatabase.Location = new System.Drawing.Point(32, 64);
-            this.textCreateDatabase.Name = "textCreateDatabase";
-            this.textCreateDatabase.Size = new System.Drawing.Size(192, 20);
-            this.textCreateDatabase.TabIndex = 0;
             // 
             // label1
             // 
-            this.label1.Location = new System.Drawing.Point(32, 14);
+            this.label1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.label1.Location = new System.Drawing.Point(3, 3);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(285, 47);
+            this.label1.Size = new System.Drawing.Size(468, 47);
             this.label1.TabIndex = 1;
-            this.label1.Text = "Hier kannst du eine neue Datenbank erstellen, indem du einfach den Namen der Date" + "nbank in das untenstehende Feld schreibst und auf Erstellen klickst.";
-            // 
-            // btnCreate
-            // 
-            this.btnCreate.Location = new System.Drawing.Point(242, 64);
-            this.btnCreate.Name = "btnCreate";
-            this.btnCreate.Size = new System.Drawing.Size(75, 20);
-            this.btnCreate.TabIndex = 2;
-            this.btnCreate.Text = "Erstellen";
-            this.btnCreate.UseVisualStyleBackColor = true;
-            // 
-            // label2
-            // 
-            this.label2.Location = new System.Drawing.Point(32, 104);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(285, 55);
-            this.label2.TabIndex = 3;
-            this.label2.Text = "Datenbank erfolgreich erstellt!";
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(32, 162);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 4;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
+            this.label1.Text = resources.GetString("label1.Text");
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // migrationControl
             // 
             this.migrationControl.Controls.Add(this.connectionPage);
-            this.migrationControl.Controls.Add(this.migrationPage);
-            this.migrationControl.Controls.Add(this.convertionPage);
+            this.migrationControl.Controls.Add(this.mappingPage);
+            this.migrationControl.Controls.Add(this.importPage);
             this.migrationControl.Location = new System.Drawing.Point(0, 0);
             this.migrationControl.Name = "migrationControl";
             this.migrationControl.SelectedIndex = 0;
@@ -109,6 +88,9 @@
             // 
             // connectionPage
             // 
+            this.connectionPage.Controls.Add(this.checkBox1);
+            this.connectionPage.Controls.Add(this.label9);
+            this.connectionPage.Controls.Add(this.textBoxSqlDatabase);
             this.connectionPage.Controls.Add(this.label8);
             this.connectionPage.Controls.Add(this.labelSqlTest);
             this.connectionPage.Controls.Add(this.btnSqlConnectionTest);
@@ -129,9 +111,46 @@
             this.connectionPage.Text = "Verbindung";
             this.connectionPage.UseVisualStyleBackColor = true;
             // 
+            // checkBox1
+            // 
+            this.checkBox1.Location = new System.Drawing.Point(259, 133);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(209, 20);
+            this.checkBox1.TabIndex = 14;
+            this.checkBox1.Text = "Neuanlage erzwingen";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            // 
+            // label9
+            // 
+            this.label9.Location = new System.Drawing.Point(6, 132);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(64, 20);
+            this.label9.TabIndex = 13;
+            this.label9.Text = "Datenbank:";
+            this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // textBoxSqlDatabase
+            // 
+            this.textBoxSqlDatabase.Cursor = System.Windows.Forms.Cursors.PanNE;
+            this.textBoxSqlDatabase.Location = new System.Drawing.Point(76, 133);
+            this.textBoxSqlDatabase.MaxLength = 32;
+            this.textBoxSqlDatabase.Name = "textBoxSqlDatabase";
+            this.textBoxSqlDatabase.Size = new System.Drawing.Size(177, 20);
+            this.textBoxSqlDatabase.TabIndex = 12;
+            // 
+            // label8
+            // 
+            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.Location = new System.Drawing.Point(8, 193);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(245, 23);
+            this.label8.TabIndex = 11;
+            this.label8.Text = "Pervasive Verbindung";
+            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // labelSqlTest
             // 
-            this.labelSqlTest.Location = new System.Drawing.Point(76, 142);
+            this.labelSqlTest.Location = new System.Drawing.Point(76, 167);
             this.labelSqlTest.Name = "labelSqlTest";
             this.labelSqlTest.Size = new System.Drawing.Size(392, 23);
             this.labelSqlTest.TabIndex = 10;
@@ -139,7 +158,7 @@
             // 
             // btnSqlConnectionTest
             // 
-            this.btnSqlConnectionTest.Location = new System.Drawing.Point(8, 142);
+            this.btnSqlConnectionTest.Location = new System.Drawing.Point(8, 167);
             this.btnSqlConnectionTest.Name = "btnSqlConnectionTest";
             this.btnSqlConnectionTest.Size = new System.Drawing.Size(62, 23);
             this.btnSqlConnectionTest.TabIndex = 9;
@@ -228,42 +247,92 @@
             this.label3.Text = "MySQL Verbindung";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // migrationPage
+            // mappingPage
             // 
-            this.migrationPage.Controls.Add(this.label1);
-            this.migrationPage.Controls.Add(this.button1);
-            this.migrationPage.Controls.Add(this.textCreateDatabase);
-            this.migrationPage.Controls.Add(this.label2);
-            this.migrationPage.Controls.Add(this.btnCreate);
-            this.migrationPage.Location = new System.Drawing.Point(4, 22);
-            this.migrationPage.Name = "migrationPage";
-            this.migrationPage.Padding = new System.Windows.Forms.Padding(3);
-            this.migrationPage.Size = new System.Drawing.Size(474, 384);
-            this.migrationPage.TabIndex = 1;
-            this.migrationPage.Text = "Migration";
-            this.migrationPage.UseVisualStyleBackColor = true;
+            this.mappingPage.Controls.Add(this.dataGridmysql);
+            this.mappingPage.Controls.Add(this.dataGridPervasiveFields);
+            this.mappingPage.Controls.Add(this.pervasiveComboBox);
+            this.mappingPage.Controls.Add(this.mysqlComboBox);
+            this.mappingPage.Controls.Add(this.label1);
+            this.mappingPage.Location = new System.Drawing.Point(4, 22);
+            this.mappingPage.Name = "mappingPage";
+            this.mappingPage.Padding = new System.Windows.Forms.Padding(3);
+            this.mappingPage.Size = new System.Drawing.Size(474, 384);
+            this.mappingPage.TabIndex = 1;
+            this.mappingPage.Text = "Mapping";
+            this.mappingPage.UseVisualStyleBackColor = true;
             // 
-            // convertionPage
+            // dataGridmysql
             // 
-            this.convertionPage.Location = new System.Drawing.Point(4, 22);
-            this.convertionPage.Name = "convertionPage";
-            this.convertionPage.Padding = new System.Windows.Forms.Padding(3);
-            this.convertionPage.Size = new System.Drawing.Size(474, 384);
-            this.convertionPage.TabIndex = 2;
-            this.convertionPage.Text = "Konverter";
-            this.convertionPage.UseVisualStyleBackColor = true;
+            this.dataGridmysql.AllowUserToAddRows = false;
+            this.dataGridmysql.AllowUserToDeleteRows = false;
+            this.dataGridmysql.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridmysql.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { this.dataGridViewTextBoxColumn1 });
+            this.dataGridmysql.Location = new System.Drawing.Point(201, 127);
+            this.dataGridmysql.Name = "dataGridmysql";
+            this.dataGridmysql.ReadOnly = true;
+            this.dataGridmysql.RowHeadersVisible = false;
+            this.dataGridmysql.Size = new System.Drawing.Size(145, 250);
+            this.dataGridmysql.TabIndex = 5;
             // 
-            // label8
+            // dataGridViewTextBoxColumn1
             // 
-            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(8, 193);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(245, 23);
-            this.label8.TabIndex = 11;
-            this.label8.Text = "Pervasive Verbindung";
-            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.dataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dataGridViewTextBoxColumn1.HeaderText = "Felder";
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            this.dataGridViewTextBoxColumn1.ReadOnly = true;
+            this.dataGridViewTextBoxColumn1.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridViewTextBoxColumn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
             // 
-            // Form1
+            // dataGridPervasiveFields
+            // 
+            this.dataGridPervasiveFields.AllowUserToAddRows = false;
+            this.dataGridPervasiveFields.AllowUserToDeleteRows = false;
+            this.dataGridPervasiveFields.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridPervasiveFields.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { this.Felder });
+            this.dataGridPervasiveFields.Location = new System.Drawing.Point(6, 127);
+            this.dataGridPervasiveFields.Name = "dataGridPervasiveFields";
+            this.dataGridPervasiveFields.ReadOnly = true;
+            this.dataGridPervasiveFields.RowHeadersVisible = false;
+            this.dataGridPervasiveFields.Size = new System.Drawing.Size(145, 250);
+            this.dataGridPervasiveFields.TabIndex = 4;
+            // 
+            // Felder
+            // 
+            this.Felder.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Felder.HeaderText = "Felder";
+            this.Felder.Name = "Felder";
+            this.Felder.ReadOnly = true;
+            this.Felder.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.Felder.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
+            // 
+            // pervasiveComboBox
+            // 
+            this.pervasiveComboBox.FormattingEnabled = true;
+            this.pervasiveComboBox.Location = new System.Drawing.Point(201, 100);
+            this.pervasiveComboBox.Name = "pervasiveComboBox";
+            this.pervasiveComboBox.Size = new System.Drawing.Size(145, 21);
+            this.pervasiveComboBox.TabIndex = 3;
+            // 
+            // mysqlComboBox
+            // 
+            this.mysqlComboBox.FormattingEnabled = true;
+            this.mysqlComboBox.Location = new System.Drawing.Point(6, 100);
+            this.mysqlComboBox.Name = "mysqlComboBox";
+            this.mysqlComboBox.Size = new System.Drawing.Size(145, 21);
+            this.mysqlComboBox.TabIndex = 2;
+            // 
+            // importPage
+            // 
+            this.importPage.Location = new System.Drawing.Point(4, 22);
+            this.importPage.Name = "importPage";
+            this.importPage.Padding = new System.Windows.Forms.Padding(3);
+            this.importPage.Size = new System.Drawing.Size(474, 384);
+            this.importPage.TabIndex = 2;
+            this.importPage.Text = "Import";
+            this.importPage.UseVisualStyleBackColor = true;
+            // 
+            // AppForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -271,15 +340,31 @@
             this.Controls.Add(this.migrationControl);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "Form1";
+            this.Name = "AppForm";
             this.Text = "Migration Panel";
             this.migrationControl.ResumeLayout(false);
             this.connectionPage.ResumeLayout(false);
             this.connectionPage.PerformLayout();
-            this.migrationPage.ResumeLayout(false);
-            this.migrationPage.PerformLayout();
+            this.mappingPage.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridmysql)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridPervasiveFields)).EndInit();
             this.ResumeLayout(false);
         }
+
+        private System.Windows.Forms.DataGridView dataGridmysql;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
+
+        private System.Windows.Forms.DataGridViewTextBoxColumn Felder;
+
+        private System.Windows.Forms.DataGridView dataGridPervasiveFields;
+
+        private System.Windows.Forms.ComboBox mysqlComboBox;
+
+        private System.Windows.Forms.ComboBox pervasiveComboBox;
+
+        private System.Windows.Forms.TextBox textBoxSqlDatabase;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.CheckBox checkBox1;
 
         private System.Windows.Forms.Label label8;
 
@@ -300,17 +385,13 @@
 
         private System.Windows.Forms.Label label3;
 
-        private System.Windows.Forms.TabPage convertionPage;
+        private System.Windows.Forms.TabPage importPage;
 
         private System.Windows.Forms.TabControl migrationControl;
         private System.Windows.Forms.TabPage connectionPage;
-        private System.Windows.Forms.TabPage migrationPage;
+        private System.Windows.Forms.TabPage mappingPage;
 
-        private System.Windows.Forms.TextBox textCreateDatabase;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button btnCreate;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button button1;
 
         #endregion
     }

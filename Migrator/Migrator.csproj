@@ -82,6 +82,7 @@
     <ItemGroup>
         <Compile Include="Listeners\TimestampedConsoleTraceListener.cs" />
         <Compile Include="Listeners\TimestampedTextWriterTraceListener.cs" />
+        <Compile Include="Mapping.cs" />
         <Compile Include="Migrator.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>
@@ -90,6 +91,7 @@
         <Content Include="Databases\**">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
+        <Content Include="Mapping.json" />
     </ItemGroup>
     <ItemGroup>
       <None Include="App.config" />

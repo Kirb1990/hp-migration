@@ -276,5 +276,28 @@ namespace MigrationTool
             MySqlCommand command = new (sqlCommand, connection);
             command.ExecuteNonQueryAsync();
         }
+
+        public List<string> LoadMySqlTableNames()
+        {
+            List<string> tableNames = new List<string>();
+            
+            using (MySqlConnection connection = new MySqlConnection(_ConnectionString))
+            {
+                connection.Open();
+
+                string query = "SHOW TABLES";
+                MySqlCommand command = new MySqlCommand(query, connection);
+                MySqlDataReader reader = command.ExecuteReader();
+                
+                while (reader.Read())
+                {
+                    tableNames.Add(reader.GetString(0));
+                }
+
+                reader.Close();
+            }
+
+            return tableNames;
+        }
     }
 }
