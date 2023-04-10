@@ -61,39 +61,18 @@ namespace MigrationPanel
             ConfigurationManager.AppSettings["pervasive-database"] = textBoxPervasiveDatabase.Text;
         }
 
-        void OnControlPageIndexChanged(object sender, EventArgs e)
-        {
-            int selectedIndex = migrationControl.SelectedIndex;
-
-            if (selectedIndex == 1)
-            {
-                if (comboBoxPervasive.MaxLength > 0)
-                {
-                    return;
-                }
-
-                if (_Migrator is null)
-                {
-                    return;
-                }
-
-                LoadPervasiveTableNamesToComboBox();
-                LoadSqlTableNamesToComboBox();
-            }
-        }
-
         void LoadSqlTableNamesToComboBox()
         {
             List<string> tableNames = _Migrator.LoadMySqlTableNames();
-    
-            if (tableNames.Count > 0)
-            {
-                comboBoxSql.Items.AddRange(tableNames.ToArray()); ;
-            }
+
+            if (tableNames.Count <= 0) return;
+            comboBoxSql.Items.AddRange(tableNames.ToArray());
         }
 
         void OnPervasiveComboBoxChanged(object sender, EventArgs e)
         {
+            List<string> fields = _Migrator.LoadPervasiveFieldNames(4);
+            
             string tableName = comboBoxPervasive.SelectedItem.ToString();
             
             // TODO: wenn bereits eine Migrationsmapping für diese tabelle existiert, diese laden, sonst aus der Datenbank die felder laden
@@ -108,8 +87,13 @@ namespace MigrationPanel
 
         void LoadPervasiveTableNamesToComboBox()
         {
-            comboBoxPervasive.Items.Add("AD_Adr");
-            comboBoxPervasive.Items.Add("OB_Obj");
+            List<PervasiveTable> tableNames =  _Migrator.LoadPervasiveTableNames();
+
+            if (tableNames.Count <= 0) return;
+           // comboBoxPervasive.Items.AddRange(tableNames.ToArray());
+            
+            //comboBoxPervasive.Items.Add("AD_Adr");
+            //comboBoxPervasive.Items.Add("OB_Obj");
         }
 
         void btnSqlConnectionTest_Click(object sender, EventArgs e)
@@ -242,12 +226,13 @@ namespace MigrationPanel
 
         void MappingPage_Enter(object sender, EventArgs e)
         {
-            throw new System.NotImplementedException();
-        }
+            if (comboBoxPervasive.MaxLength > 0)
+            {
+                return;
+            }
 
-        void MappingPage_Leave(object sender, EventArgs e)
-        {
-            throw new System.NotImplementedException();
+            LoadPervasiveTableNamesToComboBox();
+            LoadSqlTableNamesToComboBox();
         }
     }
 }

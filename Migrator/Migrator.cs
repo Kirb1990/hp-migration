@@ -142,13 +142,10 @@ namespace MigrationTool
 
             return true;
         }
-
         public bool TestPervasiveConnection()
         {
             return TestPervasiveConnection(_PervasiveConnectionString);
         }
-        
-        
         public bool Migrate()
         {
             MySqlConnection connection = new(_SqlConnectionString);
@@ -331,6 +328,51 @@ namespace MigrationTool
             reader.Close();
 
             return tableNames;
+        }
+        public List<PervasiveTable> LoadPervasiveTableNames()
+        {
+            List<PervasiveTable> tableNames = new();
+
+            using PsqlConnection connection = new(_PervasiveConnectionString);
+            connection.Open();
+
+            string query = "SELECT DISTINCT Xf$Id, Xf$Name FROM X$File";
+            PsqlCommand command = new(query, connection);
+            PsqlDataReader reader = command.ExecuteReader();
+                
+            while (reader.Read())
+            {
+                tableNames.Add(new PervasiveTable
+                {
+                    Id = reader.GetString(0),
+                    Name = reader.GetString(1)
+                });
+            }
+
+            reader.Close();
+
+            return tableNames;
+        }
+
+        public List<string> LoadPervasiveFieldNames(int tableId)
+        {
+            List<string> fieldNames = new();
+
+            using PsqlConnection connection = new(_PervasiveConnectionString);
+            connection.Open();
+
+            string query = $"SELECT * FROM X$Field WHERE Xe$File = {tableId} AND Xe$DataType < 255";
+            PsqlCommand command = new(query, connection);
+            PsqlDataReader reader = command.ExecuteReader();
+                
+            while (reader.Read())
+            {
+                fieldNames.Add(reader.GetString(0));
+            }
+
+            reader.Close();
+
+            return fieldNames;
         }
     }
 }

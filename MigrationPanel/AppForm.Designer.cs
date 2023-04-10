@@ -71,6 +71,7 @@ namespace MigrationPanel
             this.dataGridSql = new System.Windows.Forms.DataGridView();
             this.comboBoxPervasive = new System.Windows.Forms.ComboBox();
             this.dataGridPervasive = new System.Windows.Forms.DataGridView();
+            this.Feldname = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.importPage = new System.Windows.Forms.TabPage();
             this.migrationControl.SuspendLayout();
             this.connectionPage.SuspendLayout();
@@ -431,6 +432,7 @@ namespace MigrationPanel
             this.mappingPage.TabIndex = 3;
             this.mappingPage.Text = "Zuweisung";
             this.mappingPage.UseVisualStyleBackColor = true;
+            this.mappingPage.Enter += new System.EventHandler(this.MappingPage_Enter);
             // 
             // btnCopyMapping
             // 
@@ -461,6 +463,10 @@ namespace MigrationPanel
             // 
             // dataGridSql
             // 
+            this.dataGridSql.AllowUserToAddRows = false;
+            this.dataGridSql.AllowUserToDeleteRows = false;
+            this.dataGridSql.AllowUserToResizeColumns = false;
+            this.dataGridSql.AllowUserToResizeRows = false;
             this.dataGridSql.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridSql.Location = new System.Drawing.Point(251, 130);
             this.dataGridSql.Name = "dataGridSql";
@@ -474,14 +480,31 @@ namespace MigrationPanel
             this.comboBoxPervasive.Name = "comboBoxPervasive";
             this.comboBoxPervasive.Size = new System.Drawing.Size(225, 21);
             this.comboBoxPervasive.TabIndex = 1;
+            this.comboBoxPervasive.SelectedIndexChanged += new System.EventHandler(this.OnPervasiveComboBoxChanged);
             // 
             // dataGridPervasive
             // 
+            this.dataGridPervasive.AllowUserToAddRows = false;
+            this.dataGridPervasive.AllowUserToDeleteRows = false;
+            this.dataGridPervasive.AllowUserToResizeColumns = false;
+            this.dataGridPervasive.AllowUserToResizeRows = false;
             this.dataGridPervasive.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridPervasive.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {this.Feldname});
             this.dataGridPervasive.Location = new System.Drawing.Point(0, 130);
             this.dataGridPervasive.Name = "dataGridPervasive";
+            this.dataGridPervasive.ReadOnly = true;
+            this.dataGridPervasive.RowHeadersVisible = false;
             this.dataGridPervasive.Size = new System.Drawing.Size(225, 290);
             this.dataGridPervasive.TabIndex = 0;
+            // 
+            // Feldname
+            // 
+            this.Feldname.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Feldname.HeaderText = "Feldname";
+            this.Feldname.Name = "Feldname";
+            this.Feldname.ReadOnly = true;
+            this.Feldname.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.Feldname.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
             // 
             // importPage
             // 
@@ -514,6 +537,8 @@ namespace MigrationPanel
             ((System.ComponentModel.ISupportInitialize) (this.dataGridPervasive)).EndInit();
             this.ResumeLayout(false);
         }
+
+        private System.Windows.Forms.DataGridViewTextBoxColumn Feldname;
 
         private System.Windows.Forms.Button btnCopyMapping;
 

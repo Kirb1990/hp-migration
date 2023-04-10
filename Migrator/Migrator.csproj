@@ -87,6 +87,7 @@
         <Compile Include="Listeners\TimestampedTextWriterTraceListener.cs" />
         <Compile Include="Mapping.cs" />
         <Compile Include="Migrator.cs" />
+        <Compile Include="PervasiveTable.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>
     <ItemGroup>
