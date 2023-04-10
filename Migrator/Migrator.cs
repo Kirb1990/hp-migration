@@ -12,24 +12,26 @@ namespace MigrationTool
 {
     public class Migrator
     {
-        public event EventHandler<Migrator> OnSuccessfullyMigrated;
+        public event EventHandler<string> OnSuccessfullyMigrated;
         public event EventHandler<string> OnErrorOccured;
         public string Message => _ErrorMessage;
         public bool HasErrors => _ErrorOccured;
         public readonly Mapping Mapping;
         
-        readonly string _ConnectionString;
+        string _SqlConnectionString;
+        string _PervasiveConnectionString;
         readonly char _PathSeparator;
         
         string _CurrentDatabase;
         string _ErrorMessage;
         
         bool _ErrorOccured;
-        
 
-        public Migrator(string connectionString)
+
+        public Migrator(string sqlSqlConnectionString, string pervasiveConnectionString)
         {
-            _ConnectionString = connectionString;
+            _SqlConnectionString = sqlSqlConnectionString;
+            _PervasiveConnectionString = pervasiveConnectionString;
             _PathSeparator = Path.DirectorySeparatorChar;
             
             Trace.Listeners.Add(new TimestampedTextWriterTraceListener(".\\trace.log"));
@@ -42,7 +44,11 @@ namespace MigrationTool
             Mapping = JsonConvert.DeserializeObject<Mapping>(mappingString);
             
             OnErrorOccured += ErrorHandler;
+            OnSuccessfullyMigrated += SuccessHandler;
         }
+
+        public Migrator(string sqlSqlConnectionString) : this(sqlSqlConnectionString, string.Empty) { }
+        public Migrator() : this(string.Empty) { }
 
         void ErrorHandler(object sender, string e)
         {
@@ -51,10 +57,15 @@ namespace MigrationTool
             
             Trace.WriteLine(_ErrorMessage);
         }
+        
+        void SuccessHandler(object sender, string e)
+        {
+            Trace.WriteLine(e);
+        }
 
         public bool TestMySqlConnection()
         {
-            MySqlConnection connection = new(_ConnectionString);
+            MySqlConnection connection = new(_SqlConnectionString);
             try
             {
                 connection.Open();
@@ -71,10 +82,17 @@ namespace MigrationTool
 
             return true;
         }
-
+        public void SetPervasiveConnectionString(string pervasiveConnectionString)
+        {
+            _PervasiveConnectionString = pervasiveConnectionString;
+        }
+        public void SetSqlConnectionString(string sqlConnectionString)
+        {
+            _SqlConnectionString = sqlConnectionString;
+        }
         public bool MySqlDatabaseExists(string database)
         {
-            MySqlConnection connection = new (_ConnectionString);
+            MySqlConnection connection = new (_SqlConnectionString);
 
             try
             {
@@ -105,6 +123,11 @@ namespace MigrationTool
             PsqlConnection connection = new(pervasiveConnectionString);
             try
             {
+                if (string.IsNullOrEmpty(pervasiveConnectionString))
+                {
+                    throw new ArgumentNullException("Pervasive Connection String is Empty!");
+                }
+                
                 connection.Open();
             }
             catch (Exception ex)
@@ -119,9 +142,16 @@ namespace MigrationTool
 
             return true;
         }
+
+        public bool TestPervasiveConnection()
+        {
+            return TestPervasiveConnection(_PervasiveConnectionString);
+        }
+        
+        
         public bool Migrate()
         {
-            MySqlConnection connection = new(_ConnectionString);
+            MySqlConnection connection = new(_SqlConnectionString);
             
             try
             {
@@ -157,7 +187,7 @@ namespace MigrationTool
                     insertCommand.Parameters.AddWithValue("@migrationName", migrationName);
                     insertCommand.ExecuteNonQuery();
 
-                    Trace.WriteLine($"Migration {migration} executed successfully.");
+                    OnSuccessfullyMigrated?.Invoke(this, $"Migration {migration} executed successfully.");
                 }
             }
             catch (Exception ex)
@@ -170,14 +200,12 @@ namespace MigrationTool
                 connection.Close();
             }
 
-            Trace.WriteLine("All migrations executed successfully.");
-            
-            OnSuccessfullyMigrated?.Invoke(this, this);
+            OnSuccessfullyMigrated?.Invoke(this, "All migrations executed successfully.");
             return true;
         }
         public bool Refresh()
         {
-            using MySqlConnection connection = new(_ConnectionString);
+            using MySqlConnection connection = new(_SqlConnectionString);
             try
             {
                 connection.Open();
@@ -191,7 +219,7 @@ namespace MigrationTool
                 {
                     string tableName = reader.GetString(0);
                     string deleteQuery = $"DELETE FROM `{tableName}`";
-                    Trace.WriteLine(deleteQuery);
+                    OnSuccessfullyMigrated?.Invoke(this, deleteQuery);
                     using MySqlCommand deleteCommand = new(deleteQuery);
                     deleteCommand.Connection = connection;
                     deleteCommand.ExecuteNonQuery();
@@ -206,8 +234,8 @@ namespace MigrationTool
             {
                 connection.Close();
             }
-
-            Trace.WriteLine("All tables cleared successfully.");
+            
+            OnSuccessfullyMigrated?.Invoke(this, "All tables cleared successfully.");
             return true;
         }
 
@@ -223,7 +251,7 @@ namespace MigrationTool
         
         public bool Use(string database)
         {
-            MySqlConnection connection = new (_ConnectionString);
+            MySqlConnection connection = new (_SqlConnectionString);
 
             try
             {
@@ -245,7 +273,7 @@ namespace MigrationTool
         }
         bool ExecuteMigrationTable(string database)
         {
-            MySqlConnection connection = new (_ConnectionString);
+            MySqlConnection connection = new (_SqlConnectionString);
 
             try
             {
@@ -286,23 +314,21 @@ namespace MigrationTool
 
         public List<string> LoadMySqlTableNames()
         {
-            List<string> tableNames = new List<string>();
-            
-            using (MySqlConnection connection = new MySqlConnection(_ConnectionString))
-            {
-                connection.Open();
+            List<string> tableNames = new();
 
-                string query = "SHOW TABLES";
-                MySqlCommand command = new MySqlCommand(query, connection);
-                MySqlDataReader reader = command.ExecuteReader();
+            using MySqlConnection connection = new(_SqlConnectionString);
+            connection.Open();
+
+            string query = "SHOW TABLES";
+            MySqlCommand command = new(query, connection);
+            MySqlDataReader reader = command.ExecuteReader();
                 
-                while (reader.Read())
-                {
-                    tableNames.Add(reader.GetString(0));
-                }
-
-                reader.Close();
+            while (reader.Read())
+            {
+                tableNames.Add(reader.GetString(0));
             }
+
+            reader.Close();
 
             return tableNames;
         }

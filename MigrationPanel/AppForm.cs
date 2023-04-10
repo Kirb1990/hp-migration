@@ -11,15 +11,21 @@ namespace MigrationPanel
 {
     public partial class AppForm : Form
     {
-        Migrator _Migrator;
+        readonly Migrator _Migrator;
         
         public AppForm()
         {
-            _Migrator = new Migrator("asd");
+            _Migrator = new Migrator();
             InitializeComponent();
         }
 
         protected override void OnLoad(EventArgs e)
+        {
+            LoadAppSettings();
+            base.OnLoad(e);
+        }
+
+        void LoadAppSettings()
         {
             textBoxSqlServer.Text = ConfigurationManager.AppSettings["sql-server"];
             textBoxSqlPort.Text = ConfigurationManager.AppSettings["sql-port"];
@@ -27,10 +33,20 @@ namespace MigrationPanel
             textBoxSqlPassword.Text = ConfigurationManager.AppSettings["sql-password"];
             textBoxSqlDatabase.Text = ConfigurationManager.AppSettings["sql-database"];
             
-            base.OnLoad(e);
+            textBoxPervasiveServer.Text = ConfigurationManager.AppSettings["pervasive-server"];
+            textBoxPervasivePort.Text = ConfigurationManager.AppSettings["pervasive-port"];
+            textBoxPervasiveUser.Text = ConfigurationManager.AppSettings["pervasive-uid"];
+            textBoxPervasivePassword.Text = ConfigurationManager.AppSettings["pervasive-password"];
+            textBoxPervasiveDatabase.Text = ConfigurationManager.AppSettings["pervasive-database"];
         }
 
         protected override void OnClosing(CancelEventArgs e)
+        {
+            SaveAppSettings();
+            base.OnClosing(e);
+        }
+
+        void SaveAppSettings()
         {
             ConfigurationManager.AppSettings["sql-server"] = textBoxSqlServer.Text;
             ConfigurationManager.AppSettings["sql-port"] = textBoxSqlPort.Text;
@@ -38,7 +54,11 @@ namespace MigrationPanel
             ConfigurationManager.AppSettings["sql-password"] = textBoxSqlPassword.Text;
             ConfigurationManager.AppSettings["sql-database"] = textBoxSqlDatabase.Text;
             
-            base.OnClosing(e);
+            ConfigurationManager.AppSettings["pervasive-server"] = textBoxPervasiveServer.Text;
+            ConfigurationManager.AppSettings["pervasive-port"] =  textBoxPervasivePort.Text;
+            ConfigurationManager.AppSettings["pervasive-uid"] = textBoxPervasiveUser.Text;
+            ConfigurationManager.AppSettings["pervasive-password"] = textBoxPervasivePassword.Text;
+            ConfigurationManager.AppSettings["pervasive-database"] = textBoxPervasiveDatabase.Text;
         }
 
         void OnControlPageIndexChanged(object sender, EventArgs e)
@@ -47,7 +67,7 @@ namespace MigrationPanel
 
             if (selectedIndex == 1)
             {
-                if (pervasiveComboBox.MaxLength > 0)
+                if (comboBoxPervasive.MaxLength > 0)
                 {
                     return;
                 }
@@ -68,28 +88,28 @@ namespace MigrationPanel
     
             if (tableNames.Count > 0)
             {
-                mysqlComboBox.Items.AddRange(tableNames.ToArray()); ;
+                comboBoxSql.Items.AddRange(tableNames.ToArray()); ;
             }
         }
 
         void OnPervasiveComboBoxChanged(object sender, EventArgs e)
         {
-            string tableName = pervasiveComboBox.SelectedItem.ToString();
+            string tableName = comboBoxPervasive.SelectedItem.ToString();
             
             // TODO: wenn bereits eine Migrationsmapping für diese tabelle existiert, diese laden, sonst aus der Datenbank die felder laden
             
             
-            dataGridPervasiveFields.Rows.Clear();
+            dataGridPervasive.Rows.Clear();
             for (int i = 1; i <= 10; i++)
             {
-                dataGridPervasiveFields.Rows.Add("Eintrag " + i.ToString());
+                dataGridPervasive.Rows.Add("Eintrag " + i.ToString());
             }
         }
 
         void LoadPervasiveTableNamesToComboBox()
         {
-            pervasiveComboBox.Items.Add("AD_Adr");
-            pervasiveComboBox.Items.Add("OB_Obj");
+            comboBoxPervasive.Items.Add("AD_Adr");
+            comboBoxPervasive.Items.Add("OB_Obj");
         }
 
         void btnSqlConnectionTest_Click(object sender, EventArgs e)
@@ -99,13 +119,7 @@ namespace MigrationPanel
             
             try
             {
-                string server = ReadInputBox(textBoxSqlServer);
-                string port = ReadInputBox(textBoxSqlPort);
-                string user = ReadInputBox(textBoxSqlUser);
-                string password = ReadInputBox(textBoxSqlPassword); 
-                database = ReadInputBox(textBoxSqlDatabase);
-                
-                connectionString = $"server={server},{port};uid={user};password={password};";
+                BuildSqlConnectionString(out connectionString, out database);
             }
             catch (TextBoxInputException exception)
             {
@@ -113,7 +127,7 @@ namespace MigrationPanel
                 return;
             }
             
-            _Migrator = new Migrator(connectionString);
+            _Migrator.SetSqlConnectionString(connectionString);
             
             if (!_Migrator.TestMySqlConnection())
             {
@@ -121,13 +135,10 @@ namespace MigrationPanel
                 return;
             }
 
-            if (forceCreateSqlDatabase.Checked)
+            if (forceCreateSqlDatabase.Checked && !_Migrator.UseWithCreateDatabaseIfNotExists(database))
             {
-                if (!_Migrator.UseWithCreateDatabaseIfNotExists(database))
-                {
-                    SetLabelSqlTest("Fehler beim wechseln oder Erstellen der Datenbank!", Color.DarkRed);
-                    return;
-                }
+                SetLabelSqlTest("Fehler beim wechseln oder Erstellen der Datenbank!", Color.DarkRed);
+                return;
             }
 
             if (!_Migrator.Use(database))
@@ -135,7 +146,18 @@ namespace MigrationPanel
                 SetLabelSqlTest("Fehler beim wechseln der Datenbank, existiert diese?", Color.DarkRed);
                 return;
             }
-            SetLabelSqlTest("Verbindung erfolgreich aufgebaut!", Color.DarkGreen);
+            SetLabelSqlTest("MySQL Verbindung erfolgreich aufgebaut!", Color.DarkGreen);
+        }
+
+        void BuildSqlConnectionString(out string connectionString, out string database)
+        {
+            string server = ReadInputBox(textBoxSqlServer);
+            string port = ReadInputBox(textBoxSqlPort);
+            string user = ReadInputBox(textBoxSqlUser);
+            string password = ReadInputBox(textBoxSqlPassword); 
+            database = ReadInputBox(textBoxSqlDatabase);
+                
+            connectionString = $"server={server},{port};uid={user};password={password};";
         }
 
         void SetLabelSqlTest(string message, Color color)
@@ -143,8 +165,14 @@ namespace MigrationPanel
             labelSqlTest.Text = message;
             labelSqlTest.ForeColor = color;
         }
+        
+        void SetLabelPervasiveTest(string message, Color color)
+        {
+            labelPervasvieTest.Text = message;
+            labelPervasvieTest.ForeColor = color;
+        }
 
-        string ReadInputBox(TextBox textBox)
+        string ReadInputBox(Control textBox)
         {
             if (string.IsNullOrEmpty(textBox.Text))
             {
@@ -152,6 +180,74 @@ namespace MigrationPanel
             }
 
             return textBox.Text;
+        }
+
+        void btnPervasiveConnectionTest_Click(object sender, EventArgs e)
+        {
+            string connectionString;
+            
+            try
+            {
+                BuildPervasiveConnectionString(out connectionString);
+            }
+            catch (TextBoxInputException exception)
+            {
+                SetLabelPervasiveTest(exception.Message, Color.DarkRed);
+                return;
+            }
+            
+            _Migrator.SetPervasiveConnectionString(connectionString);
+            
+            if (!_Migrator.TestPervasiveConnection())
+            {
+                SetLabelPervasiveTest("Keine Verbindung möglich!", Color.DarkRed);
+                return;
+            }
+
+            SetLabelPervasiveTest("Pervasive Verbindung erfolgreich aufgebaut!", Color.DarkGreen);
+        }
+
+        void BuildPervasiveConnectionString(out string connectionString)
+        {
+            string server = ReadInputBox(textBoxPervasiveServer);
+            string port = ReadInputBox(textBoxPervasivePort);
+            string user = ReadInputBox(textBoxPervasiveUser);
+            string password = ReadInputBox(textBoxPervasivePassword); 
+            string database = ReadInputBox(textBoxPervasiveDatabase);
+                
+            connectionString = $"Server={server};Port={port};Database={database};User ID={user};Password={password};";
+        }
+
+        void btnStartMigrate_Click(object sender, EventArgs e)
+        {
+            textBoxMigrationLog.Clear();
+            _Migrator.Migrate();
+        }
+
+        void MigrationPage_Enter(object sender, EventArgs e)
+        {
+            _Migrator.OnSuccessfullyMigrated += AppendMigrateLogText;
+            _Migrator.OnErrorOccured += AppendMigrateLogText;
+        }
+        
+        void MigrationPage_Leave(object sender, EventArgs e)
+        {
+            _Migrator.OnSuccessfullyMigrated -= AppendMigrateLogText;
+            _Migrator.OnErrorOccured -= AppendMigrateLogText;
+        }
+        void AppendMigrateLogText(object sender, string e)
+        {
+            textBoxMigrationLog.Text += $"{e}\n";
+        }
+
+        void MappingPage_Enter(object sender, EventArgs e)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        void MappingPage_Leave(object sender, EventArgs e)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
