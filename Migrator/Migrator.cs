@@ -350,16 +350,9 @@ namespace MigrationTool
             return tableNames;
         }
 
-        public List<Field> GetPervasiveFields(string tableName)
+        public List<string> GetPervasiveFields(string tableName)
         {
-            List<Field> fieldNames = new()
-            {
-                new Field()
-                {
-                    Index = 0,
-                    Name = "SKIPPED"
-                }
-            };
+            List<string> fieldNames = new() { "SKIPPED" };
 
             using PsqlConnection connection = new(_PervasiveConnectionString);
             connection.Open();
@@ -368,16 +361,9 @@ namespace MigrationTool
             PsqlCommand command = new(query, connection);
             PsqlDataReader reader = command.ExecuteReader();
 
-            int index = 1;
             while (reader.Read())
             {
-                fieldNames.Add(new Field()
-                {
-                    Index = index,
-                    Name = reader.GetString(0)?.Trim()
-                });
-
-                index++;
+                fieldNames.Add(reader.GetString(0)?.Trim());
             }
 
             reader.Close();
@@ -385,9 +371,9 @@ namespace MigrationTool
             return fieldNames;
         }
 
-        public List<Field> GetSqlFields(string tableName)
+        public List<string> GetSqlFields(string tableName)
         {
-            List<Field> fieldNames = new();
+            List<string> fieldNames = new();
 
             using MySqlConnection connection = new(_SqlConnectionString);
             connection.Open();
@@ -397,16 +383,9 @@ namespace MigrationTool
             using MySqlCommand command = new(query, connection);
             using MySqlDataReader reader = command.ExecuteReader();
             
-            int index = 0;
             while (reader.Read())
             {
-                fieldNames.Add(new Field()
-                {
-                    Index = index,
-                    Name = reader.GetString(0)?.Trim()
-                });
-                
-                index++;
+                fieldNames.Add(reader.GetString(0)?.Trim());
             }
 
             return fieldNames;

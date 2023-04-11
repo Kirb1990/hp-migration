@@ -146,11 +146,11 @@ namespace MigrationPanel
             }
         }
 
-        void LoadTableFieldToGrid(DataGridView dataGridView, List<Field> fields)
+        void LoadTableFieldToGrid(DataGridView dataGridView, List<string> fields)
         {
             for (int i = 0; i < fields.Count; i++)
             {
-                dataGridView.Rows.Add(fields[i].Index, fields[i].Name);
+                dataGridView.Rows.Add(i+1, fields[i]);
             }
         }
 
@@ -336,7 +336,7 @@ namespace MigrationPanel
                 return;
             }
 
-            List<Field> fields = _Migrator.GetPervasiveFields(tableName);
+            List<string> fields = _Migrator.GetPervasiveFields(tableName);
             if(fields.Count <= 1) fields.Clear();
             
             LoadTableFieldToGrid(dataGridPervasive, fields);
@@ -354,15 +354,13 @@ namespace MigrationPanel
                 return;
             }
 
-            List<Field> fields = _Migrator.GetSqlFields(tableName);
-            //RemoveSqlIdField(fields);
-
+            List<string> fields = _Migrator.GetSqlFields(tableName);
             LoadTableFieldToGrid(dataGridSql, fields);
         }
 
-        void RemoveSqlIdField(List<Field> fields)
+        void RemoveSqlIdField(List<string> fields)
         {
-            int index = fields.FindIndex(f => f.Name.Equals("id"));
+            int index = fields.FindIndex(f => f.Equals("id"));
             if (index >= 0)
             {
                 fields.RemoveAt(index);
@@ -447,16 +445,12 @@ namespace MigrationPanel
             MessageBox.Show("In Zwischenablage gespeichert! Speicher diese json datei in die mapping.json ab.");
         }
 
-        List<Field> ExtractFields(DataGridView dataGridView)
+        List<string> ExtractFields(DataGridView dataGridView)
         {
-            List<Field> fields = new List<Field>();
+            List<string> fields = new List<string>();
             for (int i = 0; i < dataGridView.Rows.Count; i++)
             {
-                fields.Add(new Field
-                {
-                    Name = (string)dataGridView.Rows[i].Cells[1].Value,
-                    Index = dataGridView.Rows[i].Index
-                });
+                fields.Add((string)dataGridView.Rows[i].Cells["Feldname"].Value);
             }
 
             return fields;

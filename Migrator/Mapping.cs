@@ -30,11 +30,5 @@ public struct TablePair
 public struct Table
 {
     public string Name;
-    public List<Field> Fields;
-}
-
-public struct Field
-{
-    public int Index;
-    public string Name;
+    public List<string> Fields;
 }
