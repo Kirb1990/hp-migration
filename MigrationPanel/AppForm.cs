@@ -19,6 +19,8 @@ namespace MigrationPanel
         
         readonly Migrator _Migrator;
 
+        private List<TabPage> disabledTabPages = new List<TabPage>();
+        
         public AppForm()
         {
             _Migrator = new Migrator();
@@ -27,10 +29,18 @@ namespace MigrationPanel
 
         protected override void OnLoad(EventArgs e)
         {
+            DisableTabPages();
             LoadAppSettings();
             ValidateSqlDatabaseAutoConnection();
             ValidatePervasiveDatabaseAutoConnection();
             base.OnLoad(e);
+        }
+
+        void DisableTabPages()
+        {
+            SetTabEnabled(migrationPage, false);
+            SetTabEnabled(mappingPage, false);
+            SetTabEnabled(importPage, false);
         }
 
         void ValidatePervasiveDatabaseAutoConnection()
@@ -91,6 +101,19 @@ namespace MigrationPanel
             ConfigurationManager.AppSettings["pervasive-uid"] = textBoxPervasiveUser.Text;
             ConfigurationManager.AppSettings["pervasive-password"] = EncryptPassword(textBoxPervasivePassword.Text, Key, Iv);
             ConfigurationManager.AppSettings["pervasive-database"] = textBoxPervasiveDatabase.Text;
+        }
+
+        void OnSqlInputBoxChanged(object sender, EventArgs e)
+        {
+            SetTabEnabled(migrationPage, false);
+            labelSqlTest.Text = string.Empty;
+        }
+        
+        void OnPervasiveInputBoxChanged(object sender, EventArgs e)
+        {
+            SetTabEnabled(mappingPage, false);
+            SetTabEnabled(importPage, false);
+            labelPervasvieTest.Text = string.Empty;
         }
 
         void LoadSqlTableNamesToComboBox()
@@ -185,6 +208,7 @@ namespace MigrationPanel
                 return;
             }
 
+            SetTabEnabled(migrationPage, true);
             SetLabelSqlTest("MySQL Verbindung erfolgreich aufgebaut!", Color.DarkGreen);
         }
 
@@ -210,6 +234,8 @@ namespace MigrationPanel
                 return;
             }
 
+            SetTabEnabled(mappingPage, true);
+            SetTabEnabled(importPage, true);
             SetLabelPervasiveTest("Pervasive Verbindung erfolgreich aufgebaut!", Color.DarkGreen);
         }
 
@@ -454,7 +480,6 @@ namespace MigrationPanel
             SwapFieldValues(dataGridViewRow, index + 1);
         }
 
-
         bool TryGetRow(out DataGridViewRow dataGridViewRow, out int index, int offSet)
         {
             index = -1;
@@ -480,6 +505,33 @@ namespace MigrationPanel
                 (dataGridRow.Cells["Feldname"].Value, dataGridViewCell.Value);
 
             SelectPervasiveDataRow(index);
+        }
+        
+        private void SetTabEnabled(TabPage tabPage, bool enabled)
+        {
+            if (enabled)
+            {
+                if (disabledTabPages.Contains(tabPage))
+                {
+                    disabledTabPages.Remove(tabPage);
+                }
+            }
+            else
+            {
+                if (!disabledTabPages.Contains(tabPage))
+                {
+                    disabledTabPages.Add(tabPage);
+                }
+            }
+        }
+        
+        private void TabControl_Selecting(object sender, TabControlCancelEventArgs e)
+        {
+            if (disabledTabPages.Contains(e.TabPage))
+            {
+                MessageBox.Show("Nicht alle Bedinungen erfüllt! Sind alle Datenbank Verbindungen aufgebaut?");
+                e.Cancel = true;
+            }
         }
 
         private string EncryptPassword(string plainText, byte[] key, byte[] iv)

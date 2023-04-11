@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace MigrationPanel
+﻿namespace MigrationPanel
 {
     partial class AppForm
     {
@@ -31,7 +29,6 @@ namespace MigrationPanel
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AppForm));
             this.migrationControl = new System.Windows.Forms.TabControl();
             this.connectionPage = new System.Windows.Forms.TabPage();
             this.labelPervasvieTest = new System.Windows.Forms.Label();
@@ -86,8 +83,8 @@ namespace MigrationPanel
             this.connectionPage.SuspendLayout();
             this.migrationPage.SuspendLayout();
             this.mappingPage.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize) (this.dataGridSql)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize) (this.dataGridPervasive)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridSql)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridPervasive)).BeginInit();
             this.SuspendLayout();
             // 
             // migrationControl
@@ -102,6 +99,7 @@ namespace MigrationPanel
             this.migrationControl.SelectedIndex = 0;
             this.migrationControl.Size = new System.Drawing.Size(663, 446);
             this.migrationControl.TabIndex = 5;
+            this.migrationControl.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.TabControl_Selecting);
             // 
             // connectionPage
             // 
@@ -165,6 +163,7 @@ namespace MigrationPanel
             this.textBoxPervasiveDatabase.Name = "textBoxPervasiveDatabase";
             this.textBoxPervasiveDatabase.Size = new System.Drawing.Size(177, 20);
             this.textBoxPervasiveDatabase.TabIndex = 24;
+            this.textBoxPervasiveDatabase.TextChanged += new System.EventHandler(this.OnPervasiveInputBoxChanged);
             // 
             // textBoxPervasivePassword
             // 
@@ -175,6 +174,7 @@ namespace MigrationPanel
             this.textBoxPervasivePassword.PasswordChar = '*';
             this.textBoxPervasivePassword.Size = new System.Drawing.Size(177, 20);
             this.textBoxPervasivePassword.TabIndex = 23;
+            this.textBoxPervasivePassword.TextChanged += new System.EventHandler(this.OnPervasiveInputBoxChanged);
             // 
             // label12
             // 
@@ -193,6 +193,7 @@ namespace MigrationPanel
             this.textBoxPervasiveUser.Name = "textBoxPervasiveUser";
             this.textBoxPervasiveUser.Size = new System.Drawing.Size(177, 20);
             this.textBoxPervasiveUser.TabIndex = 21;
+            this.textBoxPervasiveUser.TextChanged += new System.EventHandler(this.OnPervasiveInputBoxChanged);
             // 
             // label11
             // 
@@ -211,6 +212,7 @@ namespace MigrationPanel
             this.textBoxPervasivePort.Name = "textBoxPervasivePort";
             this.textBoxPervasivePort.Size = new System.Drawing.Size(48, 20);
             this.textBoxPervasivePort.TabIndex = 19;
+            this.textBoxPervasivePort.TextChanged += new System.EventHandler(this.OnPervasiveInputBoxChanged);
             // 
             // label10
             // 
@@ -237,6 +239,7 @@ namespace MigrationPanel
             this.textBoxPervasiveServer.Name = "textBoxPervasiveServer";
             this.textBoxPervasiveServer.Size = new System.Drawing.Size(177, 20);
             this.textBoxPervasiveServer.TabIndex = 16;
+            this.textBoxPervasiveServer.TextChanged += new System.EventHandler(this.OnPervasiveInputBoxChanged);
             // 
             // label2
             // 
@@ -273,10 +276,11 @@ namespace MigrationPanel
             this.textBoxSqlDatabase.Name = "textBoxSqlDatabase";
             this.textBoxSqlDatabase.Size = new System.Drawing.Size(177, 20);
             this.textBoxSqlDatabase.TabIndex = 12;
+            this.textBoxSqlDatabase.TextChanged += new System.EventHandler(this.OnSqlInputBoxChanged);
             // 
             // label8
             // 
-            this.label8.Font = new System.Drawing.Font("Arial Rounded MT Bold", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte) (0)));
+            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label8.Location = new System.Drawing.Point(8, 220);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(245, 23);
@@ -311,6 +315,7 @@ namespace MigrationPanel
             this.textBoxSqlPassword.PasswordChar = '*';
             this.textBoxSqlPassword.Size = new System.Drawing.Size(177, 20);
             this.textBoxSqlPassword.TabIndex = 8;
+            this.textBoxSqlPassword.TextChanged += new System.EventHandler(this.OnSqlInputBoxChanged);
             // 
             // label7
             // 
@@ -329,6 +334,7 @@ namespace MigrationPanel
             this.textBoxSqlUser.Name = "textBoxSqlUser";
             this.textBoxSqlUser.Size = new System.Drawing.Size(177, 20);
             this.textBoxSqlUser.TabIndex = 6;
+            this.textBoxSqlUser.TextChanged += new System.EventHandler(this.OnSqlInputBoxChanged);
             // 
             // label6
             // 
@@ -347,6 +353,7 @@ namespace MigrationPanel
             this.textBoxSqlPort.Name = "textBoxSqlPort";
             this.textBoxSqlPort.Size = new System.Drawing.Size(48, 20);
             this.textBoxSqlPort.TabIndex = 4;
+            this.textBoxSqlPort.TextChanged += new System.EventHandler(this.OnSqlInputBoxChanged);
             // 
             // label5
             // 
@@ -363,6 +370,7 @@ namespace MigrationPanel
             this.textBoxSqlServer.Name = "textBoxSqlServer";
             this.textBoxSqlServer.Size = new System.Drawing.Size(177, 20);
             this.textBoxSqlServer.TabIndex = 2;
+            this.textBoxSqlServer.TextChanged += new System.EventHandler(this.OnSqlInputBoxChanged);
             // 
             // label4
             // 
@@ -375,7 +383,7 @@ namespace MigrationPanel
             // 
             // label3
             // 
-            this.label3.Font = new System.Drawing.Font("Arial Rounded MT Bold", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte) (0)));
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.Location = new System.Drawing.Point(6, 15);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(247, 23);
@@ -415,7 +423,6 @@ namespace MigrationPanel
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(649, 70);
             this.label14.TabIndex = 2;
-            this.label14.Text = resources.GetString("label14.Text");
             this.label14.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // textBoxMigrationLog
@@ -450,7 +457,6 @@ namespace MigrationPanel
             // 
             // btnPervasiveRowDown
             // 
-            this.btnPervasiveRowDown.BackgroundImage = ((System.Drawing.Image) (resources.GetObject("btnPervasiveRowDown.BackgroundImage")));
             this.btnPervasiveRowDown.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnPervasiveRowDown.ForeColor = System.Drawing.SystemColors.ActiveBorder;
             this.btnPervasiveRowDown.Location = new System.Drawing.Point(306, 221);
@@ -463,7 +469,6 @@ namespace MigrationPanel
             // 
             // btnPervasiveRowUp
             // 
-            this.btnPervasiveRowUp.BackgroundImage = ((System.Drawing.Image) (resources.GetObject("btnPervasiveRowUp.BackgroundImage")));
             this.btnPervasiveRowUp.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnPervasiveRowUp.ForeColor = System.Drawing.SystemColors.ActiveBorder;
             this.btnPervasiveRowUp.Location = new System.Drawing.Point(306, 172);
@@ -476,7 +481,7 @@ namespace MigrationPanel
             // 
             // label16
             // 
-            this.label16.Font = new System.Drawing.Font("Arial Rounded MT Bold", 12.25F);
+            this.label16.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F);
             this.label16.Location = new System.Drawing.Point(0, 48);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(300, 23);
@@ -486,7 +491,7 @@ namespace MigrationPanel
             // 
             // label15
             // 
-            this.label15.Font = new System.Drawing.Font("Arial Rounded MT Bold", 12.25F);
+            this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F);
             this.label15.Location = new System.Drawing.Point(355, 48);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(297, 23);
@@ -502,7 +507,7 @@ namespace MigrationPanel
             this.dataGridSql.AllowUserToResizeRows = false;
             this.dataGridSql.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.Disable;
             this.dataGridSql.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridSql.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {this.Index1, this.Feldname1});
+            this.dataGridSql.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { this.Index1, this.Feldname1 });
             this.dataGridSql.Cursor = System.Windows.Forms.Cursors.No;
             this.dataGridSql.Enabled = false;
             this.dataGridSql.Location = new System.Drawing.Point(355, 101);
@@ -578,7 +583,7 @@ namespace MigrationPanel
             this.dataGridPervasive.AllowUserToResizeColumns = false;
             this.dataGridPervasive.AllowUserToResizeRows = false;
             this.dataGridPervasive.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridPervasive.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {this.Index, this.Feldname});
+            this.dataGridPervasive.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { this.Index, this.Feldname });
             this.dataGridPervasive.Location = new System.Drawing.Point(3, 101);
             this.dataGridPervasive.MultiSelect = false;
             this.dataGridPervasive.Name = "dataGridPervasive";
@@ -644,8 +649,8 @@ namespace MigrationPanel
             this.migrationPage.ResumeLayout(false);
             this.migrationPage.PerformLayout();
             this.mappingPage.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize) (this.dataGridSql)).EndInit();
-            ((System.ComponentModel.ISupportInitialize) (this.dataGridPervasive)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridSql)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridPervasive)).EndInit();
             this.ResumeLayout(false);
         }
 
@@ -681,8 +686,6 @@ namespace MigrationPanel
         private System.Windows.Forms.Label label14;
 
         private System.Windows.Forms.TextBox textBoxMigrationLog;
-
-        private System.Windows.Forms.TabPage tabPage1;
 
         private System.Windows.Forms.Label labelPervasvieTest;
 
