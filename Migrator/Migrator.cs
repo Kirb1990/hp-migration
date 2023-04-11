@@ -329,24 +329,20 @@ namespace MigrationTool
 
             return tableNames;
         }
-        public List<PervasiveTable> LoadPervasiveTableNames()
+        public List<string> LoadPervasiveTableNames()
         {
-            List<PervasiveTable> tableNames = new();
+            List<string> tableNames = new();
 
             using PsqlConnection connection = new(_PervasiveConnectionString);
             connection.Open();
 
-            string query = "SELECT DISTINCT Xf$Id, Xf$Name FROM X$File";
+            string query = "SELECT DISTINCT Xf$Name FROM X$File";
             PsqlCommand command = new(query, connection);
             PsqlDataReader reader = command.ExecuteReader();
                 
             while (reader.Read())
             {
-                tableNames.Add(new PervasiveTable
-                {
-                    Id = reader.GetString(0),
-                    Name = reader.GetString(1)
-                });
+                tableNames.Add(reader.GetString(0));
             }
 
             reader.Close();
@@ -354,23 +350,57 @@ namespace MigrationTool
             return tableNames;
         }
 
-        public List<string> LoadPervasiveFieldNames(int tableId)
+        public List<Field> GetPervasiveFields(string tableName)
         {
-            List<string> fieldNames = new();
+            List<Field> fieldNames = new();
 
             using PsqlConnection connection = new(_PervasiveConnectionString);
             connection.Open();
 
-            string query = $"SELECT * FROM X$Field WHERE Xe$File = {tableId} AND Xe$DataType < 255";
+            string query = $"SELECT DISTINCT Xe$Name FROM X$Field LEFT JOIN X$File on Xe$File =  Xf$Id WHERE Xf$Name = '{tableName}' and Xe$DataType < 255 and Xe$DataType >= 0";
             PsqlCommand command = new(query, connection);
             PsqlDataReader reader = command.ExecuteReader();
-                
+
+            int index = 0;
             while (reader.Read())
             {
-                fieldNames.Add(reader.GetString(0));
+                fieldNames.Add(new Field()
+                {
+                    Index = index,
+                    Name = reader.GetString(0)?.Trim()
+                });
+
+                index++;
             }
 
             reader.Close();
+
+            return fieldNames;
+        }
+
+        public List<Field> GetSqlFields(string tableName)
+        {
+            List<Field> fieldNames = new();
+
+            using MySqlConnection connection = new(_SqlConnectionString);
+            connection.Open();
+            
+            string query = $"SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '{_CurrentDatabase}' AND TABLE_NAME = '{tableName}' ORDER BY ORDINAL_POSITION";
+
+            using MySqlCommand command = new(query, connection);
+            using MySqlDataReader reader = command.ExecuteReader();
+            
+            int index = 0;
+            while (reader.Read())
+            {
+                fieldNames.Add(new Field()
+                {
+                    Index = index,
+                    Name = reader.GetString(0)?.Trim()
+                });
+                
+                index++;
+            }
 
             return fieldNames;
         }

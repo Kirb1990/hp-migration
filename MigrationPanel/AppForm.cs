@@ -6,13 +6,14 @@ using System.Drawing;
 using System.Windows.Forms;
 using MigrationPanel.Exceptions;
 using MigrationTool;
+using Newtonsoft.Json;
 
 namespace MigrationPanel
 {
     public partial class AppForm : Form
     {
         readonly Migrator _Migrator;
-        
+
         public AppForm()
         {
             _Migrator = new Migrator();
@@ -22,7 +23,33 @@ namespace MigrationPanel
         protected override void OnLoad(EventArgs e)
         {
             LoadAppSettings();
+            ValidateSqlDatabaseAutoConnection();
+            ValidatePervasiveDatabaseAutoConnection();
             base.OnLoad(e);
+        }
+
+        void ValidatePervasiveDatabaseAutoConnection()
+        {
+            if (string.IsNullOrEmpty(textBoxPervasiveServer.Text) ||
+                string.IsNullOrEmpty(textBoxPervasivePort.Text) ||
+                string.IsNullOrEmpty(textBoxPervasiveUser.Text) ||
+                string.IsNullOrEmpty(textBoxPervasivePassword.Text) ||
+                string.IsNullOrEmpty(textBoxPervasiveDatabase.Text)
+               ) return;
+            
+            TestPervasiveConnection();
+        }
+
+        void ValidateSqlDatabaseAutoConnection()
+        {
+            if (string.IsNullOrEmpty(textBoxSqlServer.Text) ||
+                string.IsNullOrEmpty(textBoxSqlPort.Text) ||
+                string.IsNullOrEmpty(textBoxSqlUser.Text) ||
+                string.IsNullOrEmpty(textBoxSqlPassword.Text) ||
+                string.IsNullOrEmpty(textBoxSqlDatabase.Text)
+               ) return;
+            
+            TestSqlConnection();
         }
 
         void LoadAppSettings()
@@ -63,40 +90,62 @@ namespace MigrationPanel
 
         void LoadSqlTableNamesToComboBox()
         {
+            if (comboBoxSql.Items.Count > 0)
+            {
+                return;
+            }
+            
             List<string> tableNames = _Migrator.LoadMySqlTableNames();
 
-            if (tableNames.Count <= 0) return;
-            comboBoxSql.Items.AddRange(tableNames.ToArray());
+            if (tableNames.Count <= 0)
+            {
+                return;
+            }
+
+            foreach (string tableName in tableNames)
+            {
+                comboBoxSql.Items.Add(tableName);
+            }
         }
 
-        void OnPervasiveComboBoxChanged(object sender, EventArgs e)
+        void SwitchComboBox(ComboBox comboBox, string searchValue)
         {
-            List<string> fields = _Migrator.LoadPervasiveFieldNames(4);
-            
-            string tableName = comboBoxPervasive.SelectedItem.ToString();
-            
-            // TODO: wenn bereits eine Migrationsmapping für diese tabelle existiert, diese laden, sonst aus der Datenbank die felder laden
-            
-            
-            dataGridPervasive.Rows.Clear();
-            for (int i = 1; i <= 10; i++)
+            int index = comboBox.FindStringExact(searchValue);
+
+            if (index >= 0)
             {
-                dataGridPervasive.Rows.Add("Eintrag " + i.ToString());
+                comboBox.SelectedIndex = index;
+            }
+        }
+
+        void LoadTableFieldToGrid(DataGridView dataGridView, List<Field> fields)
+        {
+            for (int i = 0; i < fields.Count; i++)
+            {
+                dataGridView.Rows.Add(fields[i].Index, fields[i].Name);
             }
         }
 
         void LoadPervasiveTableNamesToComboBox()
         {
-            List<PervasiveTable> tableNames =  _Migrator.LoadPervasiveTableNames();
+            if (comboBoxPervasive.Items.Count > 0)
+            {
+                return;
+            }
+            
+            List<string> tableNames =  _Migrator.LoadPervasiveTableNames();
 
             if (tableNames.Count <= 0) return;
-           // comboBoxPervasive.Items.AddRange(tableNames.ToArray());
-            
-            //comboBoxPervasive.Items.Add("AD_Adr");
-            //comboBoxPervasive.Items.Add("OB_Obj");
+           
+            comboBoxPervasive.Items.Clear();
+
+            foreach (string tableName in tableNames)
+            {
+                comboBoxPervasive.Items.Add(tableName);
+            }
         }
 
-        void btnSqlConnectionTest_Click(object sender, EventArgs e)
+        void TestSqlConnection()
         {
             string connectionString;
             string database;
@@ -133,6 +182,33 @@ namespace MigrationPanel
             SetLabelSqlTest("MySQL Verbindung erfolgreich aufgebaut!", Color.DarkGreen);
         }
 
+        void TestPervasiveConnection()
+        {
+            string connectionString;
+            
+            try
+            {
+                BuildPervasiveConnectionString(out connectionString);
+            }
+            catch (TextBoxInputException exception)
+            {
+                SetLabelPervasiveTest(exception.Message, Color.DarkRed);
+                return;
+            }
+            
+            _Migrator.SetPervasiveConnectionString(connectionString);
+            
+            if (!_Migrator.TestPervasiveConnection())
+            {
+                SetLabelPervasiveTest("Keine Verbindung möglich!", Color.DarkRed);
+                return;
+            }
+
+            SetLabelPervasiveTest("Pervasive Verbindung erfolgreich aufgebaut!", Color.DarkGreen);
+        }
+        
+        void btnSqlConnectionTest_Click(object sender, EventArgs e) => TestSqlConnection();
+
         void BuildSqlConnectionString(out string connectionString, out string database)
         {
             string server = ReadInputBox(textBoxSqlServer);
@@ -166,30 +242,7 @@ namespace MigrationPanel
             return textBox.Text;
         }
 
-        void btnPervasiveConnectionTest_Click(object sender, EventArgs e)
-        {
-            string connectionString;
-            
-            try
-            {
-                BuildPervasiveConnectionString(out connectionString);
-            }
-            catch (TextBoxInputException exception)
-            {
-                SetLabelPervasiveTest(exception.Message, Color.DarkRed);
-                return;
-            }
-            
-            _Migrator.SetPervasiveConnectionString(connectionString);
-            
-            if (!_Migrator.TestPervasiveConnection())
-            {
-                SetLabelPervasiveTest("Keine Verbindung möglich!", Color.DarkRed);
-                return;
-            }
-
-            SetLabelPervasiveTest("Pervasive Verbindung erfolgreich aufgebaut!", Color.DarkGreen);
-        }
+        void btnPervasiveConnectionTest_Click(object sender, EventArgs e) => TestPervasiveConnection();
 
         void BuildPervasiveConnectionString(out string connectionString)
         {
@@ -226,13 +279,145 @@ namespace MigrationPanel
 
         void MappingPage_Enter(object sender, EventArgs e)
         {
-            if (comboBoxPervasive.MaxLength > 0)
+            if (comboBoxPervasive.MaxLength <= 0)
+            {
+                LoadPervasiveTableNamesToComboBox();
+            }
+
+            if (comboBoxSql.MaxLength <= 0)
+            {
+                LoadSqlTableNamesToComboBox();
+            }
+        }
+        
+        void OnComboBoxPervasiveChanged(object sender, EventArgs e)
+        {
+            string tableName = comboBoxPervasive.SelectedItem.ToString();
+            
+            dataGridPervasive.Rows.Clear();
+            
+            if (_Migrator.Mapping.TryGet(tableName, out TablePair tablePair))
+            {
+                LoadTableFieldToGrid(dataGridSql ,tablePair.PervasiveTable.Fields);
+                SwitchComboBox(comboBoxSql, tablePair.SqlTable.Name);
+                return;
+            }
+            
+            List<Field> fields = _Migrator.GetPervasiveFields(tableName);
+            LoadTableFieldToGrid(dataGridPervasive, fields);
+        }
+        
+        void OnComboBoxSqlChanged(object sender, EventArgs e)
+        {
+            string tableName = comboBoxSql.SelectedItem.ToString();
+            
+            dataGridSql.Rows.Clear();
+            
+            if (_Migrator.Mapping.TryGet(tableName, out TablePair tablePair))
+            {
+                SwitchComboBox(comboBoxSql, tablePair.PervasiveTable.Name);
+                return;
+            }
+            
+            List<Field> fields = _Migrator.GetSqlFields(tableName);
+            RemoveSqlIdField(fields);
+
+            LoadTableFieldToGrid(dataGridSql, fields);
+        }
+
+        void RemoveSqlIdField(List<Field> fields)
+        {
+            int index = fields.FindIndex(f => f.Name.Equals("id"));
+            if (index >= 0)
+            {
+                fields.RemoveAt(index);
+            }
+        }
+
+        void OnDataGridScroll(object sender, ScrollEventArgs e)
+        {
+            int pervasiveRowIndex = dataGridPervasive.FirstDisplayedScrollingRowIndex;
+            if (pervasiveRowIndex > dataGridSql.FirstDisplayedScrollingRowIndex)
             {
                 return;
             }
+            
+            dataGridSql.FirstDisplayedScrollingRowIndex = pervasiveRowIndex;
+        }
 
-            LoadPervasiveTableNamesToComboBox();
-            LoadSqlTableNamesToComboBox();
+        void OnCellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0)
+            {
+                return;
+            }
+            
+            if (e.RowIndex >= dataGridSql.Rows.Count)
+            {
+                dataGridSql.ClearSelection();
+                return;
+            }
+            
+            dataGridSql.ClearSelection();
+            dataGridSql.Rows[e.RowIndex].Selected = true;
+        }
+
+        void btnCopyMapping_Click(object sender, EventArgs e)
+        {
+            if (dataGridSql.Rows.Count <= 0 || dataGridPervasive.Rows.Count <= 0)
+            {
+                MessageBox.Show("Sind beide Tabellen ausgefüllt?", "Achtung", MessageBoxButtons.OK, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                return;
+            }
+            
+            Table pervasiveTable = new Table
+            {
+                Name = comboBoxPervasive.Text,
+                Fields = ExtractFields(dataGridPervasive)
+            };
+            Table sqlTable = new Table
+            {
+                Name = comboBoxSql.Text,
+                Fields = ExtractFields(dataGridSql)
+            };
+
+            Mapping mapping = new Mapping
+            {
+                TablePairs = new List<TablePair>
+                {
+                    new TablePair
+                    {
+                        PervasiveTable = pervasiveTable,
+                        SqlTable = sqlTable
+                    }
+                }
+            };
+
+            try
+            {
+                Clipboard.SetText(JsonConvert.SerializeObject(mapping));
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, "Fehler", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                return;
+            }
+
+            MessageBox.Show("In Zwischenablage gespeichert! Speicher diese json datei in die mapping.json ab.");
+        }
+
+        List<Field> ExtractFields(DataGridView dataGridView)
+        {
+            List<Field> fields = new List<Field>();
+            for (int i = 0; i < dataGridView.Rows.Count; i++)
+            {
+                fields.Add(new Field {
+                    Name = (string)dataGridView.Rows[i].Cells[1].Value,
+                    Index =  dataGridView.Rows[i].Index
+                });
+            }
+
+            return fields;
         }
     }
 }
