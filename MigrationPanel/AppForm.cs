@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
 using System.Drawing;
+using System.Security.Cryptography;
+using System.Text;
 using System.Windows.Forms;
 using MigrationPanel.Exceptions;
 using MigrationTool;
@@ -12,6 +14,9 @@ namespace MigrationPanel
 {
     public partial class AppForm : Form
     {
+        private readonly byte[] Key = Encoding.UTF8.GetBytes("xfuix61b6DXbWHhYixko6Pc2t24rqxnX");
+        private readonly byte[] Iv = Encoding.UTF8.GetBytes("lOqJ7RMpsStRQn42");
+        
         readonly Migrator _Migrator;
 
         public AppForm()
@@ -36,7 +41,7 @@ namespace MigrationPanel
                 string.IsNullOrEmpty(textBoxPervasivePassword.Text) ||
                 string.IsNullOrEmpty(textBoxPervasiveDatabase.Text)
                ) return;
-            
+
             TestPervasiveConnection();
         }
 
@@ -48,7 +53,7 @@ namespace MigrationPanel
                 string.IsNullOrEmpty(textBoxSqlPassword.Text) ||
                 string.IsNullOrEmpty(textBoxSqlDatabase.Text)
                ) return;
-            
+
             TestSqlConnection();
         }
 
@@ -57,13 +62,13 @@ namespace MigrationPanel
             textBoxSqlServer.Text = ConfigurationManager.AppSettings["sql-server"];
             textBoxSqlPort.Text = ConfigurationManager.AppSettings["sql-port"];
             textBoxSqlUser.Text = ConfigurationManager.AppSettings["sql-uid"];
-            textBoxSqlPassword.Text = ConfigurationManager.AppSettings["sql-password"];
+            textBoxSqlPassword.Text = DecryptPassword(ConfigurationManager.AppSettings["sql-password"], Key, Iv);
             textBoxSqlDatabase.Text = ConfigurationManager.AppSettings["sql-database"];
-            
+
             textBoxPervasiveServer.Text = ConfigurationManager.AppSettings["pervasive-server"];
             textBoxPervasivePort.Text = ConfigurationManager.AppSettings["pervasive-port"];
             textBoxPervasiveUser.Text = ConfigurationManager.AppSettings["pervasive-uid"];
-            textBoxPervasivePassword.Text = ConfigurationManager.AppSettings["pervasive-password"];
+            textBoxPervasivePassword.Text = DecryptPassword(ConfigurationManager.AppSettings["pervasive-password"], Key, Iv);
             textBoxPervasiveDatabase.Text = ConfigurationManager.AppSettings["pervasive-database"];
         }
 
@@ -78,13 +83,13 @@ namespace MigrationPanel
             ConfigurationManager.AppSettings["sql-server"] = textBoxSqlServer.Text;
             ConfigurationManager.AppSettings["sql-port"] = textBoxSqlPort.Text;
             ConfigurationManager.AppSettings["sql-uid"] = textBoxSqlUser.Text;
-            ConfigurationManager.AppSettings["sql-password"] = textBoxSqlPassword.Text;
+            ConfigurationManager.AppSettings["sql-password"] = EncryptPassword(textBoxSqlPassword.Text, Key, Iv);
             ConfigurationManager.AppSettings["sql-database"] = textBoxSqlDatabase.Text;
-            
+
             ConfigurationManager.AppSettings["pervasive-server"] = textBoxPervasiveServer.Text;
-            ConfigurationManager.AppSettings["pervasive-port"] =  textBoxPervasivePort.Text;
+            ConfigurationManager.AppSettings["pervasive-port"] = textBoxPervasivePort.Text;
             ConfigurationManager.AppSettings["pervasive-uid"] = textBoxPervasiveUser.Text;
-            ConfigurationManager.AppSettings["pervasive-password"] = textBoxPervasivePassword.Text;
+            ConfigurationManager.AppSettings["pervasive-password"] = EncryptPassword(textBoxPervasivePassword.Text, Key, Iv);
             ConfigurationManager.AppSettings["pervasive-database"] = textBoxPervasiveDatabase.Text;
         }
 
@@ -94,7 +99,7 @@ namespace MigrationPanel
             {
                 return;
             }
-            
+
             List<string> tableNames = _Migrator.LoadMySqlTableNames();
 
             if (tableNames.Count <= 0)
@@ -132,11 +137,11 @@ namespace MigrationPanel
             {
                 return;
             }
-            
-            List<string> tableNames =  _Migrator.LoadPervasiveTableNames();
+
+            List<string> tableNames = _Migrator.LoadPervasiveTableNames();
 
             if (tableNames.Count <= 0) return;
-           
+
             comboBoxPervasive.Items.Clear();
 
             foreach (string tableName in tableNames)
@@ -149,7 +154,7 @@ namespace MigrationPanel
         {
             string connectionString;
             string database;
-            
+
             try
             {
                 BuildSqlConnectionString(out connectionString, out database);
@@ -159,9 +164,9 @@ namespace MigrationPanel
                 SetLabelSqlTest(exception.Message, Color.DarkRed);
                 return;
             }
-            
+
             _Migrator.SetSqlConnectionString(connectionString);
-            
+
             if (!_Migrator.TestMySqlConnection())
             {
                 SetLabelSqlTest("Keine Verbindung möglich!", Color.DarkRed);
@@ -179,13 +184,14 @@ namespace MigrationPanel
                 SetLabelSqlTest("Fehler beim wechseln der Datenbank, existiert diese?", Color.DarkRed);
                 return;
             }
+
             SetLabelSqlTest("MySQL Verbindung erfolgreich aufgebaut!", Color.DarkGreen);
         }
 
         void TestPervasiveConnection()
         {
             string connectionString;
-            
+
             try
             {
                 BuildPervasiveConnectionString(out connectionString);
@@ -195,9 +201,9 @@ namespace MigrationPanel
                 SetLabelPervasiveTest(exception.Message, Color.DarkRed);
                 return;
             }
-            
+
             _Migrator.SetPervasiveConnectionString(connectionString);
-            
+
             if (!_Migrator.TestPervasiveConnection())
             {
                 SetLabelPervasiveTest("Keine Verbindung möglich!", Color.DarkRed);
@@ -206,7 +212,7 @@ namespace MigrationPanel
 
             SetLabelPervasiveTest("Pervasive Verbindung erfolgreich aufgebaut!", Color.DarkGreen);
         }
-        
+
         void btnSqlConnectionTest_Click(object sender, EventArgs e) => TestSqlConnection();
 
         void BuildSqlConnectionString(out string connectionString, out string database)
@@ -214,9 +220,9 @@ namespace MigrationPanel
             string server = ReadInputBox(textBoxSqlServer);
             string port = ReadInputBox(textBoxSqlPort);
             string user = ReadInputBox(textBoxSqlUser);
-            string password = ReadInputBox(textBoxSqlPassword); 
+            string password = ReadInputBox(textBoxSqlPassword);
             database = ReadInputBox(textBoxSqlDatabase);
-                
+
             connectionString = $"server={server},{port};uid={user};password={password};";
         }
 
@@ -225,7 +231,7 @@ namespace MigrationPanel
             labelSqlTest.Text = message;
             labelSqlTest.ForeColor = color;
         }
-        
+
         void SetLabelPervasiveTest(string message, Color color)
         {
             labelPervasvieTest.Text = message;
@@ -249,9 +255,9 @@ namespace MigrationPanel
             string server = ReadInputBox(textBoxPervasiveServer);
             string port = ReadInputBox(textBoxPervasivePort);
             string user = ReadInputBox(textBoxPervasiveUser);
-            string password = ReadInputBox(textBoxPervasivePassword); 
+            string password = ReadInputBox(textBoxPervasivePassword);
             string database = ReadInputBox(textBoxPervasiveDatabase);
-                
+
             connectionString = $"Server={server};Port={port};Database={database};User ID={user};Password={password};";
         }
 
@@ -266,12 +272,13 @@ namespace MigrationPanel
             _Migrator.OnSuccessfullyMigrated += AppendMigrateLogText;
             _Migrator.OnErrorOccured += AppendMigrateLogText;
         }
-        
+
         void MigrationPage_Leave(object sender, EventArgs e)
         {
             _Migrator.OnSuccessfullyMigrated -= AppendMigrateLogText;
             _Migrator.OnErrorOccured -= AppendMigrateLogText;
         }
+
         void AppendMigrateLogText(object sender, string e)
         {
             textBoxMigrationLog.Text += $"{e}\n";
@@ -289,36 +296,36 @@ namespace MigrationPanel
                 LoadSqlTableNamesToComboBox();
             }
         }
-        
+
         void OnComboBoxPervasiveChanged(object sender, EventArgs e)
         {
             string tableName = comboBoxPervasive.SelectedItem.ToString();
-            
+
             dataGridPervasive.Rows.Clear();
-            
+
             if (_Migrator.Mapping.TryGet(tableName, out TablePair tablePair))
             {
-                LoadTableFieldToGrid(dataGridSql ,tablePair.PervasiveTable.Fields);
+                LoadTableFieldToGrid(dataGridSql, tablePair.PervasiveTable.Fields);
                 SwitchComboBox(comboBoxSql, tablePair.SqlTable.Name);
                 return;
             }
-            
+
             List<Field> fields = _Migrator.GetPervasiveFields(tableName);
             LoadTableFieldToGrid(dataGridPervasive, fields);
         }
-        
+
         void OnComboBoxSqlChanged(object sender, EventArgs e)
         {
             string tableName = comboBoxSql.SelectedItem.ToString();
-            
+
             dataGridSql.Rows.Clear();
-            
+
             if (_Migrator.Mapping.TryGet(tableName, out TablePair tablePair))
             {
                 SwitchComboBox(comboBoxSql, tablePair.PervasiveTable.Name);
                 return;
             }
-            
+
             List<Field> fields = _Migrator.GetSqlFields(tableName);
             RemoveSqlIdField(fields);
 
@@ -341,7 +348,7 @@ namespace MigrationPanel
             {
                 return;
             }
-            
+
             dataGridSql.FirstDisplayedScrollingRowIndex = pervasiveRowIndex;
         }
 
@@ -353,16 +360,16 @@ namespace MigrationPanel
             {
                 return;
             }
-            
+
             dataGridPervasive.ClearSelection();
             dataGridPervasive.Rows[index].Selected = true;
-            
+
             if (index >= dataGridSql.Rows.Count)
             {
                 dataGridSql.ClearSelection();
                 return;
             }
-            
+
             dataGridSql.Rows[index].Selected = true;
         }
 
@@ -370,10 +377,11 @@ namespace MigrationPanel
         {
             if (dataGridSql.Rows.Count <= 0 || dataGridPervasive.Rows.Count <= 0)
             {
-                MessageBox.Show("Sind beide Tabellen ausgefüllt?", "Achtung", MessageBoxButtons.OK, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show("Sind beide Tabellen ausgefüllt?", "Achtung", MessageBoxButtons.OK,
+                    MessageBoxIcon.Question, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                 return;
             }
-            
+
             Table pervasiveTable = new Table
             {
                 Name = comboBoxPervasive.Text,
@@ -403,7 +411,8 @@ namespace MigrationPanel
             }
             catch (Exception exception)
             {
-                MessageBox.Show(exception.Message, "Fehler", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show(exception.Message, "Fehler", MessageBoxButtons.OK, MessageBoxIcon.Warning,
+                    MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
                 return;
             }
 
@@ -415,9 +424,10 @@ namespace MigrationPanel
             List<Field> fields = new List<Field>();
             for (int i = 0; i < dataGridView.Rows.Count; i++)
             {
-                fields.Add(new Field {
+                fields.Add(new Field
+                {
                     Name = (string)dataGridView.Rows[i].Cells[1].Value,
-                    Index =  dataGridView.Rows[i].Index
+                    Index = dataGridView.Rows[i].Index
                 });
             }
 
@@ -433,7 +443,7 @@ namespace MigrationPanel
 
             SwapFieldValues(dataGridViewRow, index - 1);
         }
-        
+
         void btnPervasiveRowDown_Click(object sender, EventArgs e)
         {
             if (!TryGetRow(out DataGridViewRow dataGridViewRow, out int index, -1))
@@ -443,13 +453,13 @@ namespace MigrationPanel
 
             SwapFieldValues(dataGridViewRow, index + 1);
         }
-        
+
 
         bool TryGetRow(out DataGridViewRow dataGridViewRow, out int index, int offSet)
         {
             index = -1;
             dataGridViewRow = null;
-            
+
             if (dataGridPervasive.SelectedRows.Count <= 0)
             {
                 return false;
@@ -464,12 +474,48 @@ namespace MigrationPanel
         void SwapFieldValues(DataGridViewRow dataGridRow, int index)
         {
             DataGridViewCell dataGridViewCell = dataGridPervasive.Rows[index].Cells["Feldname"];
-            
+
             // "Tuple Assignment" swapping the values between the two cells
-            (dataGridViewCell.Value, dataGridRow.Cells["Feldname"].Value) = (dataGridRow.Cells["Feldname"].Value, dataGridViewCell.Value);
+            (dataGridViewCell.Value, dataGridRow.Cells["Feldname"].Value) =
+                (dataGridRow.Cells["Feldname"].Value, dataGridViewCell.Value);
 
             SelectPervasiveDataRow(index);
         }
+
+        private string EncryptPassword(string plainText, byte[] key, byte[] iv)
+        {
+            if (string.IsNullOrEmpty(plainText)) return string.Empty;
+            
+            using (var aes = new AesCryptoServiceProvider())
+            {
+                aes.Key = key;
+                aes.IV = iv;
+
+                using (var encryptor = aes.CreateEncryptor())
+                {
+                    var buffer = Encoding.UTF8.GetBytes(plainText);
+                    var encryptedText = encryptor.TransformFinalBlock(buffer, 0, buffer.Length);
+                    return Convert.ToBase64String(encryptedText);
+                }
+            }
+        }
         
+        private string DecryptPassword(string encryptedText, byte[] key, byte[] iv)
+        {
+            if (string.IsNullOrEmpty(encryptedText)) return string.Empty;
+            
+            using (var aes = new AesCryptoServiceProvider())
+            {
+                aes.Key = key;
+                aes.IV = iv;
+
+                using (var decryptor = aes.CreateDecryptor())
+                {
+                    var buffer = Convert.FromBase64String(encryptedText);
+                    var decryptedText = decryptor.TransformFinalBlock(buffer, 0, buffer.Length);
+                    return Encoding.UTF8.GetString(decryptedText);
+                }
+            }
+        }
     }
 }
