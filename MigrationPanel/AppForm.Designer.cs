@@ -98,7 +98,7 @@
             this.migrationControl.Name = "migrationControl";
             this.migrationControl.SelectedIndex = 0;
             this.migrationControl.Size = new System.Drawing.Size(663, 446);
-            this.migrationControl.TabIndex = 5;
+            this.migrationControl.TabIndex = 1;
             this.migrationControl.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.TabControl_Selecting);
             // 
             // connectionPage
@@ -162,7 +162,7 @@
             this.textBoxPervasiveDatabase.MaxLength = 32;
             this.textBoxPervasiveDatabase.Name = "textBoxPervasiveDatabase";
             this.textBoxPervasiveDatabase.Size = new System.Drawing.Size(177, 20);
-            this.textBoxPervasiveDatabase.TabIndex = 24;
+            this.textBoxPervasiveDatabase.TabIndex = 13;
             this.textBoxPervasiveDatabase.TextChanged += new System.EventHandler(this.OnPervasiveInputBoxChanged);
             // 
             // textBoxPervasivePassword
@@ -173,7 +173,7 @@
             this.textBoxPervasivePassword.Name = "textBoxPervasivePassword";
             this.textBoxPervasivePassword.PasswordChar = '*';
             this.textBoxPervasivePassword.Size = new System.Drawing.Size(177, 20);
-            this.textBoxPervasivePassword.TabIndex = 23;
+            this.textBoxPervasivePassword.TabIndex = 12;
             this.textBoxPervasivePassword.TextChanged += new System.EventHandler(this.OnPervasiveInputBoxChanged);
             // 
             // label12
@@ -192,7 +192,7 @@
             this.textBoxPervasiveUser.MaxLength = 32;
             this.textBoxPervasiveUser.Name = "textBoxPervasiveUser";
             this.textBoxPervasiveUser.Size = new System.Drawing.Size(177, 20);
-            this.textBoxPervasiveUser.TabIndex = 21;
+            this.textBoxPervasiveUser.TabIndex = 11;
             this.textBoxPervasiveUser.TextChanged += new System.EventHandler(this.OnPervasiveInputBoxChanged);
             // 
             // label11
@@ -211,7 +211,7 @@
             this.textBoxPervasivePort.MaxLength = 5;
             this.textBoxPervasivePort.Name = "textBoxPervasivePort";
             this.textBoxPervasivePort.Size = new System.Drawing.Size(48, 20);
-            this.textBoxPervasivePort.TabIndex = 19;
+            this.textBoxPervasivePort.TabIndex = 10;
             this.textBoxPervasivePort.TextChanged += new System.EventHandler(this.OnPervasiveInputBoxChanged);
             // 
             // label10
@@ -228,7 +228,7 @@
             this.btnPervasiveConnectionTest.Location = new System.Drawing.Point(6, 383);
             this.btnPervasiveConnectionTest.Name = "btnPervasiveConnectionTest";
             this.btnPervasiveConnectionTest.Size = new System.Drawing.Size(65, 25);
-            this.btnPervasiveConnectionTest.TabIndex = 17;
+            this.btnPervasiveConnectionTest.TabIndex = 14;
             this.btnPervasiveConnectionTest.Text = "Testen";
             this.btnPervasiveConnectionTest.UseVisualStyleBackColor = true;
             this.btnPervasiveConnectionTest.Click += new System.EventHandler(this.btnPervasiveConnectionTest_Click);
@@ -238,7 +238,7 @@
             this.textBoxPervasiveServer.Location = new System.Drawing.Point(76, 244);
             this.textBoxPervasiveServer.Name = "textBoxPervasiveServer";
             this.textBoxPervasiveServer.Size = new System.Drawing.Size(177, 20);
-            this.textBoxPervasiveServer.TabIndex = 16;
+            this.textBoxPervasiveServer.TabIndex = 9;
             this.textBoxPervasiveServer.TextChanged += new System.EventHandler(this.OnPervasiveInputBoxChanged);
             // 
             // label2
@@ -255,7 +255,7 @@
             this.forceCreateSqlDatabase.Location = new System.Drawing.Point(259, 145);
             this.forceCreateSqlDatabase.Name = "forceCreateSqlDatabase";
             this.forceCreateSqlDatabase.Size = new System.Drawing.Size(209, 20);
-            this.forceCreateSqlDatabase.TabIndex = 14;
+            this.forceCreateSqlDatabase.TabIndex = 7;
             this.forceCreateSqlDatabase.Text = "Neuanlage erzwingen";
             this.forceCreateSqlDatabase.UseVisualStyleBackColor = true;
             // 
@@ -275,7 +275,7 @@
             this.textBoxSqlDatabase.MaxLength = 32;
             this.textBoxSqlDatabase.Name = "textBoxSqlDatabase";
             this.textBoxSqlDatabase.Size = new System.Drawing.Size(177, 20);
-            this.textBoxSqlDatabase.TabIndex = 12;
+            this.textBoxSqlDatabase.TabIndex = 6;
             this.textBoxSqlDatabase.TextChanged += new System.EventHandler(this.OnSqlInputBoxChanged);
             // 
             // label8
@@ -301,7 +301,7 @@
             this.btnSqlConnectionTest.Location = new System.Drawing.Point(8, 179);
             this.btnSqlConnectionTest.Name = "btnSqlConnectionTest";
             this.btnSqlConnectionTest.Size = new System.Drawing.Size(65, 25);
-            this.btnSqlConnectionTest.TabIndex = 9;
+            this.btnSqlConnectionTest.TabIndex = 8;
             this.btnSqlConnectionTest.Text = "Testen";
             this.btnSqlConnectionTest.UseVisualStyleBackColor = true;
             this.btnSqlConnectionTest.Click += new System.EventHandler(this.btnSqlConnectionTest_Click);
@@ -314,7 +314,7 @@
             this.textBoxSqlPassword.Name = "textBoxSqlPassword";
             this.textBoxSqlPassword.PasswordChar = '*';
             this.textBoxSqlPassword.Size = new System.Drawing.Size(177, 20);
-            this.textBoxSqlPassword.TabIndex = 8;
+            this.textBoxSqlPassword.TabIndex = 5;
             this.textBoxSqlPassword.TextChanged += new System.EventHandler(this.OnSqlInputBoxChanged);
             // 
             // label7
@@ -333,7 +333,7 @@
             this.textBoxSqlUser.MaxLength = 32;
             this.textBoxSqlUser.Name = "textBoxSqlUser";
             this.textBoxSqlUser.Size = new System.Drawing.Size(177, 20);
-            this.textBoxSqlUser.TabIndex = 6;
+            this.textBoxSqlUser.TabIndex = 4;
             this.textBoxSqlUser.TextChanged += new System.EventHandler(this.OnSqlInputBoxChanged);
             // 
             // label6
@@ -352,7 +352,7 @@
             this.textBoxSqlPort.MaxLength = 5;
             this.textBoxSqlPort.Name = "textBoxSqlPort";
             this.textBoxSqlPort.Size = new System.Drawing.Size(48, 20);
-            this.textBoxSqlPort.TabIndex = 4;
+            this.textBoxSqlPort.TabIndex = 3;
             this.textBoxSqlPort.TextChanged += new System.EventHandler(this.OnSqlInputBoxChanged);
             // 
             // label5
@@ -411,7 +411,7 @@
             this.btnMigrateStart.Location = new System.Drawing.Point(277, 76);
             this.btnMigrateStart.Name = "btnMigrateStart";
             this.btnMigrateStart.Size = new System.Drawing.Size(110, 25);
-            this.btnMigrateStart.TabIndex = 10;
+            this.btnMigrateStart.TabIndex = 16;
             this.btnMigrateStart.Text = "Migration Starten";
             this.btnMigrateStart.UseVisualStyleBackColor = true;
             this.btnMigrateStart.Click += new System.EventHandler(this.btnStartMigrate_Click);
