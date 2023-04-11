@@ -352,7 +352,14 @@ namespace MigrationTool
 
         public List<Field> GetPervasiveFields(string tableName)
         {
-            List<Field> fieldNames = new();
+            List<Field> fieldNames = new()
+            {
+                new Field()
+                {
+                    Index = 0,
+                    Name = "SKIPPED"
+                }
+            };
 
             using PsqlConnection connection = new(_PervasiveConnectionString);
             connection.Open();
@@ -361,7 +368,7 @@ namespace MigrationTool
             PsqlCommand command = new(query, connection);
             PsqlDataReader reader = command.ExecuteReader();
 
-            int index = 0;
+            int index = 1;
             while (reader.Read())
             {
                 fieldNames.Add(new Field()

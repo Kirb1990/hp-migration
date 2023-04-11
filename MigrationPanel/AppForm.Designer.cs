@@ -29,6 +29,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AppForm));
             this.migrationControl = new System.Windows.Forms.TabControl();
             this.connectionPage = new System.Windows.Forms.TabPage();
             this.labelPervasvieTest = new System.Windows.Forms.Label();
@@ -457,6 +458,7 @@
             // 
             // btnPervasiveRowDown
             // 
+            this.btnPervasiveRowDown.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnPervasiveRowDown.BackgroundImage")));
             this.btnPervasiveRowDown.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnPervasiveRowDown.ForeColor = System.Drawing.SystemColors.ActiveBorder;
             this.btnPervasiveRowDown.Location = new System.Drawing.Point(306, 221);
@@ -469,6 +471,7 @@
             // 
             // btnPervasiveRowUp
             // 
+            this.btnPervasiveRowUp.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnPervasiveRowUp.BackgroundImage")));
             this.btnPervasiveRowUp.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnPervasiveRowUp.ForeColor = System.Drawing.SystemColors.ActiveBorder;
             this.btnPervasiveRowUp.Location = new System.Drawing.Point(306, 172);

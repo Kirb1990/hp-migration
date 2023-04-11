@@ -337,6 +337,8 @@ namespace MigrationPanel
             }
 
             List<Field> fields = _Migrator.GetPervasiveFields(tableName);
+            if(fields.Count <= 1) fields.Clear();
+            
             LoadTableFieldToGrid(dataGridPervasive, fields);
         }
 
@@ -353,7 +355,7 @@ namespace MigrationPanel
             }
 
             List<Field> fields = _Migrator.GetSqlFields(tableName);
-            RemoveSqlIdField(fields);
+            //RemoveSqlIdField(fields);
 
             LoadTableFieldToGrid(dataGridSql, fields);
         }
