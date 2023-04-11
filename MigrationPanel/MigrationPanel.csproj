@@ -94,5 +94,9 @@
         <Name>Migrator</Name>
       </ProjectReference>
     </ItemGroup>
+    <ItemGroup>
+      <Content Include="Images\arrow-down.png" />
+      <Content Include="Images\arrow-up.png" />
+    </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

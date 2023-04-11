@@ -66,7 +66,8 @@ namespace MigrationPanel
             this.label14 = new System.Windows.Forms.Label();
             this.textBoxMigrationLog = new System.Windows.Forms.TextBox();
             this.mappingPage = new System.Windows.Forms.TabPage();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btnPervasiveRowDown = new System.Windows.Forms.Button();
+            this.btnPervasiveRowUp = new System.Windows.Forms.Button();
             this.label16 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.dataGridSql = new System.Windows.Forms.DataGridView();
@@ -428,7 +429,8 @@ namespace MigrationPanel
             // 
             // mappingPage
             // 
-            this.mappingPage.Controls.Add(this.button1);
+            this.mappingPage.Controls.Add(this.btnPervasiveRowDown);
+            this.mappingPage.Controls.Add(this.btnPervasiveRowUp);
             this.mappingPage.Controls.Add(this.label16);
             this.mappingPage.Controls.Add(this.label15);
             this.mappingPage.Controls.Add(this.dataGridSql);
@@ -446,15 +448,31 @@ namespace MigrationPanel
             this.mappingPage.UseVisualStyleBackColor = true;
             this.mappingPage.Enter += new System.EventHandler(this.MappingPage_Enter);
             // 
-            // button1
+            // btnPervasiveRowDown
             // 
-            this.button1.Location = new System.Drawing.Point(306, 230);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(43, 43);
-            this.button1.TabIndex = 9;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Visible = false;
+            this.btnPervasiveRowDown.BackgroundImage = ((System.Drawing.Image) (resources.GetObject("btnPervasiveRowDown.BackgroundImage")));
+            this.btnPervasiveRowDown.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnPervasiveRowDown.ForeColor = System.Drawing.SystemColors.ActiveBorder;
+            this.btnPervasiveRowDown.Location = new System.Drawing.Point(306, 221);
+            this.btnPervasiveRowDown.Name = "btnPervasiveRowDown";
+            this.btnPervasiveRowDown.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.btnPervasiveRowDown.Size = new System.Drawing.Size(43, 43);
+            this.btnPervasiveRowDown.TabIndex = 10;
+            this.btnPervasiveRowDown.UseVisualStyleBackColor = true;
+            this.btnPervasiveRowDown.Click += new System.EventHandler(this.btnPervasiveRowDown_Click);
+            // 
+            // btnPervasiveRowUp
+            // 
+            this.btnPervasiveRowUp.BackgroundImage = ((System.Drawing.Image) (resources.GetObject("btnPervasiveRowUp.BackgroundImage")));
+            this.btnPervasiveRowUp.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnPervasiveRowUp.ForeColor = System.Drawing.SystemColors.ActiveBorder;
+            this.btnPervasiveRowUp.Location = new System.Drawing.Point(306, 172);
+            this.btnPervasiveRowUp.Name = "btnPervasiveRowUp";
+            this.btnPervasiveRowUp.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.btnPervasiveRowUp.Size = new System.Drawing.Size(43, 43);
+            this.btnPervasiveRowUp.TabIndex = 9;
+            this.btnPervasiveRowUp.UseVisualStyleBackColor = true;
+            this.btnPervasiveRowUp.Click += new System.EventHandler(this.btnPervasiveRowUp_Click);
             // 
             // label16
             // 
@@ -513,9 +531,9 @@ namespace MigrationPanel
             // 
             // btnCopyMapping
             // 
-            this.btnCopyMapping.Location = new System.Drawing.Point(306, 394);
+            this.btnCopyMapping.Location = new System.Drawing.Point(306, 383);
             this.btnCopyMapping.Name = "btnCopyMapping";
-            this.btnCopyMapping.Size = new System.Drawing.Size(43, 23);
+            this.btnCopyMapping.Size = new System.Drawing.Size(43, 34);
             this.btnCopyMapping.TabIndex = 5;
             this.btnCopyMapping.Text = "Save";
             this.btnCopyMapping.UseVisualStyleBackColor = true;
@@ -631,12 +649,14 @@ namespace MigrationPanel
             this.ResumeLayout(false);
         }
 
+        private System.Windows.Forms.Button btnPervasiveRowDown;
+
         private System.Windows.Forms.Button btnMigrateStart;
 
         private System.Windows.Forms.DataGridViewTextBoxColumn Index1;
         private System.Windows.Forms.DataGridViewTextBoxColumn Feldname1;
 
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnPervasiveRowUp;
 
         private System.Windows.Forms.Label label16;
 

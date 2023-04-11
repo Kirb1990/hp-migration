@@ -345,21 +345,25 @@ namespace MigrationPanel
             dataGridSql.FirstDisplayedScrollingRowIndex = pervasiveRowIndex;
         }
 
-        void OnCellClick(object sender, DataGridViewCellEventArgs e)
+        void OnCellClick(object sender, DataGridViewCellEventArgs e) => SelectPervasiveDataRow(e.RowIndex);
+
+        void SelectPervasiveDataRow(int index)
         {
-            if (e.RowIndex < 0)
+            if (index < 0)
             {
                 return;
             }
             
-            if (e.RowIndex >= dataGridSql.Rows.Count)
+            dataGridPervasive.ClearSelection();
+            dataGridPervasive.Rows[index].Selected = true;
+            
+            if (index >= dataGridSql.Rows.Count)
             {
                 dataGridSql.ClearSelection();
                 return;
             }
             
-            dataGridSql.ClearSelection();
-            dataGridSql.Rows[e.RowIndex].Selected = true;
+            dataGridSql.Rows[index].Selected = true;
         }
 
         void btnCopyMapping_Click(object sender, EventArgs e)
@@ -419,5 +423,53 @@ namespace MigrationPanel
 
             return fields;
         }
+
+        void btnPervasiveRowUp_Click(object sender, EventArgs e)
+        {
+            if (!TryGetRow(out DataGridViewRow dataGridViewRow, out int index, 1))
+            {
+                return;
+            }
+
+            SwapFieldValues(dataGridViewRow, index - 1);
+        }
+        
+        void btnPervasiveRowDown_Click(object sender, EventArgs e)
+        {
+            if (!TryGetRow(out DataGridViewRow dataGridViewRow, out int index, -1))
+            {
+                return;
+            }
+
+            SwapFieldValues(dataGridViewRow, index + 1);
+        }
+        
+
+        bool TryGetRow(out DataGridViewRow dataGridViewRow, out int index, int offSet)
+        {
+            index = -1;
+            dataGridViewRow = null;
+            
+            if (dataGridPervasive.SelectedRows.Count <= 0)
+            {
+                return false;
+            }
+
+            dataGridViewRow = dataGridPervasive.SelectedRows[0];
+            index = dataGridViewRow.Index;
+
+            return index > 0 && index <= dataGridViewRow.Index;
+        }
+
+        void SwapFieldValues(DataGridViewRow dataGridRow, int index)
+        {
+            DataGridViewCell dataGridViewCell = dataGridPervasive.Rows[index].Cells["Feldname"];
+            
+            // "Tuple Assignment" swapping the values between the two cells
+            (dataGridViewCell.Value, dataGridRow.Cells["Feldname"].Value) = (dataGridRow.Cells["Feldname"].Value, dataGridViewCell.Value);
+
+            SelectPervasiveDataRow(index);
+        }
+        
     }
 }
