@@ -14,17 +14,18 @@ namespace MigrationPanel
 {
     public partial class AppForm : Form
     {
-        private readonly byte[] Key = Encoding.UTF8.GetBytes("xfuix61b6DXbWHhYixko6Pc2t24rqxnX");
-        private readonly byte[] Iv = Encoding.UTF8.GetBytes("lOqJ7RMpsStRQn42");
-        
-        readonly Migrator _Migrator;
+        readonly byte[] _Key = Encoding.UTF8.GetBytes("xfuix61b6DXbWHhYixko6Pc2t24rqxnX");
+        readonly byte[] _Iv = Encoding.UTF8.GetBytes("lOqJ7RMpsStRQn42");
 
-        private List<TabPage> disabledTabPages = new List<TabPage>();
+        readonly List<TabPage> _DisabledTabPages = new List<TabPage>();
+        readonly Migrator _Migrator;
         
         public AppForm()
         {
             _Migrator = new Migrator();
             InitializeComponent();
+
+            migrationControl.Selecting += TabControl_Selecting;
         }
 
         protected override void OnLoad(EventArgs e)
@@ -72,13 +73,13 @@ namespace MigrationPanel
             textBoxSqlServer.Text = ConfigurationManager.AppSettings["sql-server"];
             textBoxSqlPort.Text = ConfigurationManager.AppSettings["sql-port"];
             textBoxSqlUser.Text = ConfigurationManager.AppSettings["sql-uid"];
-            textBoxSqlPassword.Text = DecryptPassword(ConfigurationManager.AppSettings["sql-password"], Key, Iv);
+            textBoxSqlPassword.Text = DecryptPassword(ConfigurationManager.AppSettings["sql-password"], _Key, _Iv);
             textBoxSqlDatabase.Text = ConfigurationManager.AppSettings["sql-database"];
 
             textBoxPervasiveServer.Text = ConfigurationManager.AppSettings["pervasive-server"];
             textBoxPervasivePort.Text = ConfigurationManager.AppSettings["pervasive-port"];
             textBoxPervasiveUser.Text = ConfigurationManager.AppSettings["pervasive-uid"];
-            textBoxPervasivePassword.Text = DecryptPassword(ConfigurationManager.AppSettings["pervasive-password"], Key, Iv);
+            textBoxPervasivePassword.Text = DecryptPassword(ConfigurationManager.AppSettings["pervasive-password"], _Key, _Iv);
             textBoxPervasiveDatabase.Text = ConfigurationManager.AppSettings["pervasive-database"];
         }
 
@@ -93,13 +94,13 @@ namespace MigrationPanel
             ConfigurationManager.AppSettings["sql-server"] = textBoxSqlServer.Text;
             ConfigurationManager.AppSettings["sql-port"] = textBoxSqlPort.Text;
             ConfigurationManager.AppSettings["sql-uid"] = textBoxSqlUser.Text;
-            ConfigurationManager.AppSettings["sql-password"] = EncryptPassword(textBoxSqlPassword.Text, Key, Iv);
+            ConfigurationManager.AppSettings["sql-password"] = EncryptPassword(textBoxSqlPassword.Text, _Key, _Iv);
             ConfigurationManager.AppSettings["sql-database"] = textBoxSqlDatabase.Text;
 
             ConfigurationManager.AppSettings["pervasive-server"] = textBoxPervasiveServer.Text;
             ConfigurationManager.AppSettings["pervasive-port"] = textBoxPervasivePort.Text;
             ConfigurationManager.AppSettings["pervasive-uid"] = textBoxPervasiveUser.Text;
-            ConfigurationManager.AppSettings["pervasive-password"] = EncryptPassword(textBoxPervasivePassword.Text, Key, Iv);
+            ConfigurationManager.AppSettings["pervasive-password"] = EncryptPassword(textBoxPervasivePassword.Text, _Key, _Iv);
             ConfigurationManager.AppSettings["pervasive-database"] = textBoxPervasiveDatabase.Text;
         }
 
@@ -357,16 +358,7 @@ namespace MigrationPanel
             List<string> fields = _Migrator.GetSqlFields(tableName);
             LoadTableFieldToGrid(dataGridSql, fields);
         }
-
-        void RemoveSqlIdField(List<string> fields)
-        {
-            int index = fields.FindIndex(f => f.Equals("id"));
-            if (index >= 0)
-            {
-                fields.RemoveAt(index);
-            }
-        }
-
+        
         void OnDataGridScroll(object sender, ScrollEventArgs e)
         {
             int pervasiveRowIndex = dataGridPervasive.FirstDisplayedScrollingRowIndex;
@@ -458,7 +450,7 @@ namespace MigrationPanel
 
         void btnPervasiveRowUp_Click(object sender, EventArgs e)
         {
-            if (!TryGetRow(out DataGridViewRow dataGridViewRow, out int index, 1))
+            if (!TryGetRow(out DataGridViewRow dataGridViewRow, out int index))
             {
                 return;
             }
@@ -468,7 +460,7 @@ namespace MigrationPanel
 
         void btnPervasiveRowDown_Click(object sender, EventArgs e)
         {
-            if (!TryGetRow(out DataGridViewRow dataGridViewRow, out int index, -1))
+            if (!TryGetRow(out DataGridViewRow dataGridViewRow, out int index))
             {
                 return;
             }
@@ -476,7 +468,7 @@ namespace MigrationPanel
             SwapFieldValues(dataGridViewRow, index + 1);
         }
 
-        bool TryGetRow(out DataGridViewRow dataGridViewRow, out int index, int offSet)
+        bool TryGetRow(out DataGridViewRow dataGridViewRow, out int index)
         {
             index = -1;
             dataGridViewRow = null;
@@ -503,64 +495,66 @@ namespace MigrationPanel
             SelectPervasiveDataRow(index);
         }
         
-        private void SetTabEnabled(TabPage tabPage, bool enabled)
+        void SetTabEnabled(TabPage tabPage, bool enabled)
         {
             if (enabled)
             {
-                if (disabledTabPages.Contains(tabPage))
+                if (_DisabledTabPages.Contains(tabPage))
                 {
-                    disabledTabPages.Remove(tabPage);
+                    _DisabledTabPages.Remove(tabPage);
                 }
             }
             else
             {
-                if (!disabledTabPages.Contains(tabPage))
+                if (!_DisabledTabPages.Contains(tabPage))
                 {
-                    disabledTabPages.Add(tabPage);
+                    _DisabledTabPages.Add(tabPage);
                 }
             }
         }
         
-        private void TabControl_Selecting(object sender, TabControlCancelEventArgs e)
+        void TabControl_Selecting(object sender, TabControlCancelEventArgs e)
         {
-            if (disabledTabPages.Contains(e.TabPage))
+            if (!_DisabledTabPages.Contains(e.TabPage))
             {
-                MessageBox.Show("Nicht alle Bedinungen erfüllt! Sind alle Datenbank Verbindungen aufgebaut?");
-                e.Cancel = true;
+                return;
             }
+            
+            MessageBox.Show("Nicht alle Bedinungen erfüllt! Sind alle Datenbank Verbindungen aufgebaut?");
+            e.Cancel = true;
         }
 
-        private string EncryptPassword(string plainText, byte[] key, byte[] iv)
+        string EncryptPassword(string plainText, byte[] key, byte[] iv)
         {
             if (string.IsNullOrEmpty(plainText)) return string.Empty;
             
-            using (var aes = new AesCryptoServiceProvider())
+            using (AesCryptoServiceProvider aes = new AesCryptoServiceProvider())
             {
                 aes.Key = key;
                 aes.IV = iv;
 
-                using (var encryptor = aes.CreateEncryptor())
+                using (ICryptoTransform encryptor = aes.CreateEncryptor())
                 {
-                    var buffer = Encoding.UTF8.GetBytes(plainText);
-                    var encryptedText = encryptor.TransformFinalBlock(buffer, 0, buffer.Length);
+                    byte[] buffer = Encoding.UTF8.GetBytes(plainText);
+                    byte[] encryptedText = encryptor.TransformFinalBlock(buffer, 0, buffer.Length);
                     return Convert.ToBase64String(encryptedText);
                 }
             }
         }
         
-        private string DecryptPassword(string encryptedText, byte[] key, byte[] iv)
+        string DecryptPassword(string encryptedText, byte[] key, byte[] iv)
         {
             if (string.IsNullOrEmpty(encryptedText)) return string.Empty;
             
-            using (var aes = new AesCryptoServiceProvider())
+            using (AesCryptoServiceProvider aes = new AesCryptoServiceProvider())
             {
                 aes.Key = key;
                 aes.IV = iv;
 
-                using (var decryptor = aes.CreateDecryptor())
+                using (ICryptoTransform decryptor = aes.CreateDecryptor())
                 {
-                    var buffer = Convert.FromBase64String(encryptedText);
-                    var decryptedText = decryptor.TransformFinalBlock(buffer, 0, buffer.Length);
+                    byte[] buffer = Convert.FromBase64String(encryptedText);
+                    byte[] decryptedText = decryptor.TransformFinalBlock(buffer, 0, buffer.Length);
                     return Encoding.UTF8.GetString(decryptedText);
                 }
             }

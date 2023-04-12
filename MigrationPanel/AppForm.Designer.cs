@@ -84,8 +84,8 @@
             this.connectionPage.SuspendLayout();
             this.migrationPage.SuspendLayout();
             this.mappingPage.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridSql)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridPervasive)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize) (this.dataGridSql)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize) (this.dataGridPervasive)).BeginInit();
             this.SuspendLayout();
             // 
             // migrationControl
@@ -98,9 +98,8 @@
             this.migrationControl.Location = new System.Drawing.Point(0, 0);
             this.migrationControl.Name = "migrationControl";
             this.migrationControl.SelectedIndex = 0;
-            this.migrationControl.Size = new System.Drawing.Size(663, 446);
-            this.migrationControl.TabIndex = 1;
-            this.migrationControl.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.TabControl_Selecting);
+            this.migrationControl.Size = new System.Drawing.Size(684, 536);
+            this.migrationControl.TabIndex = 5;
             // 
             // connectionPage
             // 
@@ -134,14 +133,14 @@
             this.connectionPage.Location = new System.Drawing.Point(4, 22);
             this.connectionPage.Name = "connectionPage";
             this.connectionPage.Padding = new System.Windows.Forms.Padding(3);
-            this.connectionPage.Size = new System.Drawing.Size(655, 420);
+            this.connectionPage.Size = new System.Drawing.Size(676, 510);
             this.connectionPage.TabIndex = 0;
             this.connectionPage.Text = "Verbindung";
             this.connectionPage.UseVisualStyleBackColor = true;
             // 
             // labelPervasvieTest
             // 
-            this.labelPervasvieTest.Location = new System.Drawing.Point(76, 383);
+            this.labelPervasvieTest.Location = new System.Drawing.Point(76, 422);
             this.labelPervasvieTest.Name = "labelPervasvieTest";
             this.labelPervasvieTest.Size = new System.Drawing.Size(392, 23);
             this.labelPervasvieTest.TabIndex = 26;
@@ -149,7 +148,7 @@
             // 
             // label13
             // 
-            this.label13.Location = new System.Drawing.Point(6, 348);
+            this.label13.Location = new System.Drawing.Point(6, 387);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(64, 20);
             this.label13.TabIndex = 25;
@@ -159,27 +158,27 @@
             // textBoxPervasiveDatabase
             // 
             this.textBoxPervasiveDatabase.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.textBoxPervasiveDatabase.Location = new System.Drawing.Point(76, 348);
+            this.textBoxPervasiveDatabase.Location = new System.Drawing.Point(76, 387);
             this.textBoxPervasiveDatabase.MaxLength = 32;
             this.textBoxPervasiveDatabase.Name = "textBoxPervasiveDatabase";
             this.textBoxPervasiveDatabase.Size = new System.Drawing.Size(177, 20);
-            this.textBoxPervasiveDatabase.TabIndex = 13;
+            this.textBoxPervasiveDatabase.TabIndex = 24;
             this.textBoxPervasiveDatabase.TextChanged += new System.EventHandler(this.OnPervasiveInputBoxChanged);
             // 
             // textBoxPervasivePassword
             // 
             this.textBoxPervasivePassword.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.textBoxPervasivePassword.Location = new System.Drawing.Point(76, 322);
+            this.textBoxPervasivePassword.Location = new System.Drawing.Point(76, 361);
             this.textBoxPervasivePassword.MaxLength = 32;
             this.textBoxPervasivePassword.Name = "textBoxPervasivePassword";
             this.textBoxPervasivePassword.PasswordChar = '*';
             this.textBoxPervasivePassword.Size = new System.Drawing.Size(177, 20);
-            this.textBoxPervasivePassword.TabIndex = 12;
+            this.textBoxPervasivePassword.TabIndex = 23;
             this.textBoxPervasivePassword.TextChanged += new System.EventHandler(this.OnPervasiveInputBoxChanged);
             // 
             // label12
             // 
-            this.label12.Location = new System.Drawing.Point(6, 322);
+            this.label12.Location = new System.Drawing.Point(6, 361);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(64, 20);
             this.label12.TabIndex = 22;
@@ -189,16 +188,16 @@
             // textBoxPervasiveUser
             // 
             this.textBoxPervasiveUser.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.textBoxPervasiveUser.Location = new System.Drawing.Point(76, 296);
+            this.textBoxPervasiveUser.Location = new System.Drawing.Point(76, 335);
             this.textBoxPervasiveUser.MaxLength = 32;
             this.textBoxPervasiveUser.Name = "textBoxPervasiveUser";
             this.textBoxPervasiveUser.Size = new System.Drawing.Size(177, 20);
-            this.textBoxPervasiveUser.TabIndex = 11;
+            this.textBoxPervasiveUser.TabIndex = 21;
             this.textBoxPervasiveUser.TextChanged += new System.EventHandler(this.OnPervasiveInputBoxChanged);
             // 
             // label11
             // 
-            this.label11.Location = new System.Drawing.Point(6, 296);
+            this.label11.Location = new System.Drawing.Point(6, 335);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(64, 20);
             this.label11.TabIndex = 20;
@@ -208,16 +207,16 @@
             // textBoxPervasivePort
             // 
             this.textBoxPervasivePort.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.textBoxPervasivePort.Location = new System.Drawing.Point(76, 270);
+            this.textBoxPervasivePort.Location = new System.Drawing.Point(76, 309);
             this.textBoxPervasivePort.MaxLength = 5;
             this.textBoxPervasivePort.Name = "textBoxPervasivePort";
             this.textBoxPervasivePort.Size = new System.Drawing.Size(48, 20);
-            this.textBoxPervasivePort.TabIndex = 10;
+            this.textBoxPervasivePort.TabIndex = 19;
             this.textBoxPervasivePort.TextChanged += new System.EventHandler(this.OnPervasiveInputBoxChanged);
             // 
             // label10
             // 
-            this.label10.Location = new System.Drawing.Point(6, 270);
+            this.label10.Location = new System.Drawing.Point(6, 309);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(64, 20);
             this.label10.TabIndex = 18;
@@ -226,25 +225,25 @@
             // 
             // btnPervasiveConnectionTest
             // 
-            this.btnPervasiveConnectionTest.Location = new System.Drawing.Point(6, 383);
+            this.btnPervasiveConnectionTest.Location = new System.Drawing.Point(6, 422);
             this.btnPervasiveConnectionTest.Name = "btnPervasiveConnectionTest";
             this.btnPervasiveConnectionTest.Size = new System.Drawing.Size(65, 25);
-            this.btnPervasiveConnectionTest.TabIndex = 14;
+            this.btnPervasiveConnectionTest.TabIndex = 17;
             this.btnPervasiveConnectionTest.Text = "Testen";
             this.btnPervasiveConnectionTest.UseVisualStyleBackColor = true;
             this.btnPervasiveConnectionTest.Click += new System.EventHandler(this.btnPervasiveConnectionTest_Click);
             // 
             // textBoxPervasiveServer
             // 
-            this.textBoxPervasiveServer.Location = new System.Drawing.Point(76, 244);
+            this.textBoxPervasiveServer.Location = new System.Drawing.Point(76, 283);
             this.textBoxPervasiveServer.Name = "textBoxPervasiveServer";
             this.textBoxPervasiveServer.Size = new System.Drawing.Size(177, 20);
-            this.textBoxPervasiveServer.TabIndex = 9;
+            this.textBoxPervasiveServer.TabIndex = 16;
             this.textBoxPervasiveServer.TextChanged += new System.EventHandler(this.OnPervasiveInputBoxChanged);
             // 
             // label2
             // 
-            this.label2.Location = new System.Drawing.Point(6, 243);
+            this.label2.Location = new System.Drawing.Point(6, 282);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(64, 20);
             this.label2.TabIndex = 15;
@@ -253,16 +252,16 @@
             // 
             // forceCreateSqlDatabase
             // 
-            this.forceCreateSqlDatabase.Location = new System.Drawing.Point(259, 145);
+            this.forceCreateSqlDatabase.Location = new System.Drawing.Point(259, 159);
             this.forceCreateSqlDatabase.Name = "forceCreateSqlDatabase";
             this.forceCreateSqlDatabase.Size = new System.Drawing.Size(209, 20);
-            this.forceCreateSqlDatabase.TabIndex = 7;
+            this.forceCreateSqlDatabase.TabIndex = 14;
             this.forceCreateSqlDatabase.Text = "Neuanlage erzwingen";
             this.forceCreateSqlDatabase.UseVisualStyleBackColor = true;
             // 
             // label9
             // 
-            this.label9.Location = new System.Drawing.Point(6, 145);
+            this.label9.Location = new System.Drawing.Point(6, 159);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(64, 20);
             this.label9.TabIndex = 13;
@@ -272,17 +271,17 @@
             // textBoxSqlDatabase
             // 
             this.textBoxSqlDatabase.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.textBoxSqlDatabase.Location = new System.Drawing.Point(76, 145);
+            this.textBoxSqlDatabase.Location = new System.Drawing.Point(76, 159);
             this.textBoxSqlDatabase.MaxLength = 32;
             this.textBoxSqlDatabase.Name = "textBoxSqlDatabase";
             this.textBoxSqlDatabase.Size = new System.Drawing.Size(177, 20);
-            this.textBoxSqlDatabase.TabIndex = 6;
+            this.textBoxSqlDatabase.TabIndex = 12;
             this.textBoxSqlDatabase.TextChanged += new System.EventHandler(this.OnSqlInputBoxChanged);
             // 
             // label8
             // 
-            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(8, 220);
+            this.label8.Font = new System.Drawing.Font("Arial Rounded MT Bold", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte) (0)));
+            this.label8.Location = new System.Drawing.Point(8, 247);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(245, 23);
             this.label8.TabIndex = 11;
@@ -291,7 +290,7 @@
             // 
             // labelSqlTest
             // 
-            this.labelSqlTest.Location = new System.Drawing.Point(76, 181);
+            this.labelSqlTest.Location = new System.Drawing.Point(76, 195);
             this.labelSqlTest.Name = "labelSqlTest";
             this.labelSqlTest.Size = new System.Drawing.Size(392, 23);
             this.labelSqlTest.TabIndex = 10;
@@ -299,10 +298,10 @@
             // 
             // btnSqlConnectionTest
             // 
-            this.btnSqlConnectionTest.Location = new System.Drawing.Point(8, 179);
+            this.btnSqlConnectionTest.Location = new System.Drawing.Point(8, 193);
             this.btnSqlConnectionTest.Name = "btnSqlConnectionTest";
             this.btnSqlConnectionTest.Size = new System.Drawing.Size(65, 25);
-            this.btnSqlConnectionTest.TabIndex = 8;
+            this.btnSqlConnectionTest.TabIndex = 9;
             this.btnSqlConnectionTest.Text = "Testen";
             this.btnSqlConnectionTest.UseVisualStyleBackColor = true;
             this.btnSqlConnectionTest.Click += new System.EventHandler(this.btnSqlConnectionTest_Click);
@@ -310,17 +309,17 @@
             // textBoxSqlPassword
             // 
             this.textBoxSqlPassword.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.textBoxSqlPassword.Location = new System.Drawing.Point(76, 119);
+            this.textBoxSqlPassword.Location = new System.Drawing.Point(76, 133);
             this.textBoxSqlPassword.MaxLength = 32;
             this.textBoxSqlPassword.Name = "textBoxSqlPassword";
             this.textBoxSqlPassword.PasswordChar = '*';
             this.textBoxSqlPassword.Size = new System.Drawing.Size(177, 20);
-            this.textBoxSqlPassword.TabIndex = 5;
+            this.textBoxSqlPassword.TabIndex = 8;
             this.textBoxSqlPassword.TextChanged += new System.EventHandler(this.OnSqlInputBoxChanged);
             // 
             // label7
             // 
-            this.label7.Location = new System.Drawing.Point(6, 119);
+            this.label7.Location = new System.Drawing.Point(6, 133);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(64, 20);
             this.label7.TabIndex = 7;
@@ -330,16 +329,16 @@
             // textBoxSqlUser
             // 
             this.textBoxSqlUser.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.textBoxSqlUser.Location = new System.Drawing.Point(76, 93);
+            this.textBoxSqlUser.Location = new System.Drawing.Point(76, 107);
             this.textBoxSqlUser.MaxLength = 32;
             this.textBoxSqlUser.Name = "textBoxSqlUser";
             this.textBoxSqlUser.Size = new System.Drawing.Size(177, 20);
-            this.textBoxSqlUser.TabIndex = 4;
+            this.textBoxSqlUser.TabIndex = 6;
             this.textBoxSqlUser.TextChanged += new System.EventHandler(this.OnSqlInputBoxChanged);
             // 
             // label6
             // 
-            this.label6.Location = new System.Drawing.Point(6, 93);
+            this.label6.Location = new System.Drawing.Point(6, 107);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(64, 20);
             this.label6.TabIndex = 5;
@@ -349,16 +348,16 @@
             // textBoxSqlPort
             // 
             this.textBoxSqlPort.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.textBoxSqlPort.Location = new System.Drawing.Point(76, 67);
+            this.textBoxSqlPort.Location = new System.Drawing.Point(76, 81);
             this.textBoxSqlPort.MaxLength = 5;
             this.textBoxSqlPort.Name = "textBoxSqlPort";
             this.textBoxSqlPort.Size = new System.Drawing.Size(48, 20);
-            this.textBoxSqlPort.TabIndex = 3;
+            this.textBoxSqlPort.TabIndex = 4;
             this.textBoxSqlPort.TextChanged += new System.EventHandler(this.OnSqlInputBoxChanged);
             // 
             // label5
             // 
-            this.label5.Location = new System.Drawing.Point(6, 67);
+            this.label5.Location = new System.Drawing.Point(6, 81);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(64, 20);
             this.label5.TabIndex = 3;
@@ -367,7 +366,7 @@
             // 
             // textBoxSqlServer
             // 
-            this.textBoxSqlServer.Location = new System.Drawing.Point(76, 41);
+            this.textBoxSqlServer.Location = new System.Drawing.Point(76, 55);
             this.textBoxSqlServer.Name = "textBoxSqlServer";
             this.textBoxSqlServer.Size = new System.Drawing.Size(177, 20);
             this.textBoxSqlServer.TabIndex = 2;
@@ -375,7 +374,7 @@
             // 
             // label4
             // 
-            this.label4.Location = new System.Drawing.Point(6, 41);
+            this.label4.Location = new System.Drawing.Point(6, 55);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(64, 20);
             this.label4.TabIndex = 1;
@@ -384,8 +383,8 @@
             // 
             // label3
             // 
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(6, 15);
+            this.label3.Font = new System.Drawing.Font("Arial Rounded MT Bold", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte) (0)));
+            this.label3.Location = new System.Drawing.Point(3, 16);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(247, 23);
             this.label3.TabIndex = 0;
@@ -400,7 +399,7 @@
             this.migrationPage.Location = new System.Drawing.Point(4, 22);
             this.migrationPage.Name = "migrationPage";
             this.migrationPage.Padding = new System.Windows.Forms.Padding(3);
-            this.migrationPage.Size = new System.Drawing.Size(655, 420);
+            this.migrationPage.Size = new System.Drawing.Size(676, 510);
             this.migrationPage.TabIndex = 1;
             this.migrationPage.Text = "Migration";
             this.migrationPage.UseVisualStyleBackColor = true;
@@ -412,7 +411,7 @@
             this.btnMigrateStart.Location = new System.Drawing.Point(277, 76);
             this.btnMigrateStart.Name = "btnMigrateStart";
             this.btnMigrateStart.Size = new System.Drawing.Size(110, 25);
-            this.btnMigrateStart.TabIndex = 16;
+            this.btnMigrateStart.TabIndex = 10;
             this.btnMigrateStart.Text = "Migration Starten";
             this.btnMigrateStart.UseVisualStyleBackColor = true;
             this.btnMigrateStart.Click += new System.EventHandler(this.btnStartMigrate_Click);
@@ -422,17 +421,18 @@
             this.label14.Dock = System.Windows.Forms.DockStyle.Top;
             this.label14.Location = new System.Drawing.Point(3, 3);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(649, 70);
+            this.label14.Size = new System.Drawing.Size(670, 70);
             this.label14.TabIndex = 2;
+            this.label14.Text = resources.GetString("label14.Text");
             this.label14.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // textBoxMigrationLog
             // 
             this.textBoxMigrationLog.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.textBoxMigrationLog.Location = new System.Drawing.Point(3, 102);
+            this.textBoxMigrationLog.Location = new System.Drawing.Point(3, 107);
             this.textBoxMigrationLog.Multiline = true;
             this.textBoxMigrationLog.Name = "textBoxMigrationLog";
-            this.textBoxMigrationLog.Size = new System.Drawing.Size(649, 315);
+            this.textBoxMigrationLog.Size = new System.Drawing.Size(670, 400);
             this.textBoxMigrationLog.TabIndex = 0;
             // 
             // mappingPage
@@ -450,7 +450,7 @@
             this.mappingPage.Location = new System.Drawing.Point(4, 22);
             this.mappingPage.Name = "mappingPage";
             this.mappingPage.Padding = new System.Windows.Forms.Padding(3);
-            this.mappingPage.Size = new System.Drawing.Size(655, 420);
+            this.mappingPage.Size = new System.Drawing.Size(676, 510);
             this.mappingPage.TabIndex = 3;
             this.mappingPage.Text = "Zuweisung";
             this.mappingPage.UseVisualStyleBackColor = true;
@@ -458,10 +458,10 @@
             // 
             // btnPervasiveRowDown
             // 
-            this.btnPervasiveRowDown.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnPervasiveRowDown.BackgroundImage")));
+            this.btnPervasiveRowDown.BackgroundImage = ((System.Drawing.Image) (resources.GetObject("btnPervasiveRowDown.BackgroundImage")));
             this.btnPervasiveRowDown.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnPervasiveRowDown.ForeColor = System.Drawing.SystemColors.ActiveBorder;
-            this.btnPervasiveRowDown.Location = new System.Drawing.Point(306, 221);
+            this.btnPervasiveRowDown.Location = new System.Drawing.Point(315, 255);
             this.btnPervasiveRowDown.Name = "btnPervasiveRowDown";
             this.btnPervasiveRowDown.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.btnPervasiveRowDown.Size = new System.Drawing.Size(43, 43);
@@ -471,10 +471,10 @@
             // 
             // btnPervasiveRowUp
             // 
-            this.btnPervasiveRowUp.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnPervasiveRowUp.BackgroundImage")));
+            this.btnPervasiveRowUp.BackgroundImage = ((System.Drawing.Image) (resources.GetObject("btnPervasiveRowUp.BackgroundImage")));
             this.btnPervasiveRowUp.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnPervasiveRowUp.ForeColor = System.Drawing.SystemColors.ActiveBorder;
-            this.btnPervasiveRowUp.Location = new System.Drawing.Point(306, 172);
+            this.btnPervasiveRowUp.Location = new System.Drawing.Point(315, 190);
             this.btnPervasiveRowUp.Name = "btnPervasiveRowUp";
             this.btnPervasiveRowUp.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.btnPervasiveRowUp.Size = new System.Drawing.Size(43, 43);
@@ -484,18 +484,18 @@
             // 
             // label16
             // 
-            this.label16.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F);
-            this.label16.Location = new System.Drawing.Point(0, 48);
+            this.label16.Font = new System.Drawing.Font("Arial Rounded MT Bold", 12.25F);
+            this.label16.Location = new System.Drawing.Point(3, 48);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(300, 23);
+            this.label16.Size = new System.Drawing.Size(297, 23);
             this.label16.TabIndex = 8;
             this.label16.Text = "Pervasive";
             this.label16.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label15
             // 
-            this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F);
-            this.label15.Location = new System.Drawing.Point(355, 48);
+            this.label15.Font = new System.Drawing.Font("Arial Rounded MT Bold", 12.25F);
+            this.label15.Location = new System.Drawing.Point(376, 48);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(297, 23);
             this.label15.TabIndex = 7;
@@ -510,15 +510,15 @@
             this.dataGridSql.AllowUserToResizeRows = false;
             this.dataGridSql.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.Disable;
             this.dataGridSql.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridSql.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { this.Index1, this.Feldname1 });
+            this.dataGridSql.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {this.Index1, this.Feldname1});
             this.dataGridSql.Cursor = System.Windows.Forms.Cursors.No;
             this.dataGridSql.Enabled = false;
-            this.dataGridSql.Location = new System.Drawing.Point(355, 101);
+            this.dataGridSql.Location = new System.Drawing.Point(376, 98);
             this.dataGridSql.MultiSelect = false;
             this.dataGridSql.Name = "dataGridSql";
             this.dataGridSql.ReadOnly = true;
             this.dataGridSql.RowHeadersVisible = false;
-            this.dataGridSql.Size = new System.Drawing.Size(297, 316);
+            this.dataGridSql.Size = new System.Drawing.Size(297, 409);
             this.dataGridSql.TabIndex = 6;
             this.dataGridSql.TabStop = false;
             // 
@@ -539,9 +539,9 @@
             // 
             // btnCopyMapping
             // 
-            this.btnCopyMapping.Location = new System.Drawing.Point(306, 383);
+            this.btnCopyMapping.Location = new System.Drawing.Point(315, 464);
             this.btnCopyMapping.Name = "btnCopyMapping";
-            this.btnCopyMapping.Size = new System.Drawing.Size(43, 34);
+            this.btnCopyMapping.Size = new System.Drawing.Size(43, 43);
             this.btnCopyMapping.TabIndex = 5;
             this.btnCopyMapping.Text = "Save";
             this.btnCopyMapping.UseVisualStyleBackColor = true;
@@ -552,7 +552,7 @@
             this.label1.Dock = System.Windows.Forms.DockStyle.Top;
             this.label1.Location = new System.Drawing.Point(3, 3);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(649, 45);
+            this.label1.Size = new System.Drawing.Size(670, 45);
             this.label1.TabIndex = 4;
             this.label1.Text = "ssgit statusHier swird die beiden Datenbanken  zugewiesen";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -561,7 +561,7 @@
             // 
             this.comboBoxSql.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSql.FormattingEnabled = true;
-            this.comboBoxSql.Location = new System.Drawing.Point(355, 74);
+            this.comboBoxSql.Location = new System.Drawing.Point(376, 74);
             this.comboBoxSql.Name = "comboBoxSql";
             this.comboBoxSql.Size = new System.Drawing.Size(297, 21);
             this.comboBoxSql.TabIndex = 3;
@@ -586,13 +586,13 @@
             this.dataGridPervasive.AllowUserToResizeColumns = false;
             this.dataGridPervasive.AllowUserToResizeRows = false;
             this.dataGridPervasive.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridPervasive.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { this.Index, this.Feldname });
-            this.dataGridPervasive.Location = new System.Drawing.Point(3, 101);
+            this.dataGridPervasive.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {this.Index, this.Feldname});
+            this.dataGridPervasive.Location = new System.Drawing.Point(3, 98);
             this.dataGridPervasive.MultiSelect = false;
             this.dataGridPervasive.Name = "dataGridPervasive";
             this.dataGridPervasive.ReadOnly = true;
             this.dataGridPervasive.RowHeadersVisible = false;
-            this.dataGridPervasive.Size = new System.Drawing.Size(297, 316);
+            this.dataGridPervasive.Size = new System.Drawing.Size(297, 409);
             this.dataGridPervasive.TabIndex = 0;
             this.dataGridPervasive.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.OnCellClick);
             this.dataGridPervasive.Scroll += new System.Windows.Forms.ScrollEventHandler(this.OnDataGridScroll);
@@ -619,7 +619,7 @@
             this.importPage.Location = new System.Drawing.Point(4, 22);
             this.importPage.Name = "importPage";
             this.importPage.Padding = new System.Windows.Forms.Padding(3);
-            this.importPage.Size = new System.Drawing.Size(655, 420);
+            this.importPage.Size = new System.Drawing.Size(676, 510);
             this.importPage.TabIndex = 4;
             this.importPage.Text = "Import";
             this.importPage.UseVisualStyleBackColor = true;
@@ -638,7 +638,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(663, 446);
+            this.ClientSize = new System.Drawing.Size(684, 536);
             this.Controls.Add(this.migrationControl);
             this.Location = new System.Drawing.Point(15, 15);
             this.MaximizeBox = false;
@@ -652,8 +652,8 @@
             this.migrationPage.ResumeLayout(false);
             this.migrationPage.PerformLayout();
             this.mappingPage.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridSql)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridPervasive)).EndInit();
+            ((System.ComponentModel.ISupportInitialize) (this.dataGridSql)).EndInit();
+            ((System.ComponentModel.ISupportInitialize) (this.dataGridPervasive)).EndInit();
             this.ResumeLayout(false);
         }
 
