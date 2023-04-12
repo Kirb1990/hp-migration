@@ -59,7 +59,11 @@
         <Compile Include="AppForm.Designer.cs">
           <DependentUpon>AppForm.cs</DependentUpon>
         </Compile>
+        <Compile Include="ConnectionPage.cs" />
         <Compile Include="Exceptions\TextBoxInputException.cs" />
+        <Compile Include="ImportPage.cs" />
+        <Compile Include="MappingPage.cs" />
+        <Compile Include="MigrationPage.cs" />
         <Compile Include="Program.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
         <EmbeddedResource Include="AppForm.resx">

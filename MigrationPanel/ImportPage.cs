@@ -1,6 +1,6 @@
 ﻿namespace MigrationPanel
 {
-    public class ImportPage
+    public partial class AppForm
     {
         
     }
