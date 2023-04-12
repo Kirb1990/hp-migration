@@ -3481,6 +3481,9 @@
   <metadata name="Feldname1.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
+  <data name="label1.Text" xml:space="preserve">
+    <value>In diesem Bereich kannst du eine Zuweisung der einzelnen Feldnamen der Pervasive zur neuen MySQL Datenbank herstellen. Dazu solltest du dir sicher sein, dass du die MySQL Tabelle schon korrekt mit einem belieben DBMS (HeidiSQL, DBeaver..) angepasst hast. Wenn du fertig bist, drücke "Save" und die Zuweisung wird in die mapping.json und in die Zwischenablage gespeichert.</value>
+  </data>
   <metadata name="Index.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>

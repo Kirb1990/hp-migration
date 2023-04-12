@@ -147,8 +147,9 @@ namespace MigrationPanel
             }
         }
 
-        void LoadTableFieldToGrid(DataGridView dataGridView, List<string> fields)
+        void LoadTableFieldsToGrid(DataGridView dataGridView, List<string> fields)
         {
+            dataGridView.Rows.Clear();
             for (int i = 0; i < fields.Count; i++)
             {
                 dataGridView.Rows.Add(i+1, fields[i]);
@@ -287,7 +288,7 @@ namespace MigrationPanel
 
             connectionString = $"Server={server};Port={port};Database={database};User ID={user};Password={password};";
         }
-
+        
         void btnStartMigrate_Click(object sender, EventArgs e)
         {
             textBoxMigrationLog.Clear();
@@ -327,36 +328,54 @@ namespace MigrationPanel
         void OnComboBoxPervasiveChanged(object sender, EventArgs e)
         {
             string tableName = comboBoxPervasive.SelectedItem.ToString();
-
-            dataGridPervasive.Rows.Clear();
-
+            
+            List<string> fields;
             if (_Migrator.Mapping.TryGet(tableName, out TablePair tablePair))
             {
-                LoadTableFieldToGrid(dataGridSql, tablePair.PervasiveTable.Fields);
+                ShowMappingExistsAlert();
                 SwitchComboBox(comboBoxSql, tablePair.SqlTable.Name);
-                return;
+                
+                LoadTableFieldsToGrid(dataGridSql, tablePair.SqlTable.Fields);
+                fields = tablePair.PervasiveTable.Fields;
             }
+            else
+            {
+                HideMappingExistsAlert();
+                fields = _Migrator.GetPervasiveFields(tableName);
+                if(fields.Count <= 1) fields.Clear();
+            }
+            LoadTableFieldsToGrid(dataGridPervasive, fields);
+        }
 
-            List<string> fields = _Migrator.GetPervasiveFields(tableName);
-            if(fields.Count <= 1) fields.Clear();
-            
-            LoadTableFieldToGrid(dataGridPervasive, fields);
+        void ShowMappingExistsAlert()
+        {
+            labelMappingExists.Visible = true;
+        }
+        
+        void HideMappingExistsAlert()
+        {
+            labelMappingExists.Visible = false;
         }
 
         void OnComboBoxSqlChanged(object sender, EventArgs e)
         {
             string tableName = comboBoxSql.SelectedItem.ToString();
-
-            dataGridSql.Rows.Clear();
-
+                
+            List<string> fields;
             if (_Migrator.Mapping.TryGet(tableName, out TablePair tablePair))
             {
-                SwitchComboBox(comboBoxSql, tablePair.PervasiveTable.Name);
-                return;
+                ShowMappingExistsAlert();
+                SwitchComboBox(comboBoxPervasive, tablePair.PervasiveTable.Name);
+                LoadTableFieldsToGrid(dataGridPervasive, tablePair.PervasiveTable.Fields);
+                fields = tablePair.SqlTable.Fields;
             }
-
-            List<string> fields = _Migrator.GetSqlFields(tableName);
-            LoadTableFieldToGrid(dataGridSql, fields);
+            else
+            {
+                HideMappingExistsAlert();
+                fields = _Migrator.GetSqlFields(tableName);
+                if(fields.Count <= 1) fields.Clear();
+            }
+            LoadTableFieldsToGrid(dataGridSql, fields);
         }
         
         void OnDataGridScroll(object sender, ScrollEventArgs e)

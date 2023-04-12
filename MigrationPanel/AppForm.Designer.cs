@@ -64,6 +64,7 @@
             this.label14 = new System.Windows.Forms.Label();
             this.textBoxMigrationLog = new System.Windows.Forms.TextBox();
             this.mappingPage = new System.Windows.Forms.TabPage();
+            this.labelMappingExists = new System.Windows.Forms.Label();
             this.btnPervasiveRowDown = new System.Windows.Forms.Button();
             this.btnPervasiveRowUp = new System.Windows.Forms.Button();
             this.label16 = new System.Windows.Forms.Label();
@@ -437,6 +438,7 @@
             // 
             // mappingPage
             // 
+            this.mappingPage.Controls.Add(this.labelMappingExists);
             this.mappingPage.Controls.Add(this.btnPervasiveRowDown);
             this.mappingPage.Controls.Add(this.btnPervasiveRowUp);
             this.mappingPage.Controls.Add(this.label16);
@@ -455,6 +457,20 @@
             this.mappingPage.Text = "Zuweisung";
             this.mappingPage.UseVisualStyleBackColor = true;
             this.mappingPage.Enter += new System.EventHandler(this.MappingPage_Enter);
+            // 
+            // labelMappingExists
+            // 
+            this.labelMappingExists.BackColor = System.Drawing.Color.Transparent;
+            this.labelMappingExists.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.labelMappingExists.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (0)));
+            this.labelMappingExists.ForeColor = System.Drawing.Color.DarkRed;
+            this.labelMappingExists.Location = new System.Drawing.Point(211, 301);
+            this.labelMappingExists.Name = "labelMappingExists";
+            this.labelMappingExists.Size = new System.Drawing.Size(253, 31);
+            this.labelMappingExists.TabIndex = 11;
+            this.labelMappingExists.Text = "Achtung! Mapping vorhanden!";
+            this.labelMappingExists.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.labelMappingExists.Visible = false;
             // 
             // btnPervasiveRowDown
             // 
@@ -554,18 +570,20 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(670, 45);
             this.label1.TabIndex = 4;
-            this.label1.Text = "ssgit statusHier swird die beiden Datenbanken  zugewiesen";
+            this.label1.Text = resources.GetString("label1.Text");
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // comboBoxSql
             // 
+            this.comboBoxSql.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.comboBoxSql.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.comboBoxSql.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSql.FormattingEnabled = true;
             this.comboBoxSql.Location = new System.Drawing.Point(376, 74);
             this.comboBoxSql.Name = "comboBoxSql";
             this.comboBoxSql.Size = new System.Drawing.Size(297, 21);
             this.comboBoxSql.TabIndex = 3;
-            this.comboBoxSql.SelectedIndexChanged += new System.EventHandler(this.OnComboBoxSqlChanged);
+            this.comboBoxSql.SelectionChangeCommitted += new System.EventHandler(this.OnComboBoxSqlChanged);
             // 
             // comboBoxPervasive
             // 
@@ -577,7 +595,7 @@
             this.comboBoxPervasive.Name = "comboBoxPervasive";
             this.comboBoxPervasive.Size = new System.Drawing.Size(297, 21);
             this.comboBoxPervasive.TabIndex = 1;
-            this.comboBoxPervasive.SelectedIndexChanged += new System.EventHandler(this.OnComboBoxPervasiveChanged);
+            this.comboBoxPervasive.SelectionChangeCommitted += new System.EventHandler(this.OnComboBoxPervasiveChanged);
             // 
             // dataGridPervasive
             // 
@@ -656,6 +674,8 @@
             ((System.ComponentModel.ISupportInitialize) (this.dataGridPervasive)).EndInit();
             this.ResumeLayout(false);
         }
+
+        private System.Windows.Forms.Label labelMappingExists;
 
         private System.Windows.Forms.Button btnPervasiveRowDown;
 
