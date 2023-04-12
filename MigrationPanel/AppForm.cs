@@ -411,21 +411,16 @@ namespace MigrationPanel
                 Fields = ExtractFields(dataGridSql)
             };
 
-            Mapping mapping = new Mapping
+            TablePair tablePair = new TablePair
             {
-                TablePairs = new List<TablePair>
-                {
-                    new TablePair
-                    {
-                        PervasiveTable = pervasiveTable,
-                        SqlTable = sqlTable
-                    }
-                }
+                PervasiveTable = pervasiveTable,
+                SqlTable = sqlTable
             };
 
             try
             {
-                Clipboard.SetText(JsonConvert.SerializeObject(mapping));
+                Clipboard.SetText(JsonConvert.SerializeObject(tablePair));
+                _Migrator.AddTablePairToMapping(tablePair);
             }
             catch (Exception exception)
             {
@@ -434,7 +429,7 @@ namespace MigrationPanel
                 return;
             }
 
-            MessageBox.Show("In Zwischenablage gespeichert! Speicher diese json datei in die mapping.json ab.");
+            MessageBox.Show("In Zwischenablage gespeichert und zur mapping.json hinzugefügt!");
         }
 
         List<string> ExtractFields(DataGridView dataGridView)
@@ -442,7 +437,7 @@ namespace MigrationPanel
             List<string> fields = new List<string>();
             for (int i = 0; i < dataGridView.Rows.Count; i++)
             {
-                fields.Add((string)dataGridView.Rows[i].Cells["Feldname"].Value);
+                fields.Add((string)dataGridView.Rows[i].Cells[1].Value);
             }
 
             return fields;
@@ -450,25 +445,25 @@ namespace MigrationPanel
 
         void btnPervasiveRowUp_Click(object sender, EventArgs e)
         {
-            if (!TryGetRow(out DataGridViewRow dataGridViewRow, out int index))
+            const int OFFSET = -1;
+            if (!TryGetRow(out DataGridViewRow dataGridViewRow, out int index, OFFSET))
             {
                 return;
             }
-
-            SwapFieldValues(dataGridViewRow, index - 1);
+            SwapFieldValues(dataGridViewRow, index);
         }
 
         void btnPervasiveRowDown_Click(object sender, EventArgs e)
         {
-            if (!TryGetRow(out DataGridViewRow dataGridViewRow, out int index))
+            const int OFFSET = 1;
+            if (!TryGetRow(out DataGridViewRow dataGridViewRow, out int index, OFFSET))
             {
                 return;
             }
-
-            SwapFieldValues(dataGridViewRow, index + 1);
+            SwapFieldValues(dataGridViewRow, index);
         }
 
-        bool TryGetRow(out DataGridViewRow dataGridViewRow, out int index)
+        bool TryGetRow(out DataGridViewRow dataGridViewRow, out int index, int offSet)
         {
             index = -1;
             dataGridViewRow = null;
@@ -480,8 +475,9 @@ namespace MigrationPanel
 
             dataGridViewRow = dataGridPervasive.SelectedRows[0];
             index = dataGridViewRow.Index;
+            index += offSet;
 
-            return index > 0 && index <= dataGridViewRow.Index;
+            return index >= 0 && index < dataGridPervasive.Rows.Count;
         }
 
         void SwapFieldValues(DataGridViewRow dataGridRow, int index)
@@ -489,8 +485,7 @@ namespace MigrationPanel
             DataGridViewCell dataGridViewCell = dataGridPervasive.Rows[index].Cells["Feldname"];
 
             // "Tuple Assignment" swapping the values between the two cells
-            (dataGridViewCell.Value, dataGridRow.Cells["Feldname"].Value) =
-                (dataGridRow.Cells["Feldname"].Value, dataGridViewCell.Value);
+            (dataGridViewCell.Value, dataGridRow.Cells["Feldname"].Value) = (dataGridRow.Cells["Feldname"].Value, dataGridViewCell.Value);
 
             SelectPervasiveDataRow(index);
         }

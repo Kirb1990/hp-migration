@@ -1,2 +1,32 @@
 ﻿{
+  "TablePairs":[
+    {
+      "PervasiveTable":{
+        "Name":"FTP_Benachrichtigung",
+        "Fields":[
+          "AUTO_INCREMENT",
+          "FTP_AdrNr",
+          "FTP_Datum",
+          "FTP_Lfd_Nr",
+          "FTP_Mail",
+          "FTP_Update_Version",
+          "FTP_Verschickt",
+          "FTP_Zeit"
+        ]
+      },
+      "SqlTable":{
+        "Name":"customers",
+        "Fields":[
+          "id",
+          "first_name",
+          "last_name",
+          "bluuubb",
+          "email",
+          "foobar",
+          "birthdate",
+          "test"
+        ]
+      }
+    }
+  ]
 }

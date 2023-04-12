@@ -10,6 +10,11 @@ public struct Mapping
     public bool TryGet(string tableName, out TablePair tablePair)
     {
         tablePair = new TablePair();
+
+        if (TablePairs is null)
+        {
+            return false;
+        }
         
         foreach (TablePair pair in TablePairs.Where(pair => pair.PervasiveTable.Name.Equals(tableName) || pair.SqlTable.Name.Equals(tableName)))
         {

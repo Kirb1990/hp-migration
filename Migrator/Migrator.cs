@@ -16,17 +16,20 @@ namespace MigrationTool
         public event EventHandler<string> OnErrorOccured;
         public string Message => _ErrorMessage;
         public bool HasErrors => _ErrorOccured;
-        public readonly Mapping Mapping;
+        
+        readonly char _PathSeparator;
+        
+        Mapping _Mapping;
         
         string _SqlConnectionString;
         string _PervasiveConnectionString;
-        readonly char _PathSeparator;
         
         string _CurrentDatabase;
         string _ErrorMessage;
         
         bool _ErrorOccured;
 
+        public Mapping Mapping => _Mapping;
 
         public Migrator(string sqlSqlConnectionString, string pervasiveConnectionString)
         {
@@ -39,12 +42,27 @@ namespace MigrationTool
 
             Trace.AutoFlush = true;
 
-            string mappingString =
-                File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mapping.json"), Encoding.UTF8);
-            Mapping = JsonConvert.DeserializeObject<Mapping>(mappingString);
+            LoadMapping();
             
             OnErrorOccured += ErrorHandler;
             OnSuccessfullyMigrated += SuccessHandler;
+        }
+
+        void LoadMapping()
+        {
+            string mappingString =
+                File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mapping.json"), Encoding.UTF8);
+            _Mapping = JsonConvert.DeserializeObject<Mapping>(mappingString);
+        }
+
+        public void AddTablePairToMapping(TablePair tablePair)
+        {
+            _Mapping.TablePairs.Add(tablePair);
+        }
+        
+        public void AddTablePairsToMapping(List<TablePair> tablePairs)
+        {
+            _Mapping.TablePairs.AddRange(tablePairs);
         }
 
         public Migrator(string sqlSqlConnectionString) : this(sqlSqlConnectionString, string.Empty) { }
@@ -352,7 +370,7 @@ namespace MigrationTool
 
         public List<string> GetPervasiveFields(string tableName)
         {
-            List<string> fieldNames = new() { "SKIPPED" };
+            List<string> fieldNames = new() { "AUTO_INCREMENT" };
 
             using PsqlConnection connection = new(_PervasiveConnectionString);
             connection.Open();
