@@ -9,26 +9,30 @@ namespace MigrationPanel
     {
         void ValidatePervasiveDatabaseAutoConnection()
         {
-            if (string.IsNullOrEmpty(textBoxPervasiveServer.Text) ||
-                string.IsNullOrEmpty(textBoxPervasivePort.Text) ||
-                string.IsNullOrEmpty(textBoxPervasiveUser.Text) ||
-                string.IsNullOrEmpty(textBoxPervasivePassword.Text) ||
-                string.IsNullOrEmpty(textBoxPervasiveDatabase.Text)
-               ) return;
+            if (!CheckFields(textBoxPervasiveServer, textBoxPervasivePort, textBoxPervasiveUser,
+                    textBoxPervasivePassword, textBoxPervasiveDatabase)) return;
 
             TestPervasiveConnection();
         }
 
         void ValidateSqlDatabaseAutoConnection()
-        {
-            if (string.IsNullOrEmpty(textBoxSqlServer.Text) ||
-                string.IsNullOrEmpty(textBoxSqlPort.Text) ||
-                string.IsNullOrEmpty(textBoxSqlUser.Text) ||
-                string.IsNullOrEmpty(textBoxSqlPassword.Text) ||
-                string.IsNullOrEmpty(textBoxSqlDatabase.Text)
-               ) return;
+        {   
+            if (!CheckFields(textBoxSqlServer, textBoxSqlPort, textBoxSqlUser,
+                    textBoxSqlPassword, textBoxSqlDatabase)) return;
 
             TestSqlConnection();
+        }
+        
+        bool CheckFields(params TextBox[] fields)
+        {
+            foreach (TextBox field in fields)
+            {
+                if (string.IsNullOrEmpty(field.Text))
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         void OnSqlInputBoxChanged(object sender, EventArgs e)
