@@ -97,6 +97,7 @@
         <Content Include="mapping.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
+        <Content Include="readme.md" />
     </ItemGroup>
     <ItemGroup>
       <None Include="App.config" />

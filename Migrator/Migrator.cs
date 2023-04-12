@@ -202,7 +202,7 @@ namespace MigrationTool
                     insertCommand.Parameters.AddWithValue("@migrationName", migrationName);
                     insertCommand.ExecuteNonQuery();
 
-                    OnSuccessfullyMigrated?.Invoke(this, $"Migration {migration} executed successfully.");
+                    OnSuccessfullyMigrated?.Invoke(this, $"Migration {migrationName} executed successfully.");
                 }
             }
             catch (Exception ex)
