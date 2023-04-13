@@ -3490,6 +3490,9 @@
   <metadata name="Feldname.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
+  <data name="label17.Text" xml:space="preserve">
+    <value>Hier geht es zum automatisierten Importieren der Daten von der Pervasive in die MariaDB. Es reicht einfach auf Start zu klicken, um alle bisher gemappten Tabellen zu importieren, sollten Daten schon in der MariaDB Tabelle existieren, wird diese einfach übersprungen. Sonst kann auch eine gezielte Tabelle aus dem DropDown Menu ausgesucht werden.</value>
+  </data>
   <metadata name="dataGridViewTextBoxColumn2.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>

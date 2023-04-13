@@ -6,9 +6,9 @@ using Newtonsoft.Json;
 
 namespace MigrationPanel
 {
-    public partial class AppForm
+    internal partial class AppForm
     {
-             void LoadSqlTableNamesToComboBox()
+        void LoadSqlTableNamesToComboBox()
         {
             if (comboBoxSql.Items.Count > 0)
             {
@@ -82,7 +82,7 @@ namespace MigrationPanel
 
         void OnComboBoxPervasiveChanged(object sender, EventArgs e)
         {
-            string tableName = comboBoxPervasive.SelectedItem.ToString();
+            string tableName = comboBoxPervasive.SelectedItem.ToString().Trim();
             
             List<string> fields;
             if (_Migrator.Mapping.TryGet(tableName, out TablePair tablePair))
@@ -112,7 +112,7 @@ namespace MigrationPanel
             labelMappingExists.Visible = false;
         }
         
-                void OnComboBoxSqlChanged(object sender, EventArgs e)
+        void OnComboBoxSqlChanged(object sender, EventArgs e)
         {
             string tableName = comboBoxSql.SelectedItem.ToString();
                 
@@ -136,7 +136,11 @@ namespace MigrationPanel
         void OnDataGridScroll(object sender, ScrollEventArgs e)
         {
             int pervasiveRowIndex = dataGridPervasive.FirstDisplayedScrollingRowIndex;
-          
+
+            if (dataGridSql.FirstDisplayedScrollingRowIndex < 0)
+            {
+                return;
+            }
 
             dataGridSql.FirstDisplayedScrollingRowIndex = pervasiveRowIndex;
         }
@@ -190,7 +194,7 @@ namespace MigrationPanel
 
             try
             {
-                Clipboard.SetText(JsonConvert.SerializeObject(tablePair));
+                Clipboard.SetText(JsonConvert.SerializeObject(tablePair, Formatting.Indented));
                 _Migrator.AddTablePairToMapping(tablePair);
             }
             catch (Exception exception)
@@ -203,9 +207,6 @@ namespace MigrationPanel
             MessageBox.Show("In Zwischenablage gespeichert und zur mapping.json hinzugefügt!");
         }
         
-          
-
-
         List<string> ExtractFields(DataGridView dataGridView)
         {
             List<string> fields = new List<string>();
@@ -263,7 +264,5 @@ namespace MigrationPanel
 
             SelectPervasiveDataRow(index);
         }
-
-
     }
 }

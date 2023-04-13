@@ -9,7 +9,7 @@ using MigrationTool;
 
 namespace MigrationPanel
 {
-    public partial class AppForm : Form
+    internal partial class AppForm : Form
     {
         readonly byte[] _Key = Encoding.UTF8.GetBytes("xfuix61b6DXbWHhYixko6Pc2t24rqxnX");
         readonly byte[] _Iv = Encoding.UTF8.GetBytes("lOqJ7RMpsStRQn42");
@@ -119,10 +119,11 @@ namespace MigrationPanel
                 }
             }
         }
+
         string DecryptPassword(string encryptedText, byte[] key, byte[] iv)
         {
             if (string.IsNullOrEmpty(encryptedText)) return string.Empty;
-            
+
             using (AesCryptoServiceProvider aes = new AesCryptoServiceProvider())
             {
                 aes.Key = key;

@@ -1,7 +1,63 @@
-﻿namespace MigrationPanel
+﻿using System;
+using System.Windows.Forms;
+using MigrationTool;
+
+namespace MigrationPanel
 {
-    public partial class AppForm
+    internal partial class AppForm
     {
-        
+        void OnImportPageEnter(object sender, EventArgs e)
+        {
+            _Migrator.OnConverterStarted += AppendImportLogText;
+            _Migrator.OnConverterTableStarted += AppendImportLogText;
+            _Migrator.OnConverterMessage += AppendImportLogText;
+            _Migrator.OnConverterTableFinished += AppendImportLogText;
+            _Migrator.OnConverterFinished += AppendImportLogText;
+            _Migrator.OnErrorOccured += AppendImportLogText;
+            
+            if (_Migrator.Mapping.TablePairs.Count <= comboBoxMapping.Items.Count)
+            {
+                return;
+            }
+            
+            comboBoxMapping.Items.Clear();
+            foreach (TablePair tablePair in _Migrator.Mapping.TablePairs)
+            {
+                comboBoxMapping.Items.Add(tablePair.PervasiveTable.Name);
+            }
+        }
+
+        void OnImportPageLeave(object sender, EventArgs e)
+        {
+            _Migrator.OnConverterStarted -= AppendImportLogText;
+            _Migrator.OnConverterTableStarted -= AppendImportLogText;
+            _Migrator.OnConverterMessage -= AppendImportLogText;
+            _Migrator.OnConverterTableFinished -= AppendImportLogText;
+            _Migrator.OnConverterFinished -= AppendImportLogText;
+            _Migrator.OnErrorOccured -= AppendImportLogText;
+        }
+
+        void AppendImportLogText(object sender, string e)
+        {
+            textBoxImportLog.Text += $"{e}\r\n";
+        }
+
+        void btnImportStart_Click(object sender, EventArgs e)
+        {
+            string convertingTable = comboBoxMapping.SelectedItem.ToString().Trim();
+            if (string.IsNullOrEmpty(convertingTable))
+            {
+                _Migrator.StartConvert();
+                return;
+            }
+
+            if (!_Migrator.Mapping.TryGet(convertingTable, out TablePair tablePair))
+            {
+                MessageBox.Show($"{convertingTable} konnte nicht im Mapping gefunden werden");
+                return;
+            }
+            
+            _Migrator.StartConvert(tablePair);
+        }
     }
 }

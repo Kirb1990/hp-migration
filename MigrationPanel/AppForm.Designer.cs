@@ -80,6 +80,10 @@
             this.Index = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Feldname = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.importPage = new System.Windows.Forms.TabPage();
+            this.label17 = new System.Windows.Forms.Label();
+            this.textBoxImportLog = new System.Windows.Forms.TextBox();
+            this.comboBoxMapping = new System.Windows.Forms.ComboBox();
+            this.btnImportStart = new System.Windows.Forms.Button();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.migrationControl.SuspendLayout();
             this.connectionPage.SuspendLayout();
@@ -87,6 +91,7 @@
             this.mappingPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize) (this.dataGridSql)).BeginInit();
             ((System.ComponentModel.ISupportInitialize) (this.dataGridPervasive)).BeginInit();
+            this.importPage.SuspendLayout();
             this.SuspendLayout();
             // 
             // migrationControl
@@ -634,6 +639,11 @@
             // 
             // importPage
             // 
+            this.importPage.AccessibleName = "asd";
+            this.importPage.Controls.Add(this.label17);
+            this.importPage.Controls.Add(this.textBoxImportLog);
+            this.importPage.Controls.Add(this.comboBoxMapping);
+            this.importPage.Controls.Add(this.btnImportStart);
             this.importPage.Location = new System.Drawing.Point(4, 22);
             this.importPage.Name = "importPage";
             this.importPage.Padding = new System.Windows.Forms.Padding(3);
@@ -641,6 +651,47 @@
             this.importPage.TabIndex = 4;
             this.importPage.Text = "Import";
             this.importPage.UseVisualStyleBackColor = true;
+            this.importPage.Enter += new System.EventHandler(this.OnImportPageEnter);
+            this.importPage.Leave += new System.EventHandler(this.OnImportPageLeave);
+            // 
+            // label17
+            // 
+            this.label17.Dock = System.Windows.Forms.DockStyle.Top;
+            this.label17.Location = new System.Drawing.Point(3, 3);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(670, 45);
+            this.label17.TabIndex = 6;
+            this.label17.Text = resources.GetString("label17.Text");
+            this.label17.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // textBoxImportLog
+            // 
+            this.textBoxImportLog.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.textBoxImportLog.Location = new System.Drawing.Point(3, 107);
+            this.textBoxImportLog.Multiline = true;
+            this.textBoxImportLog.Name = "textBoxImportLog";
+            this.textBoxImportLog.Size = new System.Drawing.Size(670, 400);
+            this.textBoxImportLog.TabIndex = 5;
+            // 
+            // comboBoxMapping
+            // 
+            this.comboBoxMapping.AccessibleName = "comboBgew";
+            this.comboBoxMapping.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxMapping.FormattingEnabled = true;
+            this.comboBoxMapping.Location = new System.Drawing.Point(6, 79);
+            this.comboBoxMapping.Name = "comboBoxMapping";
+            this.comboBoxMapping.Size = new System.Drawing.Size(243, 21);
+            this.comboBoxMapping.TabIndex = 4;
+            // 
+            // btnImportStart
+            // 
+            this.btnImportStart.Location = new System.Drawing.Point(277, 76);
+            this.btnImportStart.Name = "btnImportStart";
+            this.btnImportStart.Size = new System.Drawing.Size(110, 25);
+            this.btnImportStart.TabIndex = 3;
+            this.btnImportStart.Text = "Import Start";
+            this.btnImportStart.UseVisualStyleBackColor = true;
+            this.btnImportStart.Click += new System.EventHandler(this.btnImportStart_Click);
             // 
             // dataGridViewTextBoxColumn2
             // 
@@ -672,8 +723,18 @@
             this.mappingPage.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize) (this.dataGridSql)).EndInit();
             ((System.ComponentModel.ISupportInitialize) (this.dataGridPervasive)).EndInit();
+            this.importPage.ResumeLayout(false);
+            this.importPage.PerformLayout();
             this.ResumeLayout(false);
         }
+
+        private System.Windows.Forms.Label label17;
+
+        private System.Windows.Forms.TextBox textBoxImportLog;
+
+        private System.Windows.Forms.ComboBox comboBoxMapping;
+
+        private System.Windows.Forms.Button btnImportStart;
 
         private System.Windows.Forms.Label labelMappingExists;
 

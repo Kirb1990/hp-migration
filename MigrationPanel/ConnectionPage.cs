@@ -5,7 +5,7 @@ using MigrationPanel.Exceptions;
 
 namespace MigrationPanel
 {
-    public partial class AppForm
+    internal partial class AppForm
     {
         void ValidatePervasiveDatabaseAutoConnection()
         {

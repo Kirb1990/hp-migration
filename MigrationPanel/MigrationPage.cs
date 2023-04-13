@@ -2,7 +2,7 @@
 
 namespace MigrationPanel
 {
-    public partial class AppForm
+    internal partial class AppForm
     {
         void btnStartMigrate_Click(object sender, EventArgs e)
         {
