@@ -4,6 +4,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Timers;
+using MigrationTool.Exceptions;
+using MigrationTool.Extensions;
 using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
 using Pervasive.Data.SqlClient;
@@ -12,8 +15,14 @@ namespace MigrationTool
 {
     public class Migrator
     {
+        const string AUTO_INCREMENT_PLACEHOLDER = "AUTO_INCREMENT";
         public event EventHandler<string> OnSuccessfullyMigrated;
         public event EventHandler<string> OnErrorOccured;
+        public event EventHandler<string> OnConverterStarted;
+        public event EventHandler<string> OnConverterTableStarted;
+        public event EventHandler<string> OnConverterTableFinished;
+        public event EventHandler<string> OnConverterFinished;
+        public event EventHandler<string> OnConverterMessage;
         public string Message => _ErrorMessage;
         public bool HasErrors => _ErrorOccured;
         
@@ -370,12 +379,12 @@ namespace MigrationTool
 
         public List<string> GetPervasiveFields(string tableName)
         {
-            List<string> fieldNames = new() { "AUTO_INCREMENT" };
+            List<string> fieldNames = new() { AUTO_INCREMENT_PLACEHOLDER };
 
             using PsqlConnection connection = new(_PervasiveConnectionString);
             connection.Open();
 
-            string query = $"SELECT DISTINCT Xe$Name FROM X$Field LEFT JOIN X$File on Xe$File =  Xf$Id WHERE Xf$Name = '{tableName}' and Xe$DataType < 255 and Xe$DataType >= 0";
+            string query = $"SELECT DISTINCT Xe$Name FROM X$Field LEFT JOIN X$File on Xe$File =  Xf$Id WHERE Xf$Name = '{tableName.Trim()}' and Xe$DataType < 255 and Xe$DataType >= 0 ORDER BY XE$Id";
             PsqlCommand command = new(query, connection);
             PsqlDataReader reader = command.ExecuteReader();
 
@@ -407,6 +416,149 @@ namespace MigrationTool
             }
 
             return fieldNames;
+        }
+
+        void ConvertTable(TablePair tablePair)
+        {
+            if (!MysqlTableIsEmpty(tablePair.SqlTable.Name))
+            {
+                return;
+            }
+            int maxRecords = PervasiveTableRecordAmount(tablePair.PervasiveTable.Name);
+
+            OnConverterTableStarted?.Invoke(this, $"Pervasive Tabelle {tablePair.PervasiveTable.Name} nach MySQL Tabelle {tablePair.SqlTable.Name} mit {maxRecords} Einträgen!");
+
+            RemoveAutoIncrementPlaceholder(tablePair);
+            Import(tablePair, maxRecords);
+        }
+
+        void RemoveAutoIncrementPlaceholder(TablePair tablePair)
+        {
+            int placeholderIndex = -1;
+            
+            for (int i = 0; i < tablePair.PervasiveTable.Fields.Count; i++)
+            {
+                if (!tablePair.PervasiveTable.Fields[i].Equals(AUTO_INCREMENT_PLACEHOLDER))
+                {
+                    continue;
+                }
+                
+                tablePair.PervasiveTable.Fields.RemoveAt(i);
+                placeholderIndex = i;
+            }
+
+            if (placeholderIndex >= 0)
+            {
+                tablePair.SqlTable.Fields.RemoveAt(placeholderIndex);
+            }
+        }
+
+        void Import(TablePair tablePair, int maxRecords)
+        {
+            using PsqlConnection pervasiveConnection = new (_PervasiveConnectionString);
+            using MySqlConnection mariaDbConnection = new (_SqlConnectionString);
+            pervasiveConnection.Open();
+            mariaDbConnection.Open();
+
+            using PsqlCommand pervasiveCommand = new ($"SELECT {string.Join(",", tablePair.PervasiveTable.Fields)} FROM {tablePair.PervasiveTable.Name}", pervasiveConnection);
+            using PsqlDataReader pervasiveReader = pervasiveCommand.ExecuteReader();
+            using MySqlCommand mariaDbCommand = new ($"INSERT INTO {tablePair.SqlTable.Name} ({string.Join(",", tablePair.SqlTable.Fields)}) VALUES ({string.Join(",", tablePair.SqlTable.Fields.Select(field => "@" + field))})", mariaDbConnection);
+            using MySqlTransaction transaction = mariaDbConnection.BeginTransaction();
+            
+            mariaDbCommand.Transaction = transaction;
+
+            try
+            {
+                while (pervasiveReader.Read())
+                {
+                    for (int i = 0; i < tablePair.PervasiveTable.Fields.Count; i++)
+                    {
+                        mariaDbCommand.Parameters.AddWithValue($"@{tablePair.SqlTable.Fields[i]}", pervasiveReader.GetValue(i));
+                    }
+
+                    mariaDbCommand.ExecuteNonQuery();
+                    mariaDbCommand.Parameters.Clear();
+                }
+
+                transaction.Commit();
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+                OnConverterTableFinished?.Invoke(this, $"Tabelle '{tablePair.PervasiveTable.Name}' abgebrochen.");
+                OnErrorOccured?.Invoke(this, $"Fehler beim Import der Daten: {ex.Message}");
+                return;
+            }
+            OnConverterTableFinished?.Invoke(this, $"Tabelle '{tablePair.PervasiveTable.Name}' {maxRecords}/{maxRecords} abgeschlossen.");
+        }
+
+        int PervasiveTableRecordAmount(string tableName)
+        {
+            int maxRecords = 0;
+            using PsqlConnection connection = new(_PervasiveConnectionString);
+            connection.Open();
+
+            string query = $"SELECT COUNT(*) FROM {tableName}";
+            PsqlCommand command = new(query, connection);
+            PsqlDataReader reader = command.ExecuteReader();
+            
+            while (reader.Read())
+            {
+                maxRecords = Convert.ToInt32(reader.GetString(0));
+            }
+
+            reader.Close();
+            return maxRecords;
+        }
+
+        bool MysqlTableIsEmpty(string sqlTableName)
+        {
+            MySqlConnection connection = new(_SqlConnectionString);
+
+            try
+            {
+                connection.Open();
+                connection.ChangeDatabase(_CurrentDatabase);
+
+                MySqlCommand command = new($"SELECT COUNT(*) FROM {sqlTableName};", connection);
+                int count = Convert.ToInt32(command.ExecuteScalar());
+
+                if (count > 0)
+                {
+                    OnConverterMessage?.Invoke(this, $"Es sind bereits Daten in der MySQL Datenbank [{_CurrentDatabase}] - Tabelle: {sqlTableName} vorhanden.");
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new ConvertingException("Fehler: " + ex.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+            return true;
+        }
+        
+        public void StartConvert(TablePair? single = null)
+        {
+            Timer timer = new();
+            timer.Start();
+            OnConverterStarted?.Invoke(this, "Konverter wurde gestartet.");
+            
+            if (single is null)
+            {
+                foreach (TablePair tablePair in Mapping.TablePairs)
+                {
+                    ConvertTable(tablePair);
+                }
+
+                return;
+            }
+            ConvertTable((TablePair) single);
+            timer.Stop();
+            OnConverterFinished?.Invoke(this, $"Konverter wurde nach {timer.TimeHumanReadable()} erfolgreich beendet.");
         }
     }
 }

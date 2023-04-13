@@ -83,6 +83,8 @@
         <Reference Include="System.Xml" />
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="Exceptions\ConvertingException.cs" />
+        <Compile Include="Extensions\TimerExtensions.cs" />
         <Compile Include="Listeners\TimestampedConsoleTraceListener.cs" />
         <Compile Include="Listeners\TimestampedTextWriterTraceListener.cs" />
         <Compile Include="Mapping.cs" />

@@ -1,8 +1,15 @@
 ﻿# Migrator
 
-Hier sind einige SQL Statements um die Tabellenstruktur in eine MySQL Datenbank zu ändern.
+Der Migrator dient als neuer Konverter und kann auch Tabellen Strukturen einfach und sicher ändern, ohne alle Daten vorher in eine neue Tabelle zu schreiben.
+Der Migrator durchläuft, die Dateien von oben nach unten die in dem Ordner "Databases/Migrations" in diesem Projekt befinden.
+Aus diesem Grund ist es *wichtig das die neuen SQL Statement (Dateien) immer mit dem korrekten Datum gespeichert werden*.
+Es kann auch gern die letzte Datei aus dem Ordner genommen, kopiert und abgewandelt werden.
 
-## Fundort
+Im Folgenden werden einige SQL Statements erklärt, um die Tabellenstruktur in eine MySQL-Datenbank zu ändern.
+
+Bei weiteren Fragen stehe ich (@Thomas Jünemann) gern zur Verfügung bzw. https://www.w3schools.com/sql/ hilf auch sehr beim Erstellen von SQL Statements.
+
+## Fundort der Dateien
 Im Ordner Databases/Migrations im csproj 'Migrator' findet ihr alle SQL Statements.
 Hier sind Kleinigkeiten zu beachten: 
 
@@ -10,29 +17,25 @@ Beispiel Filename:
 ```
 <jahr_monat_tag>_<entwickler>_<mode>_<tabellenname>.sql
 ```
-
 Beispiel Attribute:
-- jahr: 2023
-- monat: 11
-- tag: 04
-- entwickler: thj
-- mode: 
+- Jahr: 2023
+- Monat: 11
+- Tag: 04
+- Entwickler: thj
+- Mode: 
   - CREATE (anlegen)
   - ADD (hinzufügen) 
   - RENAME (umbennen)
   - MODIFY (änderung)
   - DROP (löschen)
-- tabellenname: adressen
+- Tabellenname: adressen
 
-Ergibt im dann eine Datei die beispielsweise so ausehen könnte.
+Ergibt dann eine Datei die beispielsweise so ausehen könnte.
 
 ```
 2023_03_04_thj_create_adressen.sql
 ```
-+
-Es kann auch gern die letzte genommen, kopiert und abgewandelt werdenm, *wichtig ist nur das die Dateien die am neusten sind auch ganz unten stehen*, der Migrator geht diesen Ordner nämlich von Oben nach Unten durch.
-
-## Benutzungen
+## Benutzungen der Statements
 
 1) Eine neue Tabelle erstellen:
 
@@ -85,7 +88,7 @@ ALTER TABLE orders DROP FOREIGN KEY orders_customer_id_fk;
 DROP TABLE customers;
 ```
 
-## Multistatements
+## Multi Statements
 Es können auch mehrer Statement mit einer einzigen Datei ausgeführt werden.
 
 Beispiel:
@@ -93,4 +96,9 @@ Beispiel:
 ALTER TABLE customers ADD phone VARCHAR(15) AFTER email;
 ALTER TABLE customers RENAME COLUMN email TO mail_address;
 ```
+oder auch ein Update einer bestimmten Column (das WHERE ist hierbei optional) nach dem eine Tabelle modifiziert wurde:
 
+```sql
+ALTER TABLE customers RENAME COLUMN mail_address TO mail;
+UPDATE customers SET product = "richtig cooles Produkt" WHERE quantity > 60
+```
