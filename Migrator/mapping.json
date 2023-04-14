@@ -1,9 +1,9 @@
 ﻿{
   "TablePairs":[
     {
-      "PervasiveTable":{
-        "Name":"AD_Adr",
-        "Fields":[
+      "PervasiveTable": {
+        "Name": "AD_Adr",
+        "Fields": [
           "AUTO_INCREMENT",
           "AdrNr",
           "SBegrAdr",
@@ -39,42 +39,42 @@
           "SterbeDat2"
         ]
       },
-      "SqlTable":{
-        "Name":"adressen",
-        "Fields":[
+      "SqlTable": {
+        "Name": "adressen",
+        "Fields": [
           "id",
-          "AdrNr",
-          "SBegrAdr",
-          "Anrede",
-          "Titel",
-          "Vorname",
-          "Name1",
-          "Name2",
-          "Name3",
-          "Strasse",
-          "Land",
-          "PLZ",
-          "Ort",
-          "Zustellpostamt",
-          "GebDat1",
-          "GebDat2",
-          "SBrief_JN",
-          "SF1",
-          "SF2",
-          "SF3",
-          "SF4",
-          "SF5",
-          "SF6",
-          "SF7",
-          "SF8",
-          "SF9",
-          "SF10",
-          "BriefAnZeil1",
-          "BriefAnZeil2",
-          "Geburtsname",
-          "BerufsBez",
-          "SterbeDat1",
-          "SterbeDat2"
+          "nummer",
+          "suchbegriff",
+          "anrede",
+          "titel",
+          "vorname",
+          "name1",
+          "name2",
+          "name3",
+          "strasse",
+          "land",
+          "plz",
+          "ort",
+          "zustellpostamt",
+          "geburtsdatum1",
+          "geburtsdatum2",
+          "is_serienbrief",
+          "sonderfunktion1",
+          "sonderfunktion2",
+          "sonderfunktion3",
+          "sonderfunktion4",
+          "sonderfunktion5",
+          "sonderfunktion6",
+          "sonderfunktion7",
+          "sonderfunktion8",
+          "sonderfunktion9",
+          "sonderfunktion10",
+          "brief_anrede_zeile1",
+          "brief_anrede_zeile2",
+          "geburtsname",
+          "berufsbezeichnung",
+          "sterbedatum1",
+          "sterbedatum2"
         ]
       }
     }

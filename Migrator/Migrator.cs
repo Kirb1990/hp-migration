@@ -369,7 +369,7 @@ namespace MigrationTool
                 
             while (reader.Read())
             {
-                tableNames.Add(reader.GetString(0));
+                tableNames.Add(reader.GetString(0)?.Trim());
             }
 
             reader.Close();
