@@ -4,10 +4,11 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Timers;
 using MigrationTool.Exceptions;
 using MigrationTool.Extensions;
-using MySql.Data.MySqlClient;
+using MySqlConnector;
 using Newtonsoft.Json;
 using Pervasive.Data.SqlClient;
 
@@ -15,13 +16,9 @@ namespace MigrationTool
 {
     public class Migrator
     {
-        const string AUTO_INCREMENT_PLACEHOLDER = "AUTO_INCREMENT";
+        const string AUTO_INCREMENT_PLACEHOLDER = "id";
         public event EventHandler<string> OnSuccessfullyMigrated;
         public event EventHandler<string> OnErrorOccured;
-        public event EventHandler<string> OnConverterStarted;
-        public event EventHandler<string> OnConverterTableStarted;
-        public event EventHandler<string> OnConverterTableFinished;
-        public event EventHandler<string> OnConverterFinished;
         public event EventHandler<string> OnConverterMessage;
         public string Message => _ErrorMessage;
         public bool HasErrors => _ErrorOccured;
@@ -33,9 +30,7 @@ namespace MigrationTool
         string _SqlConnectionString;
         string _PervasiveConnectionString;
         
-        string _CurrentDatabase;
         string _ErrorMessage;
-        
         bool _ErrorOccured;
 
         public Mapping Mapping => _Mapping;
@@ -90,7 +85,7 @@ namespace MigrationTool
             Trace.WriteLine(e);
         }
 
-        public bool TestMySqlConnection()
+        public bool TestSqlConnection()
         {
             MySqlConnection connection = new(_SqlConnectionString);
             try
@@ -180,7 +175,6 @@ namespace MigrationTool
             try
             {
                 connection.Open();
-                connection.ChangeDatabase(_CurrentDatabase);
                 
                 string migrationsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"Databases{_PathSeparator}Migrations");
                 
@@ -233,11 +227,10 @@ namespace MigrationTool
             try
             {
                 connection.Open();
-                connection.ChangeDatabase(_CurrentDatabase);
 
                 string query = "SELECT table_name FROM information_schema.tables WHERE table_schema = @DatabaseName AND table_type = 'BASE TABLE'";
                 using MySqlCommand command = new(query, connection);
-                command.Parameters.AddWithValue("@DatabaseName", _CurrentDatabase);
+                command.Parameters.AddWithValue("@DatabaseName", connection.Database);
                 using MySqlDataReader reader = command.ExecuteReader();
                 while (reader.Read())
                 {
@@ -263,7 +256,7 @@ namespace MigrationTool
             return true;
         }
 
-        public bool UseWithCreateDatabaseIfNotExists(string database)
+        public bool UseForceCreatingDatabase(string database)
         {
             if (MySqlDatabaseExists(database))
             {
@@ -280,6 +273,11 @@ namespace MigrationTool
             try
             {
                 connection.Open();
+                if (string.IsNullOrEmpty(connection.Database))
+                {
+                    OnErrorOccured?.Invoke(this, "Datenbank muss vor dem Wechsel angegeben werden!");
+                    return false;
+                }
                 connection.ChangeDatabase(database);
             }
             catch (Exception ex)
@@ -292,9 +290,52 @@ namespace MigrationTool
                 connection.Close();
             }
             
-            _CurrentDatabase = database;
             return true;
         }
+
+        public bool UseWithDataDirectoryPath(string directoryPath)
+        {
+            if (!TryExtractDatabaseFromPath(directoryPath, out string database))
+            {
+                return false;
+            }
+            
+            return Use(database);
+        }
+
+        bool TryExtractDatabaseFromPath(string directoryPath, out string database)
+        {
+            database = string.Empty;
+            if (string.IsNullOrEmpty(directoryPath))
+            {
+                return false;
+            }
+            
+            Regex regex = new(@"\\([^\\]+)\\?$");
+            Match match = regex.Match(directoryPath);
+            string dirtyDatabaseName = match.Groups[match.Groups.Count-1].Value;
+            
+            database = RemoveSpecialCharacters(dirtyDatabaseName);
+            return true;
+        }
+
+        public bool UseForceCreatingDatabaseWithDataDirectoryPath(string directoryPath)
+        {
+            if (!TryExtractDatabaseFromPath(directoryPath, out string database))
+            {
+                return false;
+            }
+
+            return UseForceCreatingDatabase(database);
+        }
+        
+        string RemoveSpecialCharacters(string str)
+        {
+            string normalizedString = str.Normalize(NormalizationForm.FormKD);
+            Regex regex = new("[^a-zA-Z0-9]");
+            return regex.Replace(normalizedString, string.Empty);
+        }
+        
         bool ExecuteMigrationTable(string database)
         {
             MySqlConnection connection = new (_SqlConnectionString);
@@ -343,7 +384,7 @@ namespace MigrationTool
             using MySqlConnection connection = new(_SqlConnectionString);
             connection.Open();
 
-            string query = "SHOW TABLES";
+            const string query = "SHOW TABLES";
             MySqlCommand command = new(query, connection);
             MySqlDataReader reader = command.ExecuteReader();
                 
@@ -356,14 +397,17 @@ namespace MigrationTool
 
             return tableNames;
         }
-        public List<string> LoadPervasiveTableNames()
+
+        public List<string> LoadPervasiveTableNames() => LoadPervasiveTableNames(_PervasiveConnectionString);
+
+        public List<string> LoadPervasiveTableNames(string connectionString)
         {
             List<string> tableNames = new();
 
-            using PsqlConnection connection = new(_PervasiveConnectionString);
+            using PsqlConnection connection = new(connectionString);
             connection.Open();
 
-            string query = "SELECT DISTINCT Xf$Name FROM X$File";
+            const string query = "SELECT DISTINCT Xf$Name FROM X$File";
             PsqlCommand command = new(query, connection);
             PsqlDataReader reader = command.ExecuteReader();
                 
@@ -379,8 +423,7 @@ namespace MigrationTool
 
         public List<string> GetPervasiveFields(string tableName)
         {
-            List<string> fieldNames = new() { AUTO_INCREMENT_PLACEHOLDER };
-
+            List<string> fieldNames = new();
             using PsqlConnection connection = new(_PervasiveConnectionString);
             connection.Open();
 
@@ -398,6 +441,13 @@ namespace MigrationTool
             return fieldNames;
         }
 
+        public List<string> GetPervasiveFieldsWithPlaceholder(string tableName)
+        {
+            List<string> fieldNames = new() { AUTO_INCREMENT_PLACEHOLDER };
+            fieldNames.AddRange(GetPervasiveFields(tableName));
+            return fieldNames;
+        }
+
         public List<string> GetSqlFields(string tableName)
         {
             List<string> fieldNames = new();
@@ -405,7 +455,7 @@ namespace MigrationTool
             using MySqlConnection connection = new(_SqlConnectionString);
             connection.Open();
             
-            string query = $"SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '{_CurrentDatabase}' AND TABLE_NAME = '{tableName}' ORDER BY ORDINAL_POSITION";
+            string query = $"SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '{connection.Database}' AND TABLE_NAME = '{tableName}' ORDER BY ORDINAL_POSITION";
 
             using MySqlCommand command = new(query, connection);
             using MySqlDataReader reader = command.ExecuteReader();
@@ -420,16 +470,44 @@ namespace MigrationTool
 
         void ConvertTable(TablePair tablePair)
         {
-            if (!MysqlTableIsEmpty(tablePair.SqlTable.Name))
+            if (!SqlTableIsEmpty(tablePair.SqlTable.Name))
             {
                 return;
             }
-            int maxRecords = PervasiveTableRecordAmount(tablePair.PervasiveTable.Name);
-
-            OnConverterTableStarted?.Invoke(this, $"Pervasive Tabelle {tablePair.PervasiveTable.Name} nach MySQL Tabelle {tablePair.SqlTable.Name} mit {maxRecords} Einträgen!");
-
+            
             RemoveAutoIncrementPlaceholder(tablePair);
-            Import(tablePair, maxRecords);
+            ConvertTable(tablePair.PervasiveTable.Name, tablePair.PervasiveTable.Fields, tablePair.SqlTable.Name, tablePair.SqlTable.Fields);
+        }
+
+        void ConvertTable(string table, List<string> fields) => ConvertTable(table, fields, table, fields);
+
+        void ConvertTable(string pervasiveTable, List<string> pervasiveFields, string sqlTable, List<string> sqlFields)
+        {
+            if (!SqlTableExists(sqlTable) || !SqlTableIsEmpty(sqlTable))
+            {
+                return;
+            }
+            
+            int maxRecords = PervasiveTableRecordAmount(pervasiveTable);
+
+            OnConverterMessage?.Invoke(this, $"Pervasive Tabelle {pervasiveTable} nach MySQL Tabelle {sqlTable} mit {maxRecords} Einträgen!");
+
+            Import(pervasiveTable,  sqlTable, maxRecords);
+        }
+
+        bool SqlTableExists(string sqlTable)
+        {
+            using MySqlConnection connection = new(_SqlConnectionString);
+            connection.Open();
+            
+            string query = $"SELECT count(*) FROM information_schema.tables WHERE table_schema = '{connection.Database}' AND table_name = '{sqlTable}';";
+            MySqlCommand command = new(query, connection);
+
+            int count = Convert.ToInt32(command.ExecuteScalar());
+            if (count > 0) return true;
+            
+            OnConverterMessage?.Invoke(this, $"Überspringe nicht existierende Tabelle: {connection.Database}.{sqlTable}");
+            return false;
         }
 
         void RemoveAutoIncrementPlaceholder(TablePair tablePair)
@@ -452,28 +530,35 @@ namespace MigrationTool
                 tablePair.SqlTable.Fields.RemoveAt(placeholderIndex);
             }
         }
-
-        void Import(TablePair tablePair, int maxRecords)
+        
+        void Import(string pervasiveTable, string sqlTable, int maxRecords)
         {
-            using PsqlConnection pervasiveConnection = new (_PervasiveConnectionString);
-            using MySqlConnection mariaDbConnection = new (_SqlConnectionString);
+            using PsqlConnection pervasiveConnection = new(_PervasiveConnectionString);
+            using MySqlConnection mariaDbConnection = new(_SqlConnectionString);
             pervasiveConnection.Open();
             mariaDbConnection.Open();
-
-            using PsqlCommand pervasiveCommand = new ($"SELECT {string.Join(",", tablePair.PervasiveTable.Fields)} FROM {tablePair.PervasiveTable.Name}", pervasiveConnection);
-            using PsqlDataReader pervasiveReader = pervasiveCommand.ExecuteReader();
-            using MySqlCommand mariaDbCommand = new ($"INSERT INTO {tablePair.SqlTable.Name} ({string.Join(",", tablePair.SqlTable.Fields)}) VALUES ({string.Join(",", tablePair.SqlTable.Fields.Select(field => "@" + field))})", mariaDbConnection);
-            using MySqlTransaction transaction = mariaDbConnection.BeginTransaction();
             
+            //int sqlFieldCount =  MySQ
+            
+
+            using PsqlCommand pervasiveCommand = new($"SELECT * FROM {pervasiveTable}", pervasiveConnection);
+            using PsqlDataReader pervasiveReader = pervasiveCommand.ExecuteReader();
+
+            string valuePlaceholders = string.Join(",", Enumerable.Range(0, pervasiveReader.FieldCount + 1).Select(i => $"@param{i}"));
+            using MySqlCommand mariaDbCommand = new($"INSERT INTO {sqlTable} VALUES ({valuePlaceholders})", mariaDbConnection);
+            using MySqlTransaction transaction = mariaDbConnection.BeginTransaction();
+
             mariaDbCommand.Transaction = transaction;
 
             try
             {
                 while (pervasiveReader.Read())
                 {
-                    for (int i = 0; i < tablePair.PervasiveTable.Fields.Count; i++)
+                    mariaDbCommand.Parameters.AddWithValue("@param0", null);
+                    
+                    for (int i = 0; i < pervasiveReader.FieldCount; i++)
                     {
-                        mariaDbCommand.Parameters.AddWithValue($"@{tablePair.SqlTable.Fields[i]}", pervasiveReader.GetValue(i));
+                        mariaDbCommand.Parameters.AddWithValue($"@param{i+1}", pervasiveReader.GetValue(i));
                     }
 
                     mariaDbCommand.ExecuteNonQuery();
@@ -485,11 +570,11 @@ namespace MigrationTool
             catch (Exception ex)
             {
                 transaction.Rollback();
-                OnConverterTableFinished?.Invoke(this, $"Tabelle '{tablePair.PervasiveTable.Name}' abgebrochen.");
-                OnErrorOccured?.Invoke(this, $"Fehler beim Import der Daten: {ex.Message}");
+                OnConverterMessage?.Invoke(this, $"Tabelle '{pervasiveTable}' abgebrochen.");
+                OnErrorOccured?.Invoke(this, $"Fehler beim Import: {ex.Message}");
                 return;
             }
-            OnConverterTableFinished?.Invoke(this, $"Tabelle '{tablePair.PervasiveTable.Name}' {maxRecords}/{maxRecords} abgeschlossen.");
+            OnConverterMessage?.Invoke(this, $"Tabelle '{pervasiveTable}' {maxRecords}/{maxRecords} abgeschlossen.");
         }
 
         int PervasiveTableRecordAmount(string tableName)
@@ -511,21 +596,19 @@ namespace MigrationTool
             return maxRecords;
         }
 
-        bool MysqlTableIsEmpty(string sqlTableName)
+        bool SqlTableIsEmpty(string sqlTableName)
         {
             MySqlConnection connection = new(_SqlConnectionString);
 
             try
             {
                 connection.Open();
-                connection.ChangeDatabase(_CurrentDatabase);
-
-                MySqlCommand command = new($"SELECT COUNT(*) FROM {sqlTableName};", connection);
+                MySqlCommand command = new($"SELECT COUNT(*) FROM {sqlTableName} LIMIT 1;", connection);
                 int count = Convert.ToInt32(command.ExecuteScalar());
 
                 if (count > 0)
                 {
-                    OnConverterMessage?.Invoke(this, $"Es sind bereits Daten in der MySQL Datenbank [{_CurrentDatabase}] - Tabelle: {sqlTableName} vorhanden.");
+                    OnConverterMessage?.Invoke(this, $"Es sind bereits Daten in der MySQL: {connection.Database}.{sqlTableName} vorhanden.");
                     return false;
                 }
             }
@@ -545,7 +628,7 @@ namespace MigrationTool
         {
             Timer timer = new();
             timer.Start();
-            OnConverterStarted?.Invoke(this, "Konverter wurde gestartet.");
+            OnConverterMessage?.Invoke(this, "Konverter wurde gestartet.");
             
             if (single is null)
             {
@@ -558,7 +641,31 @@ namespace MigrationTool
             }
             ConvertTable((TablePair) single);
             timer.Stop();
-            OnConverterFinished?.Invoke(this, $"Konverter wurde nach {timer.TimeHumanReadable()} erfolgreich beendet.");
+            OnConverterMessage?.Invoke(this, $"Konverter wurde nach {timer.TimeHumanReadable()} erfolgreich beendet.");
+        }
+
+        public void StartConverter(string pervasiveConnectionString, string sqlConnectionString)
+        {
+            _PervasiveConnectionString = pervasiveConnectionString;
+            _SqlConnectionString = sqlConnectionString;
+            
+            Timer timer = new();
+            timer.Start();
+            OnConverterMessage?.Invoke(this, "Konverter wurde gestartet.");
+            
+            //List<string> tables = LoadPervasiveTableNames();
+            List<string> tables = new()
+            {
+                "ad_adr",
+                "tes",
+                "ad_ansprpart"
+            };
+
+            foreach (string table in tables)
+            {
+                ConvertTable(table, null);
+            }
+            OnConverterMessage?.Invoke(this, $"Konverter wurde nach {timer.TimeHumanReadable()} erfolgreich beendet.");
         }
     }
 }

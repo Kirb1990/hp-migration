@@ -15,4 +15,7 @@ internal class Options
 
     [Option("--seed", HelpText = "Seed the database")]
     public bool Seed { get; set; }
+
+    [Option("test", HelpText = "Test the automatic convert")]
+    public bool Test { get; set; }
 }

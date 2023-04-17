@@ -22,9 +22,9 @@ namespace MigrationPanel
             _Migrator.OnErrorOccured -= AppendMigrateLogText;
         }
 
-        void AppendMigrateLogText(object sender, string e)
+        void AppendMigrateLogText(object sender, string message)
         {
-            textBoxMigrationLog.Text += $"{e}\r\n";
+            textBoxMigrationLog.Text += message + Environment.NewLine;
         }
     }
 }

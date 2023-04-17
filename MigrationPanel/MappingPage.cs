@@ -96,7 +96,7 @@ namespace MigrationPanel
             else
             {
                 HideMappingExistsAlert();
-                fields = _Migrator.GetPervasiveFields(tableName);
+                fields = _Migrator.GetPervasiveFieldsWithPlaceholder(tableName);
                 if(fields.Count <= 1) fields.Clear();
             }
             LoadTableFieldsToGrid(dataGridPervasive, fields);
@@ -177,12 +177,12 @@ namespace MigrationPanel
 
             Table pervasiveTable = new Table
             {
-                Name = comboBoxPervasive.Text,
+                Name = comboBoxPervasive.Text?.Trim(),
                 Fields = ExtractFields(dataGridPervasive)
             };
             Table sqlTable = new Table
             {
-                Name = comboBoxSql.Text,
+                Name = comboBoxSql.Text?.Trim(),
                 Fields = ExtractFields(dataGridSql)
             };
 

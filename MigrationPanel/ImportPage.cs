@@ -8,11 +8,7 @@ namespace MigrationPanel
     {
         void OnImportPageEnter(object sender, EventArgs e)
         {
-            _Migrator.OnConverterStarted += AppendImportLogText;
-            _Migrator.OnConverterTableStarted += AppendImportLogText;
             _Migrator.OnConverterMessage += AppendImportLogText;
-            _Migrator.OnConverterTableFinished += AppendImportLogText;
-            _Migrator.OnConverterFinished += AppendImportLogText;
             _Migrator.OnErrorOccured += AppendImportLogText;
             
             if (_Migrator.Mapping.TablePairs.Count <= comboBoxMapping.Items.Count)
@@ -29,17 +25,13 @@ namespace MigrationPanel
 
         void OnImportPageLeave(object sender, EventArgs e)
         {
-            _Migrator.OnConverterStarted -= AppendImportLogText;
-            _Migrator.OnConverterTableStarted -= AppendImportLogText;
             _Migrator.OnConverterMessage -= AppendImportLogText;
-            _Migrator.OnConverterTableFinished -= AppendImportLogText;
-            _Migrator.OnConverterFinished -= AppendImportLogText;
             _Migrator.OnErrorOccured -= AppendImportLogText;
         }
 
-        void AppendImportLogText(object sender, string e)
+        void AppendImportLogText(object sender, string message)
         {
-            textBoxImportLog.Text += $"{e}\r\n";
+            textBoxImportLog.Text += message + Environment.NewLine;
         }
 
         void btnImportStart_Click(object sender, EventArgs e)

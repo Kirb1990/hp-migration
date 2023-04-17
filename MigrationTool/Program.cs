@@ -20,7 +20,7 @@ namespace MigrationTool
                 Console.WriteLine(ex);
                 return;
             }
-
+            
             try
             {
                 Parser.Default.ParseArguments<Options>(args)
@@ -42,12 +42,34 @@ namespace MigrationTool
                         {
                             Seeding(database, connectionString);
                         }
+
+                        if (o.Test)
+                        {
+                            TestSzenario();
+                        }
                     });
             }
             catch (ArgumentNullException ex)
             {
                 Console.WriteLine(ex);
             }
+        }
+
+        static void TestSzenario()
+        {
+            Migrator migrator = new();
+            
+            migrator.OnConverterMessage += WriteToConsole;
+            migrator.OnErrorOccured += WriteToConsole;
+
+            //migrator.UseWithDataDirectoryPath(@"D:\Daten\Dev SQL\Blub\Te eäst\");
+
+            migrator.StartConverter("Server=localhost;Port=1583;Database=HAUSPERFEKT;User ID=Master;Password=c4kbg10S;","server=localhost,3306;uid=67tuD6S52eKS;password=nYNQFTsTm9UE;database=hausperfekt");
+        }
+
+        static void WriteToConsole(object sender, string e)
+        {
+            Console.WriteLine(e);
         }
 
         static void LoadAppSettings(out string database, out string connectionString)
@@ -69,7 +91,7 @@ namespace MigrationTool
         static void MigrateWithRefresh(string database, string connectionString)
         {
             Migrator migrator = new(connectionString);
-            migrator.UseWithCreateDatabaseIfNotExists(database);
+            migrator.UseForceCreatingDatabase(database);
             migrator.Refresh();
             migrator.Migrate();
         }
@@ -77,14 +99,14 @@ namespace MigrationTool
         static void Refresh(string database, string connectionString)
         {
             Migrator migrator = new(connectionString);
-            migrator.UseWithCreateDatabaseIfNotExists(database);
+            migrator.UseForceCreatingDatabase(database);
             migrator.Refresh();
         }
 
         static void Migrate(string database, string connectionString)
         {
             Migrator migrator = new(connectionString);
-            migrator.UseWithCreateDatabaseIfNotExists(database);
+            migrator.UseForceCreatingDatabase(database);
             migrator.Migrate();
         }
 

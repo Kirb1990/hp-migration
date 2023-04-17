@@ -66,13 +66,13 @@ namespace MigrationPanel
 
             _Migrator.SetSqlConnectionString(connectionString);
 
-            if (!_Migrator.TestMySqlConnection())
+            if (!_Migrator.TestSqlConnection())
             {
                 SetLabelSqlTest("Keine Verbindung möglich!", Color.DarkRed);
                 return;
             }
 
-            if (forceCreateSqlDatabase.Checked && !_Migrator.UseWithCreateDatabaseIfNotExists(database))
+            if (forceCreateSqlDatabase.Checked && !_Migrator.UseForceCreatingDatabase(database))
             {
                 SetLabelSqlTest("Fehler beim wechseln oder Erstellen der Datenbank!", Color.DarkRed);
                 return;
@@ -124,7 +124,7 @@ namespace MigrationPanel
             string password = ReadInputBox(textBoxSqlPassword);
             database = ReadInputBox(textBoxSqlDatabase);
 
-            connectionString = $"server={server},{port};uid={user};password={password};";
+            connectionString = $"server={server},{port};database={database};uid={user};password={password};";
         }
         
         
